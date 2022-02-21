@@ -1,0 +1,5 @@
++backend: 
+spring security oauth2: 
+-https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-1/
+-https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-2/
+-https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-3/

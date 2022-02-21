@@ -1,0 +1,56 @@
+server:
+   port: 8081
+spring:
+   datasource:
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      url: jdbc:sqlserver://DESKTOP-CJDQ9TC\\BAOCS:1433;databaseName=QUANLYKHACHSAN_190222
+      username: sa
+      password: 1
+   jpa:
+      hibernate:
+         ddl-auto: update
+      show-sql: true
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.SQLServer2012Dialect
+            format_sql: true
+   security: 
+      oauth2:
+         client:
+            registration:
+               google:
+                  clientId: 561186946477-vf1e7v6u6s85m6sh3k8c3283n6j84r0p.apps.googleusercontent.com
+                  clientSecret: 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
+                  redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+                  scope: 
+                     - email
+                     - profile
+               facebook:
+                  clientId: 1798316450367266
+                  clientSecret: 1f2c83d9930bdc3264f577a00664b6dd
+                  redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+                  scope:
+                     - email
+                     - public_profile
+            provider:
+               facebook:
+                  authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+                  tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+                  userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,name,email,picture
+app:
+   auth:
+      tokenSecret: nguyensybao14032000
+      tokenExpirationMsec: 864000000
+   cors:
+      allowedOrigins: http://localhost:3000
+   oauth2:
+      authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+   pagedDefault:
+      currentPage: 0
+      sizePage: 20
+      sortField: "id"
+      sortDir: "asc"
+      keyword: ""

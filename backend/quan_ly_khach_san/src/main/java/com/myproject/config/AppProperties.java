@@ -14,6 +14,8 @@ public class AppProperties {
 	
 	private final Auth Auth = new Auth();
 	private final OAuth2 OAuth2 = new OAuth2();
+	private final SystemConstant systemConstant = new SystemConstant();
+	
 
 	@Getter
 	@Setter
@@ -30,6 +32,13 @@ public class AppProperties {
 			this.authorizedRedirectUris = authorizedRedirectUris;
 			return this;
 		}
+	}
+	
+	@Getter
+	@Setter
+	public static final class SystemConstant {
+		private String avatarUrlDefault;
+		private String emailSystem;
 	}
 	
 }

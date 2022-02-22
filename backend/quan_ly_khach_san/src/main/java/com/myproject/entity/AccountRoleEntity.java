@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,11 +28,13 @@ public class AccountRoleEntity {
 //	1 account_role - 1 account
 	@ManyToOne
 	@JoinColumn(name = "[id_account]")
+	@JsonBackReference("account-account_role")
 	private AccountEntity account;
 	
 //	1 account_role - 1 role
 	@ManyToOne
 	@JoinColumn(name = "[id_role]")
+	@JsonBackReference("role-account_role")
 	private RoleEntity role;
 	
 }

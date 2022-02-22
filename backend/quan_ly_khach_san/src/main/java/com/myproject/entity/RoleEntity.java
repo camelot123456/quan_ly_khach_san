@@ -17,6 +17,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,10 +58,12 @@ public class RoleEntity {
 	
 //	1 role - n account_role
 	@OneToMany(mappedBy = "role")
+	@JsonManagedReference("role-account_role")
 	private List<AccountRoleEntity> accountRoleArr;
 	
 //	---------------------------Transient-------------------------
 	
 	@Transient
+	@JsonIgnore
 	private String[] ids;
 }

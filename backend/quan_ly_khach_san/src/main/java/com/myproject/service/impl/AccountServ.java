@@ -44,6 +44,11 @@ public class AccountServ implements IAccountServ{
 		}
 		return accountRepo.pagedByKeyword(deleted, veryfied, enabled, keyword, pageRequest);
 	}
+	
+	@Override
+	public Optional<AccountEntity> findByOtpCode(String otpCode) {
+		return accountRepo.findByOtpCode(otpCode);
+	}
 
 //----------------------------- INSERT -----------------------------
 	

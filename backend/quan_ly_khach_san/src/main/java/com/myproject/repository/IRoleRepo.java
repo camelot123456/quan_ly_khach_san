@@ -1,5 +1,7 @@
 package com.myproject.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +24,8 @@ public interface IRoleRepo extends JpaRepository<RoleEntity, String>{
 			+ "or r.code like %?1%",
 			nativeQuery = true)
 	public Page<RoleEntity> pagedByKeyword(String keyword, Pageable pageable);
+	
+	public Optional<RoleEntity> findByCode(String code);
 	
 //	----------------------------- INSERT -----------------------------
 	

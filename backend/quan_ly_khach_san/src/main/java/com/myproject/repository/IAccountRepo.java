@@ -35,6 +35,8 @@ public interface IAccountRepo extends JpaRepository<AccountEntity, String>{
 	
 	public Optional<AccountEntity> findByEmail(String email);
 	
+	public Optional<AccountEntity> findByOtpCode(String otpCode);
+	
 	public Boolean existsByEmail(String email);
 	
 //	----------------------------- INSERT -----------------------------

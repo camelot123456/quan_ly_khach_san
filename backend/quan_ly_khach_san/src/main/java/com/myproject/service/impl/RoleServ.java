@@ -44,6 +44,13 @@ public class RoleServ implements IRoleServ{
 		}
 		return roleRepo.pagedByKeyword(keyword, pageRequest);
 	}
+	
+
+	@Override
+	public Optional<RoleEntity> findByCode(String code) {
+		// TODO Auto-generated method stub
+		return roleRepo.findByCode(code);
+	}
 
 //----------------------------- INSERT -----------------------------
 	
@@ -83,11 +90,4 @@ public class RoleServ implements IRoleServ{
 		}
 	}
 
-
-
-
-
-	
-	
-	
 }

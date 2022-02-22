@@ -12,6 +12,8 @@ public interface IAccountServ {
 //	----------------------------- SELECT -----------------------------
 
 	public List<AccountEntity> findAll();
+	
+	public Optional<AccountEntity> findByOtpCode(String otpCode);
 
 	public Optional<AccountEntity> findById(String id);
 

@@ -1,16 +1,21 @@
 package com.myproject.controller;
 
+import java.io.FileNotFoundException;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myproject.config.AppProperties;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.AuthResponse;
 import com.myproject.payload.LoginRequest;
@@ -31,25 +36,28 @@ public class AuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
+	@Autowired
+	private AppProperties appProperties;
+	
+	@GetMapping("/register")
+	public ResponseEntity<?> doVerifyEmail(@Param("otpCode") String otpCode) {
+		authServ.doVerifyEmail(otpCode);
+		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
+	}
+	
 	@PostMapping("/login")
 	public ResponseEntity<?> doLogin(@RequestBody LoginRequest loginRequest) {
-		
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-				loginRequest.getEmail(), loginRequest.getPassword());
-		
-		Authentication authentication = authenticationManager.authenticate(authenticationToken);
-		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		String accessToken = tokenPovider.createToken(authentication);
-		
+		String accessToken = authServ.doLogin(loginRequest, tokenPovider, authenticationManager);
 		return ResponseEntity.ok().body(new AuthResponse(accessToken, "Bearer "));
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> doRegister(@RequestBody RegisterRequest registerRequest) {
-		authServ.doRegister(registerRequest);
+	public ResponseEntity<?> doRegister(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) throws FileNotFoundException, MessagingException {
+		String domainNameServer = request.getRequestURL().toString();
+		authServ.doRegister(appProperties, registerRequest, domainNameServer);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Register Successfully"));
 	}
+	
+	
 	
 }

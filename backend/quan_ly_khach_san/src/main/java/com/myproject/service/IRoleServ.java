@@ -17,6 +17,8 @@ public interface IRoleServ {
 	
 	public Page<RoleEntity> paged(int sizePage, int currentPage, String sortField, String sortDir, String keyword);
 	
+	public Optional<RoleEntity> findByCode(String code);
+	
 //	----------------------------- INSERT -----------------------------
 	
 	public RoleEntity save(RoleEntity role);

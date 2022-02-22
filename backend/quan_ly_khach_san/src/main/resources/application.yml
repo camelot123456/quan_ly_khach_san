@@ -1,6 +1,9 @@
 server:
    port: 8081
 spring:
+   web:
+      resources:
+         static-locations: classpath:/static/
    datasource:
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       url: jdbc:sqlserver://DESKTOP-CJDQ9TC\\BAOCS:1433;databaseName=QUANLYKHACHSAN_190222
@@ -14,6 +17,17 @@ spring:
          hibernate:
             dialect: org.hibernate.dialect.SQLServer2012Dialect
             format_sql: true
+   mail:
+      host: smtp.gmail.com
+      port: 587
+      username: nguyensybao1403@gmail.com
+      password: bhcljxwdifpgpigh
+      properties:
+         mail:
+            smtp:
+               auth: true
+               starttls:
+                  enable: true
    security: 
       oauth2:
          client:
@@ -40,7 +54,7 @@ spring:
 app:
    auth:
       tokenSecret: nguyensybao14032000
-      tokenExpirationMsec: 864000000
+      tokenExpirationMsec: 86400000
    cors:
       allowedOrigins: http://localhost:3000
    oauth2:
@@ -48,9 +62,14 @@ app:
       - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
-   pagedDefault:
-      currentPage: 0
-      sizePage: 20
-      sortField: "id"
-      sortDir: "asc"
-      keyword: ""
+   
+   systemConstant:
+      emailSystem: nguyensybao1403@gmail.com
+      avatarUrlDefault: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
+      pagedDefault:
+         currentPage: 0
+         sizePage: 20
+         sortField: "id"
+         sortDir: "asc"
+         keyword: ""
+      

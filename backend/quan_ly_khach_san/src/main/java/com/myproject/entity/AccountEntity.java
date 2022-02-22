@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,6 +21,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.myproject.entity.enums.EAuthProvider;
 
 import lombok.AllArgsConstructor;
@@ -90,17 +93,20 @@ public class AccountEntity {
 	@Column(name = "[enabled]", columnDefinition = "bit default 1")
 	private Boolean enabled;
 
+	@JsonIgnore
 	@Column(name = "otp_code", columnDefinition = "char(64)")
 	private String otpCode;
 	
 	@Column(name = "[verified]", columnDefinition = "bit default 0")
 	private Boolean verified;
 	
+	@JsonIgnore
 	@Column(name = "[password]", columnDefinition = "varchar(255)")
 	private String password;
 
 //	1 account - n account_role
 	@OneToMany(mappedBy = "account")
+	@JsonManagedReference("account")
 	private List<AccountRoleEntity> AccountRoleArr;
 
 //	1 account - n transaction
@@ -117,5 +123,7 @@ public class AccountEntity {
 	
 //	----------------------------------Transient------------------------------------
 	
+	@Transient
+	@JsonIgnore
 	private String[] ids;
 }

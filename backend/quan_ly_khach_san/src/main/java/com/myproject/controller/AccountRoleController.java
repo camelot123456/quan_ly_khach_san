@@ -2,6 +2,7 @@ package com.myproject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -20,6 +21,11 @@ public class AccountRoleController {
 	
 	@Autowired
 	private IAccountRoleServ accountRoleServ;
+	
+	@GetMapping("/account-role")
+	public ResponseEntity<?> doShowAccountRoleList() {
+		return ResponseEntity.ok().body(accountRoleServ.findAll());
+	}
 
 	@PostMapping(value = "/account-role", consumes = {"multipart/form-data"})
 	public ResponseEntity<?> doAddRoleIntoAccount(@RequestPart("account-role") DataRequest dataRequest){

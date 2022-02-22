@@ -1,5 +1,7 @@
 package com.myproject.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,12 @@ public class AccountRoleServ implements IAccountRoleServ{
 	private IRoleRepo roleRepo;
 	
 //----------------------------- SELECT -----------------------------
+	
+	@Override
+	public List<AccountRoleEntity> findAll() {
+		// TODO Auto-generated method stub
+		return accountRoleRepo.findAll();
+	}
 
 //----------------------------- INSERT -----------------------------
 

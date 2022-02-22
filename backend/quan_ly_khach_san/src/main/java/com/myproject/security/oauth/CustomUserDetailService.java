@@ -28,7 +28,9 @@ public class CustomUserDetailService implements UserDetailsService{
 		// TODO Auto-generated method stub
 		AccountEntity account = accountRepo.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("Email not found !!"));
-		
+		if (!account.getVerified() || !account.getEnabled() || account.getDeleted()) {
+			return null;
+		}
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		
 		account.getAccountRoleArr().forEach(accountRole -> {
@@ -43,7 +45,9 @@ public class CustomUserDetailService implements UserDetailsService{
 		// TODO Auto-generated method stub
 		AccountEntity account = accountRepo.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException("Id not found !!"));
-		
+		if (!account.getVerified() || !account.getEnabled() || account.getDeleted()) {
+			return null;
+		}
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		
 		account.getAccountRoleArr().forEach(accountRole -> {

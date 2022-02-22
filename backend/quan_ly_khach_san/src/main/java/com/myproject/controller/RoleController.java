@@ -34,11 +34,13 @@ public class RoleController {
 	}
 	
 	@GetMapping("/roles")
+//	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
 	public ResponseEntity<?> doPagedRoleDefault() {
-		return doPagedRole(0, 2, "id", "asc", "");
+		return doPagedRole(0, 20, "id", "asc", "");
 	}
 	
 	@GetMapping("/roles/page/{currentPage}")
+//	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
 	public ResponseEntity<?> doPagedRole(
 			@PathVariable("currentPage") int currentPage,
 			@Param("sizePage") int sizePage,

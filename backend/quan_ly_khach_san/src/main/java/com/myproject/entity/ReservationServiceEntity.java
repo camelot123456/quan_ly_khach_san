@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,11 +31,13 @@ public class ReservationServiceEntity {
 	private Double intoPrice;
 	
 //	1 reservation_service - 1 reservation
+	@JsonBackReference("reservation-reservation_service")
 	@ManyToOne
 	@JoinColumn(name = "[id_reservation]")
 	private ReservationEntity reservation;
 	
 //	1 reservation_service - 1 service
+	@JsonBackReference("service-reservation_service")
 	@ManyToOne
 	@JoinColumn(name = "[id_service]")
 	private ServiceEntity service;

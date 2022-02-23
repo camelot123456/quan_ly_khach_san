@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -57,7 +58,7 @@ public class RoleEntity {
 	private String code;
 	
 //	1 role - n account_role
-	@OneToMany(mappedBy = "role")
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
 	@JsonManagedReference("role-account_role")
 	private List<AccountRoleEntity> accountRoleArr;
 	

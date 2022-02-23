@@ -39,6 +39,20 @@ public class AppProperties {
 	public static final class SystemConstant {
 		private String avatarUrlDefault;
 		private String emailSystem;
+		private PagedDefault pagedDefault;
+		
+		@Getter
+		@Setter
+		public static final class PagedDefault {
+			private int currentPage;
+			private int sizePage;
+			private String sortField;
+			private String sortDir;
+			private String keyword;
+		}
+		
 	}
 	
 }
+
+

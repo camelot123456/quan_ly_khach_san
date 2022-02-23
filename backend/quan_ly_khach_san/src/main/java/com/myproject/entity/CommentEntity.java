@@ -16,6 +16,9 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,16 +55,19 @@ public class CommentEntity {
 	private String idParent;
 	
 //	1 comment - 1 account
+	@JsonBackReference("comment-account")
 	@ManyToOne
 	@JoinColumn(name = "id_account")
 	private AccountEntity account;
 	
 //	1 comment - 1 room
+	@JsonBackReference("comment-room")
 	@ManyToOne
 	@JoinColumn(name = "id_room")
 	private RoomEntity room;
 	
 //	1 comment - n comment_photo
+	@JsonManagedReference("comment_photo-comment")
 	@OneToMany(mappedBy = "comment")
 	private List<CommentPhotoEntity> commentPhotoArr;
 } 

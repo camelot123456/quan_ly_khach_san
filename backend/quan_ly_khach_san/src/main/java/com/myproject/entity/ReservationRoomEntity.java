@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.myproject.entity.enums.ERoomState;
 
 import lombok.AllArgsConstructor;
@@ -31,11 +32,13 @@ public class ReservationRoomEntity {
 	private ERoomState status;
 	
 //	1 reservation_room - 1 reservation
+	@JsonBackReference("reservation-reservation_room")
 	@ManyToOne
 	@JoinColumn(name = "[id_reservation]")
 	private ReservationEntity reservation;
 	
 //	1 reservation_room - 1 room
+	@JsonBackReference("room-reservation_room")
 	@ManyToOne
 	@JoinColumn(name = "[id_room]")
 	private RoomEntity room;

@@ -17,45 +17,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.config.AppProperties;
-import com.myproject.entity.AccountEntity;
+import com.myproject.entity.RoomEntity;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.PagedResponse;
-import com.myproject.service.IAccountServ;
+import com.myproject.service.IRoomServ;
 
 @RestController
 @RequestMapping("/api")
-public class AccountController {
+public class RoomController {
 
 	@Autowired
-	private IAccountServ accountServ;
+	private IRoomServ roomServ;
 	
 	@Autowired
 	private AppProperties appProperties;
 	
-	@GetMapping("/accounts/page/{currentPage}")
-	public ResponseEntity<?> doPagedAccountList(
+	@GetMapping("/rooms/page/{currentPage}")
+	public ResponseEntity<?> doPagedRoomList(
 			@PathVariable("currentPage") int currentPage,
 			@Param("sizePage") int sizePage,
 			@Param("sortField") String sortField,
 			@Param("sortDir") String sortDir,
 			@Param("keyword") String keyword) {
-		
-		Page<AccountEntity> accounts = accountServ.paged(false, true, true, sizePage, currentPage, sortField, sortDir, keyword);
-		
-		PagedResponse pagedResponse = new PagedResponse(currentPage, sizePage, sortField, sortDir, keyword, accounts.getTotalPages(), accounts.getTotalElements());
+		Page<RoomEntity> paged = roomServ.paged(currentPage, sizePage, sortField, sortDir, keyword);
+		PagedResponse pagedResponse = new PagedResponse(currentPage, sizePage, sortField, sortDir, keyword, paged.getTotalPages(), paged.getTotalElements());
 		
 		Map<String, Object> dataRespone = new HashMap<String, Object>();
-		
 		dataRespone.put("paged", pagedResponse);
-		dataRespone.put("accounts", accounts.getContent());
+		dataRespone.put("rooms", paged.getContent());
 		
 		return ResponseEntity.ok().body(dataRespone);
-		
 	}
 	
-	@GetMapping("/accounts")
-	public ResponseEntity<?> doPagedAccountDefault() {
-		return doPagedAccountList(
+	@GetMapping("/rooms")
+	public ResponseEntity<?> doPagedRoomDefault() {
+		return doPagedRoomList(
 				appProperties.getSystemConstant().getPagedDefault().getCurrentPage(), 
 				appProperties.getSystemConstant().getPagedDefault().getSizePage(), 
 				appProperties.getSystemConstant().getPagedDefault().getSortField(), 
@@ -63,34 +59,28 @@ public class AccountController {
 				appProperties.getSystemConstant().getPagedDefault().getKeyword());
 	}
 	
-	@GetMapping("/accounts/{idAccount}")
-	public ResponseEntity<?> doFindAccountById(@PathVariable("idAccount") String idAccount) {
-		accountServ.findById(idAccount);
+	@PostMapping(value = "/rooms")
+	public ResponseEntity<?> doSaveroom(@RequestBody RoomEntity room) {
+		roomServ.save(room);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@PostMapping("/accounts")
-	public ResponseEntity<?> doSaveAccount(@RequestBody AccountEntity account) {
-		accountServ.save(account);
-		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
-	}
-
-	@PutMapping("/accounts")
-	public ResponseEntity<?> doUpdateAccount(@RequestBody AccountEntity account) {
-		accountServ.update(account);
+	@PutMapping("/rooms")
+	public ResponseEntity<?> doUpdateroom(@RequestBody RoomEntity room) {
+		roomServ.update(room);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@DeleteMapping("/accounts/{idAccount}")
-	public ResponseEntity<?> doDeleteOneAccount(@PathVariable("idAccount") String idAccount) {
-		accountServ.deleteById(idAccount);
+	@DeleteMapping("/rooms/{idRoom}")
+	public ResponseEntity<?> doDeleteOneroom(@PathVariable("idRoom") String idRoom) {
+		roomServ.deleteById(idRoom);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@DeleteMapping("/accounts")
-	public ResponseEntity<?> doDeleteManyAccount(@RequestBody AccountEntity account) {
-		accountServ.deleteMany(account.getIds());
+	@DeleteMapping("/rooms")
+	public ResponseEntity<?> doDeleteOneroom(@RequestBody RoomEntity room) {
+		roomServ.deleteMany(room.getIds());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
-
+	
 }

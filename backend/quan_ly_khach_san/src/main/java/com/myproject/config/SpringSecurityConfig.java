@@ -32,10 +32,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 		return super.authenticationManagerBean();
 	}
 	
-	@Bean
-	public CustomJwtAuthorizationFilter customJwtAuthorizationFilter() {
-		return new CustomJwtAuthorizationFilter();
-	}
+//	@Bean
+//	public CustomJwtAuthorizationFilter customJwtAuthorizationFilter() {
+//		return new CustomJwtAuthorizationFilter();
+//	}
 	
 	@Bean
 	public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
@@ -47,9 +47,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 		// TODO Auto-generated method stub
 		http.csrf().disable().cors();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/auth/login", "/auth/register").permitAll();
-		http.authorizeRequests().anyRequest().authenticated();
-		http.addFilterBefore(customJwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.authorizeRequests().anyRequest().permitAll();
+//		http.authorizeRequests().antMatchers("/auth/login", "/auth/register").permitAll();
+//		http.authorizeRequests().anyRequest().authenticated();
+//		http.addFilterBefore(customJwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint());
 	}
 	

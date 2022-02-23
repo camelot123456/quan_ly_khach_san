@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -105,19 +106,22 @@ public class AccountEntity {
 	private String password;
 
 //	1 account - n account_role
-	@OneToMany(mappedBy = "account")
-	@JsonManagedReference("account")
+	@JsonManagedReference("account-account_role")
+	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
 	private List<AccountRoleEntity> AccountRoleArr;
 
 //	1 account - n transaction
+	@JsonManagedReference("transaction-account")
 	@OneToMany(mappedBy = "account")
 	private List<TransactionEntity> transactions;
 
 //	1 account - n reservation
+	@JsonManagedReference("reservation-account")
 	@OneToMany(mappedBy = "account")
 	private List<ReservationEntity> reservations;
 
 //	1 account - n comment
+	@JsonManagedReference("comment-account")
 	@OneToMany(mappedBy = "account")
 	private List<CommentEntity> comments;
 	

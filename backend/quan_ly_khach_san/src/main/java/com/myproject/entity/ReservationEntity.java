@@ -18,6 +18,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -89,19 +92,23 @@ public class ReservationEntity {
 	private Double grandTotal;
 	
 //	1 reservation - 1 account
+	@JsonBackReference("reservation-account")
 	@ManyToOne
 	@JoinColumn(name = "[id_account]")
 	private AccountEntity account;
 	
 //	1 reservation - n transaction
+	@JsonManagedReference("transaction-reservation")
 	@OneToMany(mappedBy = "reservation")
 	private List<TransactionEntity> transactions;
 	
 //	1 reservation - n reservation_room
+	@JsonManagedReference("reservation-reservation_room")
 	@OneToMany(mappedBy = "reservation")
 	private List<ReservationRoomEntity> reservationRoomArr;
 	
 //	1 reservation - n reservation_service
+	@JsonManagedReference("reservation-reservation_service")
 	@OneToMany(mappedBy = "reservation")
 	private List<ReservationServiceEntity> reservationServiceArr;
 }

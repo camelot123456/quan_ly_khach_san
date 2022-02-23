@@ -18,6 +18,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.myproject.entity.enums.ETransactionMode;
 import com.myproject.entity.enums.ETransactionStatus;
 
@@ -85,13 +86,13 @@ public class TransactionEntity {
 	
 	
 //	1 transaction - 1 account
-	
+	@JsonBackReference("transaction-account")
 	@ManyToOne
 	@JoinColumn(name = "[id_account]")
 	private AccountEntity account;
 	
 //	1 transaction - 1 reservation
-	
+	@JsonBackReference("transaction-reservation")
 	@ManyToOne
 	@JoinColumn(name = "[id_reservation]")
 	private ReservationEntity reservation;

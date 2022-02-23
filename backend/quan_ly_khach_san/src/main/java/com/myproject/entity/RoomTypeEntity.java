@@ -5,14 +5,21 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "[roomtypes]")
 public class RoomTypeEntity {
@@ -50,11 +58,20 @@ public class RoomTypeEntity {
 	private String description;
 	
 //	1 room_type - n room
-	@OneToMany(mappedBy = "roomType")
+	
+	@JsonManagedReference("room-roomtype")
+	@OneToMany(mappedBy = "roomType", fetch = FetchType.LAZY)
 	private List<RoomEntity> rooms;
 	
 //	1 room_type - n room_type_photos
-	@OneToMany(mappedBy = "roomType")
+	@JsonManagedReference("roomtype_photo-roomtype")
+	@OneToMany(mappedBy = "roomType", fetch = FetchType.LAZY)
 	private List<RoomTypePhotoEntity> roomTypePhotoArr;
+	
+//	-------------------------------------Transient------------------------------------------
+	
+	@JsonIgnore
+	@Transient
+	private String[] ids;
 	
 }

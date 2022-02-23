@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myproject.config.AppProperties;
 import com.myproject.entity.RoleEntity;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.PagedResponse;
@@ -28,6 +29,9 @@ public class RoleController {
 	@Autowired
 	private IRoleServ roleServ;
 	
+	@Autowired
+	private AppProperties appProperties;
+	
 	@GetMapping("/roles/{idRole}")
 	public ResponseEntity<?> doFindRoleById(@PathVariable("idRole") String idRole) {
 		return ResponseEntity.ok().body(roleServ.findById(idRole));
@@ -36,7 +40,12 @@ public class RoleController {
 	@GetMapping("/roles")
 //	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
 	public ResponseEntity<?> doPagedRoleDefault() {
-		return doPagedRole(0, 20, "id", "asc", "");
+		return doPagedRole(
+				appProperties.getSystemConstant().getPagedDefault().getCurrentPage(), 
+				appProperties.getSystemConstant().getPagedDefault().getSizePage(), 
+				appProperties.getSystemConstant().getPagedDefault().getSortField(), 
+				appProperties.getSystemConstant().getPagedDefault().getSortDir(), 
+				appProperties.getSystemConstant().getPagedDefault().getKeyword());
 	}
 	
 	@GetMapping("/roles/page/{currentPage}")

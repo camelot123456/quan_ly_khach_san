@@ -14,6 +14,8 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -53,6 +55,7 @@ public class ServiceEntity {
 	private String description;
 	
 //	1 service - n reservation_service
+	@JsonManagedReference("service-reservation_service")
 	@OneToMany(mappedBy = "service")
 	private List<ReservationServiceEntity> reservationServiceArr;
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myproject.config.AppProperties;
 import com.myproject.entity.AccountEntity;
 import com.myproject.payload.ApiResponse;
+import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
 import com.myproject.service.IAccountServ;
 
@@ -40,7 +41,7 @@ public class AccountController {
 			@Param("sortDir") String sortDir,
 			@Param("keyword") String keyword) {
 		
-		Page<AccountEntity> accounts = accountServ.paged(false, true, true, sizePage, currentPage, sortField, sortDir, keyword);
+		Page<AccountEntity> accounts = accountServ.paged(true, true, sizePage, currentPage, sortField, sortDir, keyword);
 		
 		PagedResponse pagedResponse = new PagedResponse(currentPage, sizePage, sortField, sortDir, keyword, accounts.getTotalPages(), accounts.getTotalElements());
 		
@@ -81,15 +82,15 @@ public class AccountController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@DeleteMapping("/accounts/{idAccount}")
-	public ResponseEntity<?> doDeleteOneAccount(@PathVariable("idAccount") String idAccount) {
-		accountServ.deleteById(idAccount);
+	@DeleteMapping("/account")
+	public ResponseEntity<?> doDeleteOneAccount(@RequestBody EntityResponse entityResponse) {
+		accountServ.deleteById(entityResponse.getId());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
 	@DeleteMapping("/accounts")
-	public ResponseEntity<?> doDeleteManyAccount(@RequestBody AccountEntity account) {
-		accountServ.deleteMany(account.getIds());
+	public ResponseEntity<?> doDeleteManyAccount(@RequestBody EntityResponse entityResponse) {
+		accountServ.deleteMany(entityResponse.getIds());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 

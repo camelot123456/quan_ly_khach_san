@@ -1,0 +1,13 @@
+chức booking ở receptionist:
+1.điền thông tin khách hàng, nếu đã có rồi thì nhập email hoặc sdt để hệ thống
+tự động nhập thông tin khách hàng
+2.chọn loại phòng, số khách hoặc tầng -> tìm -> lọc danh sách các phòng theo loại, số khách hoặc tầng
+3.chọn các phòng cần đặt thuê
+3.1.Kiểm tra phòng đó có thể thuê từ ngày ... đến ngày .... hay không?
+4.(Không cần thiết) chọn dịch vụ của khách sạn theo số lượng
+
+5.Hệ thống cập nhập tổng tiền, thuế, hóa đơn,....
+
+6.Bấm nut đặt phòng, hệ thống sẽ lưu thông tin này vào reservation_table
+7.Bấm nút thanh toán sẽ cập nhập thông tin khách hàng, phòng, dịch vụ, thuế, tổng tiền,..)
+8.Bấm nút payment sẽ tạo bảng transaction 

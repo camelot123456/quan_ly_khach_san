@@ -27,9 +27,7 @@ public class RoomtypeServ implements IRoomtypeServ{
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
-		if (keyword == null || keyword == "") {
-			return roomtypeRepo.pagedRoomTypeNoKeyword(pageRequest);
-		}
+		keyword = keyword == null ? "" : keyword;
 		return roomtypeRepo.pagedRoomTypeByKeyword(keyword, pageRequest);
 	}
 

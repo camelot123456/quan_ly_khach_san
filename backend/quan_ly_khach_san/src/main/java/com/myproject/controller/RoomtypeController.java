@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myproject.config.AppProperties;
 import com.myproject.entity.RoomTypeEntity;
 import com.myproject.payload.ApiResponse;
+import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
 import com.myproject.service.IRoomtypeServ;
 
@@ -71,15 +72,15 @@ public class RoomtypeController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@DeleteMapping("/roomtypes/{idRoomType}")
-	public ResponseEntity<?> doDeleteOneRoomType(@PathVariable("idRoomType") String idRoomType) {
-		roomtypeServ.deleteById(idRoomType);
+	@DeleteMapping("/roomtype")
+	public ResponseEntity<?> doDeleteOneRoomType(@RequestBody EntityResponse entityResponse) {
+		roomtypeServ.deleteById(entityResponse.getId());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
 	@DeleteMapping("/roomtypes")
-	public ResponseEntity<?> doDeleteOneRoomType(@RequestBody RoomTypeEntity roomType) {
-		roomtypeServ.deleteMany(roomType.getIds());
+	public ResponseEntity<?> doDeleteManyRoomType(@RequestBody EntityResponse entityResponse) {
+		roomtypeServ.deleteMany(entityResponse.getIds());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	

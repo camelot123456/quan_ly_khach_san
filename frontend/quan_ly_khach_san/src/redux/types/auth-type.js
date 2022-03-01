@@ -1,0 +1,8 @@
+const authTypes = {
+    LOGIN_ACTION: "LOGIN_ACTION",
+    REGISTER_ACTION: "REGISTER_ACTION",
+    ERROR_ACTION: "ERROR_ACTION",
+    LOGOUT_ACTION: "LOGOUT_ACTION"
+}
+
+export default authTypes

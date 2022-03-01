@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -49,7 +50,7 @@ public class ServiceEntity {
 	private String avatar;
 	
 	@Column(name = "[price]", columnDefinition = "float default 0")
-	private String price;
+	private Double price;
 	
 	@Column(name = "[description]", columnDefinition = "nvarchar(max)")
 	private String description;
@@ -58,4 +59,11 @@ public class ServiceEntity {
 	@JsonManagedReference("service-reservation_service")
 	@OneToMany(mappedBy = "service")
 	private List<ReservationServiceEntity> reservationServiceArr;
+	
+//	----------------------------------transient------------------------------
+
+	
+	@Transient
+	private Integer quantity;
+	
 }

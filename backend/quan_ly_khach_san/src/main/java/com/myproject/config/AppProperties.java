@@ -40,6 +40,7 @@ public class AppProperties {
 		private String avatarUrlDefault;
 		private String emailSystem;
 		private PagedDefault pagedDefault;
+		private String imageRoomUrlDefault;
 		
 		@Getter
 		@Setter

@@ -53,17 +53,6 @@ public class ReservationEntity {
 	@LastModifiedBy
 	@Column(name = "[modifiedBy]", columnDefinition = "nvarchar(50)")
 	protected String modifiedBy;
-	
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "[deleted_at]", columnDefinition = "datetime")
-	protected Date deletedAt;
-	
-	@Column(name = "[deleted_by]", columnDefinition = "nvarchar(50)")
-	protected String deletedBy;
-	
-	@Column(name = "[deleted]", columnDefinition = "bit")
-	protected Boolean deleted;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "[start_date]", columnDefinition = "datetime")

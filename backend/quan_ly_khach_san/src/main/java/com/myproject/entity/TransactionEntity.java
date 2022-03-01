@@ -55,17 +55,6 @@ public class TransactionEntity {
 	@LastModifiedBy
 	@Column(name = "[modifiedBy]", columnDefinition = "nvarchar(50)")
 	protected String modifiedBy;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "[deleted_at]", columnDefinition = "datetime")
-	protected Date deletedAt;
-	
-	@Column(name = "[deleted_by]", columnDefinition = "nvarchar(50)")
-	protected String deletedBy;
-	
-	@Column(name = "[deleted]", columnDefinition = "bit")
-	protected Boolean deleted;
-	
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "[status]", columnDefinition = "varchar(9)")

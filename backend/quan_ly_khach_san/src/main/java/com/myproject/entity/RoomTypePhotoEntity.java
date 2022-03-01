@@ -29,8 +29,8 @@ public class RoomTypePhotoEntity {
 	@Column(name = "[id]", columnDefinition = "varchar(10)")
 	protected String id;
 
-	@Column(name = "[avatar]", columnDefinition = "bit")
-	private Boolean avatar;
+	@Column(name = "[avatar_state]", columnDefinition = "bit")
+	private Boolean avatarState;
 	
 	@Column(name = "[url]", columnDefinition = "nvarchar(255)")
 	private String url;

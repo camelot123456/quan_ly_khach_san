@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myproject.config.AppProperties;
 import com.myproject.entity.RoleEntity;
 import com.myproject.payload.ApiResponse;
+import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
 import com.myproject.service.IRoleServ;
 
@@ -38,7 +40,7 @@ public class RoleController {
 	}
 	
 	@GetMapping("/roles")
-//	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
+	@PreAuthorize("hasAnyRole('ROLE_MEMBER')")
 	public ResponseEntity<?> doPagedRoleDefault() {
 		return doPagedRole(
 				appProperties.getSystemConstant().getPagedDefault().getCurrentPage(), 
@@ -49,7 +51,7 @@ public class RoleController {
 	}
 	
 	@GetMapping("/roles/page/{currentPage}")
-//	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
+	@PreAuthorize("hasAnyRole('ROLE_MEMBER')")
 	public ResponseEntity<?> doPagedRole(
 			@PathVariable("currentPage") int currentPage,
 			@Param("sizePage") int sizePage,
@@ -79,15 +81,15 @@ public class RoleController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@DeleteMapping("/roles/{idRole}")
-	public ResponseEntity<?> doDeleleOne(@PathVariable("idRole") String idRole){
-		roleServ.deleteById(idRole);
+	@DeleteMapping("/role")
+	public ResponseEntity<?> doDeleleOne(@RequestBody EntityResponse entityResponse){
+		roleServ.deleteById(entityResponse.getId());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
 	@DeleteMapping("/roles")
-	public ResponseEntity<?> doDeleleMany(@RequestBody RoleEntity role){
-		roleServ.deleteMany(role.getIds());
+	public ResponseEntity<?> doDeleleMany(@RequestBody EntityResponse entityResponse){
+		roleServ.deleteMany(entityResponse.getIds());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	

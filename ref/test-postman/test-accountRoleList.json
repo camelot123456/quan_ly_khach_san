@@ -1,0 +1,24 @@
+[
+    {
+        "id": "1",
+        "quantity": 12,
+        "intoPrice": 123123,
+        "reservation": {
+            "id": "A0000001"
+        },
+        "service": {
+            "id": "R01"
+        }
+    }, 
+    {
+        "id": "2",
+        "quantity": 12,
+        "intoPrice": 123123,
+        "reservation": {
+            "id": "A0000001"
+        },
+        "service": {
+            "id": "R01"
+        }
+    }
+]

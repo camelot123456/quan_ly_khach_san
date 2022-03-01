@@ -17,7 +17,7 @@ public interface IAccountServ {
 
 	public Optional<AccountEntity> findById(String id);
 
-	public Page<AccountEntity> paged(Boolean deleted, Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword);
+	public Page<AccountEntity> paged(Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword);
 
 //	----------------------------- INSERT -----------------------------
 

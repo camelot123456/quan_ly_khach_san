@@ -15,7 +15,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		// TODO Auto-generated method stub
-		System.out.println("error 401");
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
 	}
 

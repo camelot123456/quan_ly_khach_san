@@ -56,7 +56,6 @@ public class CustomOAuth2DetailService extends DefaultOAuth2UserService{
 		accountNew.setName(oAuth2UserInfo.getName());
 		accountNew.setAvatar(oAuth2UserInfo.getAvatarUrl());
 		accountNew.setEmail(oAuth2UserInfo.getEmail());
-		accountNew.setDeleted(false);
 		accountNew.setEnabled(true);
 		accountNew.setVerified(true);
 		return accountRepo.save(accountNew);

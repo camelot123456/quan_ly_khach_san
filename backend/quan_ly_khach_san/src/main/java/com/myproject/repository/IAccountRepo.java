@@ -14,24 +14,24 @@ public interface IAccountRepo extends JpaRepository<AccountEntity, String>{
 //	----------------------------- SELECT -----------------------------
 	@Query(countQuery = "select count(*) "
 		+ "from accounts a "
-		+ "where a.deleted = ?1 and a.verified = ?2 and a.[enabled] = ?3",
+		+ "where a.verified = ?1 and a.[enabled] = ?2",
 		value = "select * "
 		+ "from accounts a "
-		+ "where a.deleted = ?1 and a.verified = ?2 and a.[enabled] = ?3",
+		+ "where a.verified = ?1 and a.[enabled] = ?2",
 		nativeQuery = true)
-	public Page<AccountEntity> pagedNoKeyword(Boolean deleted, Boolean veryfied, Boolean enabled, Pageable pageable);
+	public Page<AccountEntity> pagedNoKeyword(Boolean veryfied, Boolean enabled, Pageable pageable);
 	
 	@Query(value = "select * "
 			+ "from accounts a "
-			+ "where a.deleted = ?1 and a.verified = ?2 and a.[enabled] = ?3 "
-			+ "and a.id like %?4% "
-			+ "or a.[address] like %?4% "
-			+ "or a.auth_provider like %?4% "
-			+ "or a.email like %?4% "
-			+ "or a.name like %?4% "
-			+ "or a.phone_num like %?4%",
+			+ "where a.verified = ?1 and a.[enabled] = ?2 "
+			+ "and a.id like %?3% "
+			+ "or a.[address] like %?3% "
+			+ "or a.auth_provider like %?3% "
+			+ "or a.email like %?3% "
+			+ "or a.name like %?3% "
+			+ "or a.phone_num like %?3%",
 			nativeQuery = true)
-	public Page<AccountEntity> pagedByKeyword(Boolean deleted, Boolean veryfied, Boolean enabled, String keyword, Pageable pageable);
+	public Page<AccountEntity> pagedByKeyword(Boolean veryfied, Boolean enabled, String keyword, Pageable pageable);
 	
 	public Optional<AccountEntity> findByEmail(String email);
 	

@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,7 +21,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.myproject.entity.enums.EAuthProvider;
 
@@ -60,17 +58,6 @@ public class AccountEntity {
 	@LastModifiedBy
 	@Column(name = "[modifiedBy]", columnDefinition = "nvarchar(50)")
 	protected String modifiedBy;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "[deleted_at]", columnDefinition = "datetime")
-	protected Date deletedAt;
-	
-	@Column(name = "[deleted_by]", columnDefinition = "nvarchar(50)")
-	protected String deletedBy;
-	
-	@Column(name = "[deleted]", columnDefinition = "bit")
-	protected Boolean deleted; 
-	
 
 	@Column(name = "[name]", columnDefinition = "nvarchar(30)")
 	private String name;
@@ -94,14 +81,12 @@ public class AccountEntity {
 	@Column(name = "[enabled]", columnDefinition = "bit default 1")
 	private Boolean enabled;
 
-	@JsonIgnore
 	@Column(name = "otp_code", columnDefinition = "char(64)")
 	private String otpCode;
 	
 	@Column(name = "[verified]", columnDefinition = "bit default 0")
 	private Boolean verified;
 	
-	@JsonIgnore
 	@Column(name = "[password]", columnDefinition = "varchar(255)")
 	private String password;
 
@@ -127,7 +112,5 @@ public class AccountEntity {
 	
 //	----------------------------------Transient------------------------------------
 	
-	@Transient
-	@JsonIgnore
-	private String[] ids;
+
 }

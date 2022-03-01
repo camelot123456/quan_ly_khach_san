@@ -12,13 +12,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -63,8 +61,5 @@ public class RoleEntity {
 	private List<AccountRoleEntity> accountRoleArr;
 	
 //	---------------------------Transient-------------------------
-	
-	@Transient
-	@JsonIgnore
-	private String[] ids;
+
 }

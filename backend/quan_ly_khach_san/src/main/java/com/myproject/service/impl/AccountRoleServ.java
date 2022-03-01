@@ -1,7 +1,5 @@
 package com.myproject.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +27,6 @@ public class AccountRoleServ implements IAccountRoleServ{
 	
 //----------------------------- SELECT -----------------------------
 	
-	@Override
-	public List<AccountRoleEntity> findAll() {
-		// TODO Auto-generated method stub
-		return accountRoleRepo.findAll();
-	}
 
 //----------------------------- INSERT -----------------------------
 
@@ -49,7 +42,23 @@ public class AccountRoleServ implements IAccountRoleServ{
 	}
 	
 //----------------------------- UPDATE -----------------------------
-
+	
 //----------------------------- DELETE -----------------------------
+	
+
+	@Override
+	public void deleteById(String id) {
+		// TODO Auto-generated method stub
+		accountRoleRepo.deleteById(id);
+	}
+
+	@Override
+	public void deleteMany(String[] ids) {
+		// TODO Auto-generated method stub
+		for (String id : ids) {
+			accountRoleRepo.deleteById(id);
+		}
+	}
+	
 	
 }

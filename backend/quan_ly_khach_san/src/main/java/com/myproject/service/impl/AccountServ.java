@@ -34,15 +34,15 @@ public class AccountServ implements IAccountServ{
 	}
 
 	@Override
-	public Page<AccountEntity> paged(Boolean deleted, Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword) {
+	public Page<AccountEntity> paged(Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword) {
 		// TODO Auto-generated method stub
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
 		if (keyword == "" || keyword == null) {
-			return accountRepo.pagedNoKeyword(deleted, veryfied, enabled, pageRequest);
+			return accountRepo.pagedNoKeyword(veryfied, enabled, pageRequest);
 		}
-		return accountRepo.pagedByKeyword(deleted, veryfied, enabled, keyword, pageRequest);
+		return accountRepo.pagedByKeyword(veryfied, enabled, keyword, pageRequest);
 	}
 	
 	@Override
@@ -56,7 +56,6 @@ public class AccountServ implements IAccountServ{
 	public AccountEntity save(AccountEntity account) {
 		// TODO Auto-generated method stub
 		if (!accountRepo.existsById(account.getId())) {
-			account.setDeleted(false);
 			account.setEnabled(true);
 			account.setVerified(true);
 			return accountRepo.save(account);
@@ -70,7 +69,6 @@ public class AccountServ implements IAccountServ{
 	public AccountEntity update(AccountEntity account) {
 		// TODO Auto-generated method stub
 		if (accountRepo.existsById(account.getId())) {
-			account.setDeleted(false);
 			account.setEnabled(true);
 			account.setVerified(true);
 			return accountRepo.save(account);

@@ -3,6 +3,7 @@ package com.myproject.security;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,11 +28,12 @@ public class CustomJwtAuthorizationFilter extends OncePerRequestFilter{
 	@Autowired
 	private AppProperties appProperties;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		if (request.getRequestURI().equals("/auth/login") || request.getRequestURI().equals("/auth/logout") || request.getRequestURI().equals("/auth/register")) {
+		if (request.getRequestURI().startsWith("/auth/")) {
 			filterChain.doFilter(request, response);
 		} else {
 			if (request.getHeader("Authorization").startsWith("Bearer ") || request.getHeader("Authorization") != null) {
@@ -43,7 +45,8 @@ public class CustomJwtAuthorizationFilter extends OncePerRequestFilter{
 				DecodedJWT jwt = verifier.verify(accessToken);
 				
 				String email = jwt.getSubject();
-				String[] roles = jwt.getClaim("roles").asArray(String.class);
+				Map<String, Object> claims = jwt.getClaim("claims").asMap();
+				List<String> roles = (List<String>) claims.get("roles");
 				List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 				for (String role : roles) {
 					authorities.add(new SimpleGrantedAuthority(role));

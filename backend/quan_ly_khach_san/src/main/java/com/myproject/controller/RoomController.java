@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myproject.config.AppProperties;
 import com.myproject.entity.RoomEntity;
 import com.myproject.payload.ApiResponse;
+import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
 import com.myproject.service.IRoomServ;
 
@@ -60,26 +61,26 @@ public class RoomController {
 	}
 	
 	@PostMapping(value = "/rooms")
-	public ResponseEntity<?> doSaveroom(@RequestBody RoomEntity room) {
+	public ResponseEntity<?> doSaveRoom(@RequestBody RoomEntity room) {
 		roomServ.save(room);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
 	@PutMapping("/rooms")
-	public ResponseEntity<?> doUpdateroom(@RequestBody RoomEntity room) {
+	public ResponseEntity<?> doUpdateRoom(@RequestBody RoomEntity room) {
 		roomServ.update(room);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
-	@DeleteMapping("/rooms/{idRoom}")
-	public ResponseEntity<?> doDeleteOneroom(@PathVariable("idRoom") String idRoom) {
-		roomServ.deleteById(idRoom);
+	@DeleteMapping("/room")
+	public ResponseEntity<?> doDeleteOneRoom(@RequestBody EntityResponse entityResponse) {
+		roomServ.deleteById(entityResponse.getId());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	
 	@DeleteMapping("/rooms")
-	public ResponseEntity<?> doDeleteOneroom(@RequestBody RoomEntity room) {
-		roomServ.deleteMany(room.getIds());
+	public ResponseEntity<?> doDeleteManyRoom(@RequestBody EntityResponse entityResponse) {
+		roomServ.deleteMany(entityResponse.getIds());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}
 	

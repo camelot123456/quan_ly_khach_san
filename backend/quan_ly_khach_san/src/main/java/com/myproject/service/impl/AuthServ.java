@@ -55,7 +55,6 @@ public class AuthServ implements IAuthServ {
 		account.setName(registerRequest.getName());
 		account.setEmail(registerRequest.getEmail());
 		account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-		account.setDeleted(false);
 		account.setEnabled(false);
 		account.setVerified(false);
 		account.setAuthProvider(EAuthProvider.LOCAL);

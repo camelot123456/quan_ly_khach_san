@@ -1,6 +1,7 @@
 import React from "react";
 import { Tabs, TabList, Tab, TabPanels, TabPanel, Heading, Divider} from "@chakra-ui/react";
 import RoomState from "./RoomState";
+import RoomtypeList from "./RoomtypeList";
 
 function RoomTab() {
   return (
@@ -21,7 +22,7 @@ function RoomTab() {
             <p>two!</p>
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <RoomtypeList />
           </TabPanel>
         </TabPanels>
       </Tabs>

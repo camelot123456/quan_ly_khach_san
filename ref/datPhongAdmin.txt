@@ -11,3 +11,17 @@ tự động nhập thông tin khách hàng
 6.Bấm nut đặt phòng, hệ thống sẽ lưu thông tin này vào reservation_table
 7.Bấm nút thanh toán sẽ cập nhập thông tin khách hàng, phòng, dịch vụ, thuế, tổng tiền,..)
 8.Bấm nút payment sẽ tạo bảng transaction 
+
+chức năng tìm phòng trống theo ngày đặt và ngày trả
+1.tạo danh sách mới đã lọc các phòng không có trạng thái 'REPAIR'
+2.làm việc với danh sách mới
+3.lọc danh sách mới theo mã phòng
+4.duyệt danh sách vừa lọc, kiểm tra:
+	+kiểm tra reservation có transaction:
+		-nếu ngày trả của phòng có người đang ở 'trước' ngày đặt của người mới thì pass
+	+kiểm tra reservation chưa có transaction:
+		-nếu ngày đặt và ngày trả của khách cũ đã đặt cọc 'sau' ngày trả của khách mới hoặc
+		-nếu ngày trả của khách cũ đã đặt cọc 'trước' ngày đặt của khách mới thì pass
+3.
+
+[now]~(sd, ed) [sd, ed] (sd, ed)

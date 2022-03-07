@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import dateformat from "dateformat";
 import {
   Box,
+  Button,
   Flex,
   HStack,
   Spacer,
@@ -13,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-import { doShowRooms } from "../../../../redux/actions/room-action";
+import { doShowRoomsAdmin } from "../../../../redux/actions/room-action";
 
 function RoomState() {
   const rooms = useSelector((state) => state.roomReducer.rooms);
@@ -26,6 +27,8 @@ function RoomState() {
 
   const parseColor = (roomState) => {
     switch (roomState) {
+      case "ALL":
+        return "#4299E1";
       case "EMPTY":
         return "#A0AEC0";
       case "USING":
@@ -40,13 +43,13 @@ function RoomState() {
   };
 
   useEffect(() => {
-    dispatch(doShowRooms());
+    dispatch(doShowRoomsAdmin());
   }, []);
 
   return (
     <>
       <HStack spacing={8}>
-        <Link style={{ width: "100%" }} to="/">
+        <Link style={{ width: "100%" }} to="/admin/rooms">
           <Box
             w="100%"
             h="100%"
@@ -55,12 +58,13 @@ function RoomState() {
             p={4}
             color="white"
             bg="#4299E1"
+            boxShadow='lg'
           >
             Tất cả:{" "}
           </Box>
         </Link>
 
-        <Link style={{ width: "100%" }} to="/">
+        <Link style={{ width: "100%" }} to="/admin/rooms?state=USING">
           <Box
             w="100%"
             h="100%"
@@ -69,12 +73,13 @@ function RoomState() {
             p={4}
             color="white"
             bg="#48BB78"
+            boxShadow='lg'
           >
             Đang ở:{" "}
           </Box>
         </Link>
 
-        <Link style={{ width: "100%" }} to="/">
+        <Link style={{ width: "100%" }} to="/admin/rooms?state=DEPOSIT">
           <Box
             w="100%"
             h="100%"
@@ -83,12 +88,13 @@ function RoomState() {
             p={4}
             color="white"
             bg="#9F7AEA"
+            boxShadow='lg'
           >
             Đặt cọc:{" "}
           </Box>
         </Link>
 
-        <Link style={{ width: "100%" }} to="/">
+        <Link style={{ width: "100%" }} to="/admin/rooms?state=EMPTY">
           <Box
             w="100%"
             h="100%"
@@ -97,12 +103,13 @@ function RoomState() {
             p={4}
             color="white"
             bg="#A0AEC0"
+            boxShadow='lg'
           >
             Trống:{" "}
           </Box>
         </Link>
 
-        <Link style={{ width: "100%" }} to="/">
+        <Link style={{ width: "100%" }} to="/admin/rooms?state=REPAIR" >
           <Box
             w="100%"
             h="100%"
@@ -111,15 +118,22 @@ function RoomState() {
             p={4}
             color="white"
             bg="#F56565"
+            boxShadow='lg'
           >
             Sửa chữa:{" "}
           </Box>
         </Link>
       </HStack>
 
+      <HStack mt={4} justify="end">
+        <Link to="/admin/rooms/reservation">
+          <Button colorScheme="blue">Đặt phòng</Button>
+        </Link>
+      </HStack>
+
       <Wrap marginTop={8} justify="flex-start" spacing={8}>
         {rooms.map((room, index) => (
-          <WrapItem key={index + 1}>
+          <WrapItem key={index + 1} boxShadow='2xl'>
             <Box
               p={2}
               borderRadius={4}
@@ -127,7 +141,7 @@ function RoomState() {
               bg={parseColor(room.roomState)}
             >
               <Flex>
-                <Box color="white">Box 1</Box>
+                <Box color="white">{index + 1}</Box>
                 <Spacer />
                 <Link
                   style={{
@@ -150,7 +164,12 @@ function RoomState() {
                     <i className="fa fa-bell-o" aria-hidden="true"></i>
                   </Box>
                 </Link>
-                <Link style={{ minWidth: "26px", textAlign: "center" }} to={`/admin/rooms/${room.idRoom}`}>
+                <Link
+                  style={{ minWidth: "26px", textAlign: "center" }}
+                  to={`/admin/rooms/${room.idRoom}?idTransaction=${
+                    room.idTransaction === null ? "" : room.idTransaction
+                  }`}
+                >
                   <Box
                     color="white"
                     borderRadius={4}

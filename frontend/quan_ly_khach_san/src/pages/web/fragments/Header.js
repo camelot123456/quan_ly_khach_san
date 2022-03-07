@@ -16,6 +16,8 @@ import {
   MenuItem,
   MenuDivider,
   HStack,
+  Badge,
+  Avatar,
 } from "@chakra-ui/react";
 
 import { ACCESS_TOKEN, APP_NAME } from "../../../constants";
@@ -38,9 +40,11 @@ function Header() {
   return (
     <Box bg="#EDF2F7" w="100%" p={4}>
       <Flex>
-        <HStack spacing='24px'>
+        <HStack spacing="24px">
           <Heading size="sm">
-            <Link to="/home" style={{fontSize: '24px'}}>{APP_NAME}</Link>
+            <Link to="/home" style={{ fontSize: "24px" }}>
+              {APP_NAME}
+            </Link>
           </Heading>
           <Heading size="sm">
             <Link to="/web/rooms">Phòng</Link>
@@ -57,12 +61,22 @@ function Header() {
           <Menu isLazy>
             <MenuButton>
               <HStack>
-                <Text>{jwtDecode(accessToken).claims.name}</Text>
-                <Image
-                  borderRadius="full"
-                  boxSize="40px"
+                <Box ml="3" align="end">
+                  <Text fontWeight="bold">
+                    {jwtDecode(accessToken).claims.name}
+                  </Text>
+                  {jwtDecode(accessToken).claims.roles.map((role) => (
+                    <Badge ml="1" colorScheme="green">
+                      <Text fontSize="xs">
+                        {role.toString().substring("ROLE_".length)}
+                      </Text>
+                    </Badge>
+                  ))}
+                </Box>
+                <Avatar
                   src={jwtDecode(accessToken).claims.avatarUrl}
                   alt={jwtDecode(accessToken).claims.name}
+                  size="md"
                 />
               </HStack>
             </MenuButton>

@@ -21,6 +21,8 @@ import AdminLayout from "./pages/admin/layouts";
 import Login from "./pages/auth/bodys/Login";
 import Dashboard from "./pages/admin/bodys/Dashboard";
 import RoomTab from './pages/admin/bodys/room-management'
+import RoomDetail from "./pages/admin/bodys/room-management/RoomDetail";
+import RoomReservation from "./pages/admin/bodys/room-management/RoomReservation";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -30,7 +32,7 @@ ReactDOM.render(
           <Suspense
             fallback={
               <div className="App">
-                <header className="App-header">
+                {/* <header className="App-header">
                   <img src={logo} className="App-logo" alt="logo" />
                   <p>
                     Edit <code>src/App.js</code> and save to reload.
@@ -43,7 +45,8 @@ ReactDOM.render(
                   >
                     Learn React
                   </a>
-                </header>
+                </header> */}
+                <h1>Loading...</h1>
               </div>
             }
           >
@@ -60,6 +63,8 @@ ReactDOM.render(
                 <Route path="admin" element={<AdminLayout />}>
                   <Route path="dashboard" element={<Dashboard />}></Route>
                   <Route path="rooms" element={<RoomTab />}></Route>
+                  <Route path="rooms/:idRoom" element={<RoomDetail />}></Route>
+                  <Route path="rooms/reservation" element={<RoomReservation />}></Route>
                 </Route>
               </Route>
             </Routes>

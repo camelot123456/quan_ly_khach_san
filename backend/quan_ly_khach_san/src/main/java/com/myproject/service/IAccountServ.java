@@ -16,6 +16,8 @@ public interface IAccountServ {
 	public Optional<AccountEntity> findByOtpCode(String otpCode);
 
 	public Optional<AccountEntity> findById(String id);
+	
+	public Optional<AccountEntity> findByIdEmailPhoneNum(String keyword);
 
 	public Page<AccountEntity> paged(Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword);
 

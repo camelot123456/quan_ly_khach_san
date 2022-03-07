@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 import com.myproject.entity.ServiceEntity;
+import com.myproject.payload.service.ServiceOfInvoice;
 
 public interface IServiceServ {
 
@@ -14,6 +15,8 @@ public interface IServiceServ {
 	public List<ServiceEntity> findAll();
 	
 	public List<ServiceEntity> findAllByIdReservation(String idReservation);
+	
+	public List<ServiceOfInvoice> findAllByIdTransaction(String idTransaction);
 	
 	public Optional<ServiceEntity> findById(String id);
 	

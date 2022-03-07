@@ -3,3 +3,8 @@ spring security oauth2:
 -https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-1/
 -https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-2/
 -https://www.callicoder.com/spring-boot-security-oauth2-social-login-part-3/
+
+https://github.com/callicoder
+
+React + Formik :
+-https://jasonwatmore.com/post/2020/04/20/react-formik-combined-add-edit-create-update-form-example

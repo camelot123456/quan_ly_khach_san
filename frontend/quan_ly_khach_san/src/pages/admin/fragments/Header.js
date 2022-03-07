@@ -15,6 +15,8 @@ import {
   HStack,
   Text,
   Image,
+  Avatar,
+  Badge,
 } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -39,34 +41,42 @@ function Header() {
   };
 
   return (
-    <Box bg="#EDF2F7" w="100%" p={2}>
-      <Flex>
+    <Box bg="#EDF2F7" w="100%" p={2} boxShadow='lg'>
+      <Flex alignItems="center">
         <Box>
           <Button colorScheme="teal" mr="4">
             <i className="fa fa-bars" aria-hidden="true"></i>
           </Button>
         </Box>
         <Spacer />
-        <Menu isLazy>
-          <MenuButton>
-            <HStack>
-              <Text>{jwtDecode(accessToken).claims.name}</Text>
-              <Image
-                borderRadius="full"
-                boxSize="40px"
+        <HStack>
+          <Box ml="3" align="end">
+            <Text fontWeight="bold">{jwtDecode(accessToken).claims.name}</Text>
+            {jwtDecode(accessToken).claims.roles.map((role) => (
+              <Badge ml="1" colorScheme="green" key={role}>
+                <Text fontSize="8px">
+                  {role.toString().substring("ROLE_".length)}
+                </Text>
+              </Badge>
+            ))}
+          </Box>
+          <Menu isLazy>
+            <MenuButton>
+              <Avatar
                 src={jwtDecode(accessToken).claims.avatarUrl}
                 alt={jwtDecode(accessToken).claims.name}
+                size="md"
               />
-            </HStack>
-          </MenuButton>
-          <MenuList>
-            {/* MenuItems are not rendered unless Menu is open */}
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>Setting</MenuItem>
-            <MenuDivider />
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </MenuList>
-        </Menu>
+            </MenuButton>
+            <MenuList>
+              {/* MenuItems are not rendered unless Menu is open */}
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>Setting</MenuItem>
+              <MenuDivider />
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        </HStack>
       </Flex>
     </Box>
   );

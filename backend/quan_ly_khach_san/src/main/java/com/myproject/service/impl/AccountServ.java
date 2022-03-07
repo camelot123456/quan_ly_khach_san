@@ -39,15 +39,26 @@ public class AccountServ implements IAccountServ{
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
-		if (keyword == "" || keyword == null) {
-			return accountRepo.pagedNoKeyword(veryfied, enabled, pageRequest);
-		}
+		keyword = keyword == null ? "" : keyword;
 		return accountRepo.pagedByKeyword(veryfied, enabled, keyword, pageRequest);
 	}
 	
 	@Override
 	public Optional<AccountEntity> findByOtpCode(String otpCode) {
 		return accountRepo.findByOtpCode(otpCode);
+	}
+	
+	@Override
+	public Optional<AccountEntity> findByIdEmailPhoneNum(String keyword) {
+		Object[] records = accountRepo.findByIdEmailPhoneNum(keyword).get(0);
+		AccountEntity accountEntity = new AccountEntity();
+		accountEntity.setId((String) records[0]);
+		accountEntity.setName((String) records[1]);
+		accountEntity.setAvatar((String) records[2]);
+		accountEntity.setEmail((String) records[3]);
+		accountEntity.setAddress((String) records[4]);
+		accountEntity.setPhoneNum((String) records[5]);
+		return Optional.of(accountEntity);
 	}
 
 //----------------------------- INSERT -----------------------------

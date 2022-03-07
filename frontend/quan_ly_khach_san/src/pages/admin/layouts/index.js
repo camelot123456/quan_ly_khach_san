@@ -12,7 +12,7 @@ function AdminLayout() {
         <Sidebar />
         <Flex flexDirection="column" justifyContent="top" width="85%">
           <Header />
-          <Box p={4}>
+          <Box p={4} overflow="auto">
             <Outlet />
           </Box>
         </Flex>

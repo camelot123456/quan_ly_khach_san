@@ -10,6 +10,7 @@ function Sidebar() {
       <Box
         w="100%"
         p={4}
+        minHeight="64px"
         color="white"
         transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
         cursor="pointer"

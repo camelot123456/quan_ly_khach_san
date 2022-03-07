@@ -20,6 +20,7 @@ public class RoomRoomtypeReservationReservationroomAccount {
 	private String phoneNum;
 	private String idRoomType;
 	private String idReservation;
+	private String idTransaction;
 	private Date startDate;
 	private Date endDate;
 	

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 import com.myproject.entity.RoomTypeEntity;
+import com.myproject.payload.roomtype.RoomtypeCustom;
 
 public interface IRoomtypeServ {
 
@@ -16,6 +17,10 @@ public interface IRoomtypeServ {
 	public List<RoomTypeEntity> findAll();
 	
 	public Optional<RoomTypeEntity> findById(String id);
+	
+	public List<RoomTypeEntity> findAllByAvatarState(Boolean avatarState);
+	
+	public Page<RoomtypeCustom> pagedRoomtype(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
 	
 //	----------------------------- INSERT -----------------------------
 	

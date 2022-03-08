@@ -10,11 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.myproject.entity.ReservationEntity;
 
 public interface IReservationRepo extends JpaRepository<ReservationEntity, String>{
-	
-	@Query(countQuery = "select count(*) from reservations",
-			value = "select * from reservations",
-			nativeQuery = true)
-	public Page<ReservationEntity> pagedNoKeyword(Pageable pageable);
 
 	@Query(value = "select * from reservations r where r.id like %?1% ",
 			nativeQuery = true)
@@ -25,9 +20,5 @@ public interface IReservationRepo extends JpaRepository<ReservationEntity, Strin
 			+ "where a.id=?1",
 			nativeQuery = true)
 	public List<ReservationEntity> findByIdAccount(String idAccount);
-	
-//	reservation trash
-	
-	
-	
+
 }

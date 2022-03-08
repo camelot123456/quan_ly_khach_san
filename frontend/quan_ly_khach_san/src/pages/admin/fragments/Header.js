@@ -52,8 +52,8 @@ function Header() {
         <HStack>
           <Box ml="3" align="end">
             <Text fontWeight="bold">{jwtDecode(accessToken).claims.name}</Text>
-            {jwtDecode(accessToken).claims.roles.map((role) => (
-              <Badge ml="1" colorScheme="green" key={role}>
+            {jwtDecode(accessToken).claims.roles.map((role, index) => (
+              <Badge ml="1" colorScheme="green" key={index}>
                 <Text fontSize="8px">
                   {role.toString().substring("ROLE_".length)}
                 </Text>

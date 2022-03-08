@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 import com.myproject.entity.ReservationEntity;
+import com.myproject.payload.reservation.ReservationCustom;
 
 public interface IReservationServ {
 
@@ -14,6 +15,8 @@ public interface IReservationServ {
 	public List<ReservationEntity> findByIdAccount(String idAccount);
 	
 	public Optional<ReservationEntity> findById(String id);
+	
+	public void createReservation(ReservationCustom reservationCustom);
 	
 	public ReservationEntity save(ReservationEntity reservation, String idAccount);
 	

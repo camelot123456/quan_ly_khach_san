@@ -42,6 +42,11 @@ import { doShowRoomtypeByAvatarStateList } from "../../../../redux/actions/roomt
 import { doFindAll } from "../../../../redux/actions/service-action";
 import FormField from "../../fragments/FormField";
 import { doFindByIdEmailPhoneNum } from "../../../../redux/actions/account-action";
+import {
+  doCreateReservation,
+  doSetRoomsId,
+  doSetServices,
+} from "../../../../redux/actions/reservation-action";
 
 function RoomReservation() {
   const dispatch = useDispatch();
@@ -55,14 +60,21 @@ function RoomReservation() {
   const roomsChecked = useSelector((state) => state.roomReducer.roomsChecked);
   const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
   const services = useSelector((state) => state.serviceReducer.services);
-  const account = useSelector((state) => state.accountReducer.account)
+  const account = useSelector((state) => state.accountReducer.account);
+  const reservationRooms = useSelector(
+    (state) => state.reservationReducer.rooms
+  );
+  const reservationServices = useSelector(
+    (state) => state.reservationReducer.services
+  );
 
   const initialValues = {
+    id: "",
     name: "",
     address: "",
     email: "",
     phoneNum: "",
-    avatar: ""
+    avatar: "",
   };
 
   const validationSchema = Yup.object().shape({
@@ -83,7 +95,6 @@ function RoomReservation() {
     setRoomtype(_rt);
   };
 
-
   useEffect(() => {
     dispatch(doShowRoomtypeByAvatarStateList());
     dispatch(doFindAll());
@@ -94,21 +105,41 @@ function RoomReservation() {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => {
+          var data = {
+            customer: {
+              id: values.id,
+              name: values.name,
+              email: values.email,
+              address: values.address,
+              phoneNum: values.phoneNum,
+            },
+            rooms: reservationRooms,
+            services: reservationServices,
+            startDate: startDate,
+            endDate: endDate,
+            customerNum: customerNum,
+            idRoomtype: roomtype.id,
+          };
+
+          console.log(data);
+          dispatch(doCreateReservation(data));
+        }}
       >
         {(formikProps) => {
           // ... do something here ...
-          const {  values, errors, touched , setFieldValue } = formikProps
+          const { values, errors, touched, setFieldValue } = formikProps;
 
           const handleFindByKeyword = () => {
             dispatch(doFindByIdEmailPhoneNum(keyword));
-            setFieldValue('name', account.name || '')
-            setFieldValue('email', account.email || '')
-            setFieldValue('address', account.address || '')
-            setFieldValue('phoneNum', account.phoneNum || '')
-            setFieldValue('avatar', account.avatar || '')
+            setFieldValue("name", account.name || "");
+            setFieldValue("email", account.email || "");
+            setFieldValue("address", account.address || "");
+            setFieldValue("phoneNum", account.phoneNum || "");
+            setFieldValue("avatar", account.avatar || "");
+            setFieldValue("id", account.id || "");
           };
-          
+
           return (
             <Form>
               <Heading py={4}>Đặt phòng</Heading>
@@ -237,11 +268,16 @@ function RoomReservation() {
                         boxSize="200px"
                         objectFit="cover"
                         borderRadius="6px"
-                        src={account.avatar || ''}
+                        src={account.avatar || ""}
                         alt="Dan Abramov"
                       />
                     </Box>
                     <Box width="70%">
+                      <FastField
+                        name="id"
+                        type="hidden"
+                        component={FormField.InputField}
+                      />
                       <FastField
                         name="name"
                         type="text"
@@ -268,6 +304,7 @@ function RoomReservation() {
                       />
                     </Box>
                   </HStack>
+
                   <HStack mt={8} justify="right">
                     <Button colorScheme="blue">Báo giá</Button>
                     <Button colorScheme="blue" type="submit">
@@ -286,6 +323,11 @@ function RoomReservation() {
 
 function TableServiceElement(props) {
   const { services } = props;
+  const dispatch = useDispatch();
+
+  const handleSetServices = (id, quantity) => {
+    dispatch(doSetServices({ id, quantity }));
+  };
 
   return (
     <>
@@ -313,6 +355,9 @@ function TableServiceElement(props) {
                     min={0}
                     borderColor="blue.100"
                     size="sm"
+                    onChange={(e) =>
+                      handleSetServices(service.id, e.target.value)
+                    }
                   ></Input>
                 </Th>
                 <Td isNumeric>{service.price}</Td>
@@ -336,15 +381,18 @@ function TableServiceElement(props) {
 
 function TableRoomElement(props) {
   const { rooms } = props;
+  const dispatch = useDispatch();
+
+  const handleSetRoomsId = (idRoom) => {
+    dispatch(doSetRoomsId(idRoom));
+  };
 
   return (
     <>
       <Table size="sm" mt={4} shadow="lg" bg="white" borderRadius="6">
         <Thead>
           <Tr>
-            <Th>
-              <Checkbox></Checkbox>
-            </Th>
+            <Th>#</Th>
             <Th>Id</Th>
             <Th>Số phòng</Th>
             <Th>Tầng</Th>
@@ -357,7 +405,7 @@ function TableRoomElement(props) {
             rooms.map((room, index) => (
               <Tr key={index}>
                 <Td>
-                  <Checkbox></Checkbox>
+                  <Checkbox onChange={() => handleSetRoomsId(room.id)} />
                 </Td>
                 <Td>{room.id}</Td>
                 <Td>{room.roomNum}</Td>

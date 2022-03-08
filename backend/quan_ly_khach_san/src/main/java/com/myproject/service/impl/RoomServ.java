@@ -41,6 +41,75 @@ public class RoomServ implements IRoomServ {
 		keyword = keyword == null ? "" : keyword;
 		return roomRepo.pagedByKeyword(keyword, pageRequest);
 	}
+	
+	@Override
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNull(int currentPage,
+			int sizePage, String sortField, String sortDir, String keyword) {
+		// TODO Auto-generated method stub
+		keyword = keyword == null ? "" : keyword;
+		List<Object[]> roomRecords = roomRepo.findAllRoomsTransactionIsNotNull(keyword);
+		List<RoomRoomtypeReservationReservationroomAccount> roomNewArr = null;
+		if (roomRecords.size() > 0) {
+			roomNewArr = new ArrayList<RoomRoomtypeReservationReservationroomAccount>();
+			for (Object[] record : roomRecords) {
+				RoomRoomtypeReservationReservationroomAccount r = new RoomRoomtypeReservationReservationroomAccount();
+				r.setIdRoom((String) record[0]);
+				r.setRoomNum((String) record[1]);
+				r.setRoomState((String) record[2]);
+				r.setFloor((String) record[3]);
+				r.setNameAccount((String) record[4]);
+				r.setPhoneNum((String) record[5]);
+				r.setIdRoomType((String) record[6]);
+				r.setIdReservation((String) record[7]);
+				r.setStartDate((Date) record[8]);
+				r.setEndDate((Date) record[9]);
+				r.setIdTransaction( (String) record[10]);
+				roomNewArr.add(r);
+			}
+		}
+
+		Sort sort = Sort.by(sortField);
+		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
+		PageImpl<RoomRoomtypeReservationReservationroomAccount> pageImpl = new PageImpl<RoomRoomtypeReservationReservationroomAccount>(
+				roomNewArr, pageRequest, roomNewArr.size());
+
+		return pageImpl;
+	}
+
+	@Override
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNull(int currentPage,
+			int sizePage, String sortField, String sortDir, String keyword) {
+		// TODO Auto-generated method stub
+		keyword = keyword == null ? "" : keyword;
+		List<Object[]> roomRecords = roomRepo.findAllRoomsTransactionIsNull(keyword);
+		List<RoomRoomtypeReservationReservationroomAccount> roomNewArr = null;
+		if (roomRecords.size() > 0) {
+			roomNewArr = new ArrayList<RoomRoomtypeReservationReservationroomAccount>();
+			for (Object[] record : roomRecords) {
+				RoomRoomtypeReservationReservationroomAccount r = new RoomRoomtypeReservationReservationroomAccount();
+				r.setIdRoom((String) record[0]);
+				r.setRoomNum((String) record[1]);
+				r.setRoomState((String) record[2]);
+				r.setFloor((String) record[3]);
+				r.setNameAccount((String) record[4]);
+				r.setPhoneNum((String) record[5]);
+				r.setIdRoomType((String) record[6]);
+				r.setIdReservation((String) record[7]);
+				r.setStartDate((Date) record[8]);
+				r.setEndDate((Date) record[9]);
+				roomNewArr.add(r);
+			}
+		}
+
+		Sort sort = Sort.by(sortField);
+		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
+		PageImpl<RoomRoomtypeReservationReservationroomAccount> pageImpl = new PageImpl<RoomRoomtypeReservationReservationroomAccount>(
+				roomNewArr, pageRequest, roomNewArr.size());
+
+		return pageImpl;
+	}
 
 	@Override
 	public Optional<RoomDetailForAdmin> findRoomDetailForAdmin(String idRoom, String idTransaction) {
@@ -179,8 +248,10 @@ public class RoomServ implements IRoomServ {
 
 	}
 
-	public List<RoomEntity> findAllRoomsInReservationByCustomerNumAndIdRoomtype(String idRoomtype,Integer customerNum, Date startDate, Date endDate) {
-		List<Object[]> roomsInReservation = roomRepo.findAllRoomsInReservationByCustomerNumAndIdRoomtype(idRoomtype, customerNum);
+	public List<RoomEntity> findAllRoomsInReservationByCustomerNumAndIdRoomtype(String idRoomtype, Integer customerNum,
+			Date startDate, Date endDate) {
+		List<Object[]> roomsInReservation = roomRepo.findAllRoomsInReservationByCustomerNumAndIdRoomtype(idRoomtype,
+				customerNum);
 
 		@Getter
 		@Setter
@@ -202,7 +273,7 @@ public class RoomServ implements IRoomServ {
 				roomsCustom.add(roomCustom);
 			}
 		}
-		if(roomsCustom == null) {
+		if (roomsCustom == null) {
 			return null;
 		}
 
@@ -219,19 +290,38 @@ public class RoomServ implements IRoomServ {
 				continue;
 			}
 			boolean k = roomsCustom.stream().filter(room -> room.idRoom.equals(roomEntity.getId()))
-					.anyMatch(room -> (room.startDate.before(startDate) && room.endDate.after(endDate))//0110
-							|| (room.startDate.after(startDate) && room.endDate.before(endDate))//1001
-							|| (room.startDate.after(startDate) && room.endDate.after(endDate) && room.startDate.before(endDate))//1010
-							|| (room.startDate.before(startDate) && room.endDate.before(endDate) && room.endDate.after(startDate))//0101
-							|| (room.startDate.compareTo(endDate) == 0) 
-							|| (room.endDate.compareTo(endDate) == 0)
-							|| (room.startDate.compareTo(startDate) == 0) 
-							|| (room.endDate.compareTo(startDate) == 0) );
+					.anyMatch(room -> (room.startDate.before(startDate) && room.endDate.after(endDate))// 0110
+							|| (room.startDate.after(startDate) && room.endDate.before(endDate))// 1001
+							|| (room.startDate.after(startDate) && room.endDate.after(endDate)
+									&& room.startDate.before(endDate))// 1010
+							|| (room.startDate.before(startDate) && room.endDate.before(endDate)
+									&& room.endDate.after(startDate))// 0101
+							|| (room.startDate.compareTo(endDate) == 0) || (room.endDate.compareTo(endDate) == 0)
+							|| (room.startDate.compareTo(startDate) == 0) || (room.endDate.compareTo(startDate) == 0));
 			if (!k) {
 				roomsResult.add(roomRepo.findById(roomEntity.getId()).get());
-			} else continue;
+			} else
+				continue;
 		}
 		return roomsResult;
+	}
+	
+
+
+	@Override
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllByRoomstate(String roomState, int currentPage,
+			int sizePage, String sortField, String sortDir, String keyword) {
+		// TODO Auto-generated method stub
+		if (roomState.equalsIgnoreCase("using")) {
+			return findAllRoomsTransactionIsNotNull(currentPage, sizePage, sortField, sortDir, keyword);
+		} else if (roomState.equalsIgnoreCase("deposit")) {
+			return findAllRoomsTransactionIsNull(currentPage, sizePage, sortField, sortDir, keyword);
+		} else if (roomState.equalsIgnoreCase("empty")) {
+			return null;
+		} else if (roomState.equalsIgnoreCase("repair")) {
+			return null;
+		}
+		return pagedRoomsAllForAdminPage(currentPage, sizePage, sortField, sortDir, keyword);
 	}
 
 	@Override

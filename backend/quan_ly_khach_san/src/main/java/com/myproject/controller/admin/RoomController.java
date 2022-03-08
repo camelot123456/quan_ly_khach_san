@@ -38,11 +38,12 @@ public class RoomController {
 	@Autowired
 	private AppProperties appProperties;
 
-	@GetMapping("/rooms/page/{currentPage}")
-	public ResponseEntity<?> doPagedRoomList(@PathVariable("currentPage") int currentPage,
+	@GetMapping("/rooms/{roomState}/page/{currentPage}")
+	public ResponseEntity<?> doPagedRoomList(@PathVariable("roomState") String roomState,@PathVariable("currentPage") int currentPage,
 			@Param("sizePage") int sizePage, @Param("sortField") String sortField, @Param("sortDir") String sortDir,
 			@Param("keyword") String keyword) {
-		Page<RoomRoomtypeReservationReservationroomAccount> paged = roomServ.pagedRoomsAllForAdminPage(currentPage,
+		
+		Page<RoomRoomtypeReservationReservationroomAccount> paged = roomServ.findAllByRoomstate(roomState, currentPage,
 				sizePage, sortField, sortDir, keyword);
 		PagedResponse pagedResponse = new PagedResponse(currentPage, sizePage, sortField, sortDir, keyword,
 				paged.getTotalPages(), paged.getTotalElements());
@@ -56,12 +57,14 @@ public class RoomController {
 
 	@GetMapping("/rooms")
 	public ResponseEntity<?> doPagedRoomDefault() {
-		return doPagedRoomList(appProperties.getSystemConstant().getPagedDefault().getCurrentPage(),
+		return doPagedRoomList("", 
+				appProperties.getSystemConstant().getPagedDefault().getCurrentPage(),
 				appProperties.getSystemConstant().getPagedDefault().getSizePage(),
 				appProperties.getSystemConstant().getPagedDefault().getSortField(),
 				appProperties.getSystemConstant().getPagedDefault().getSortDir(),
 				appProperties.getSystemConstant().getPagedDefault().getKeyword());
 	}
+	
 
 	@GetMapping(value = "/rooms/{idRoom}")
 	public ResponseEntity<?> doGetRoomDetailForAdmin(@PathVariable("idRoom") String idRoom,

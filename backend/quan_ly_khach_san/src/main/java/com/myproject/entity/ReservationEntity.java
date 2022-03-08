@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,6 +18,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -30,6 +32,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "[reservations]")
+@EntityListeners(AuditingEntityListener.class)
 public class ReservationEntity {
 	
 	@Id
@@ -51,7 +54,7 @@ public class ReservationEntity {
 	protected Date modifiedAt;
 	
 	@LastModifiedBy
-	@Column(name = "[modifiedBy]", columnDefinition = "nvarchar(50)")
+	@Column(name = "[modified_by]", columnDefinition = "nvarchar(50)")
 	protected String modifiedBy;
 
 	@Temporal(TemporalType.DATE)
@@ -71,11 +74,11 @@ public class ReservationEntity {
 	@Column(name = "[total]", columnDefinition = "float default 0")
 	private Double total;
 	
-	@Column(name = "[tax_invoice]", columnDefinition = "int default 0")
-	private Integer taxInvoice;
+	@Column(name = "[tax_invoice]", columnDefinition = "float default 0")
+	private Double taxInvoice;
 	
-	@Column(name = "[tax_service]", columnDefinition = "int default 0")
-	private Integer taxService;
+	@Column(name = "[tax_service]", columnDefinition = "float default 0")
+	private Double taxService;
 	
 	@Column(name = "[grand_total]", columnDefinition = "float default 0")
 	private Double grandTotal;
@@ -100,4 +103,8 @@ public class ReservationEntity {
 	@JsonManagedReference("reservation-reservation_service")
 	@OneToMany(mappedBy = "reservation")
 	private List<ReservationServiceEntity> reservationServiceArr;
+	
+//  ------------------------ Transient -----------------------------
+	
 }
+

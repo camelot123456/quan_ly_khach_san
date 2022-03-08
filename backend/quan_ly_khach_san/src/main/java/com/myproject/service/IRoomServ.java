@@ -16,9 +16,15 @@ public interface IRoomServ {
 	
 	public List<RoomEntity> findAll();
 	
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllByRoomstate(String roomState, int currentPage, int sizePage, String sortField, String sortDir, String keyword);
+	
 	public List<RoomEntity> findAllByIdReservation(String idReservation);
 	
 	public List<RoomEntity> findAllRoomsInReservationByCustomerNumAndIdRoomtype(String idRoomtype,Integer customerNum, Date startDate, Date endDate);
+	
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNull(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
+	
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNull(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
 	
 	public Page<RoomRoomtypeReservationReservationroomAccount> pagedRoomsAllForAdminPage(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
 	

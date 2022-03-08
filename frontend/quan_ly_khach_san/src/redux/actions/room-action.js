@@ -1,9 +1,9 @@
 import roomService from '../../services/room-service'
 import roomTypes from '../types/room-type'
 
-export const doShowRoomsAdmin = () => async (dispatch) => {
+export const doShowRoomsAdmin = (pagedRequest) => async (dispatch) => {
     try {
-        const roomResponse = await roomService.doShowRoomsAdmin()
+        const roomResponse = await roomService.doShowRoomsAdmin(pagedRequest)
 
         dispatch({
             type: roomTypes.SHOW_ROOMS_ACTION,

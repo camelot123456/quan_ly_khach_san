@@ -17,6 +17,8 @@ public interface ITransactionServ {
 	
 	public List<TransactionEntity> findAllByIdAccount(String idAccount);
 	
+	public void doPayment(TransactionEntity transaction);
+	
 	public void addAccountAndReservationIntoTransactions(TransactionEntity transaction, String idAccount, String idReservation);
 	
 	public void update(String id, String idReservation);

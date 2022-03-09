@@ -16,6 +16,12 @@ const reservationReducer = (state = initialState, { type, payload }) => {
         apiResponse: payload.apiResponse,
       };
 
+      case reservationTypes.CANCEL_BY_ID_ACTION:
+      return {
+        ...state,
+        apiResponse: payload.apiResponse,
+      };
+
     case reservationTypes.SET_ROOMS_ID_ACTION:
         const stateRoomNew = {...state}
         if (stateRoomNew.rooms.every(room => room != payload)) {

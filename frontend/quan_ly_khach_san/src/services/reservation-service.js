@@ -5,4 +5,12 @@ const doCreateReservation = (apiRequest) => {
     return httpCommon().post(`${URL_BASE}/api/admin/reservations/create`, apiRequest)
 }
 
-export default {doCreateReservation}
+const doCancelById = (dataRequest) => {
+    return httpCommon().delete(`${URL_BASE}/api/admin/reservations/delete`, {data: dataRequest})
+}
+
+const doPaymentById = (idReservation) => {
+    return httpCommon().post(`${URL_BASE}/api/admin/reservations/payment`, idReservation)
+}
+
+export default { doCreateReservation, doCancelById }

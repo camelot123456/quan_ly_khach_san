@@ -22,6 +22,7 @@ import com.myproject.entity.ServiceEntity;
 import com.myproject.entity.TransactionEntity;
 import com.myproject.entity.enums.EAuthProvider;
 import com.myproject.payload.reservation.ReservationCustom;
+import com.myproject.payload.reservation.ReservationDeleteRoom;
 import com.myproject.repository.IAccountRepo;
 import com.myproject.repository.IAccountRoleRepo;
 import com.myproject.repository.IReservationRepo;
@@ -40,7 +41,7 @@ import net.bytebuddy.utility.RandomString;
 
 @Service
 public class ReservationServ implements IReservationServ {
-	
+
 	@Autowired
 	private AppProperties appProperties;
 
@@ -61,22 +62,22 @@ public class ReservationServ implements IReservationServ {
 
 	@Autowired
 	private IAccountServ accountServ;
-	
-	@Autowired 
+
+	@Autowired
 	private IRoomRepo roomRepo;
-	
+
 	@Autowired
 	private IServiceRepo serviceRepo;
-	
+
 	@Autowired
 	private IAccountRepo accountRepo;
-	
+
 	@Autowired
 	private IRoleRepo roleRepo;
-	
+
 	@Autowired
 	private IAccountRoleRepo accountRoleRepo;
-	
+
 	@Autowired
 	private IRoomtypeRepo roomtypeRepo;
 
@@ -123,9 +124,8 @@ public class ReservationServ implements IReservationServ {
 		String idReservation = "";
 		do {
 			idReservation = RandomString.make(10);
-		} while(reservationRepo.existsById(idReservation));	
-		
-		
+		} while (reservationRepo.existsById(idReservation));
+
 //		Tạo danh sách đặt phòng, tạo thông tin khách hàng mới , rồi khách vào bảng đặt phòng
 		ReservationEntity reservation = new ReservationEntity();
 
@@ -144,34 +144,34 @@ public class ReservationServ implements IReservationServ {
 			customer.setVerified(true);
 			customer.setAuthProvider(EAuthProvider.NO_ACCOUNT);
 			customer.setAvatar(appProperties.getSystemConstant().getAvatarUrlDefault());
-			
+
 			AccountEntity customerNew = accountRepo.save(customer);
-			
+
 			AccountRoleEntity accountRole = new AccountRoleEntity();
 			String idAccountRole = "";
 			do {
 				idAccountRole = RandomString.make(10);
 			} while (accountRoleRepo.existsById(idAccountRole));
-			
+
 			RoleEntity role = roleRepo.findByCode("MEMBER").get();
 			accountRole.setId(idAccountRole);
 			accountRole.setRole(role);
 			accountRole.setAccount(customerNew);
 			accountRoleRepo.save(accountRole);
-			
+
 			reservation.setAccount(customerNew);
 		} else {
 			AccountEntity customerOld = accountRepo.findById(reservationCustom.getCustomer().getId()).get();
 			reservation.setAccount(customerOld);
 		}
-		
+
 		reservation.setId(idReservation);
 		reservation.setStartDate(reservationCustom.getStartDate());
 		reservation.setEndDate(reservationCustom.getEndDate());
 		reservation.setCustomerNum(reservationCustom.getCustomerNum());
-		
+
 		ReservationEntity reservationNew = reservationRepo.save(reservation);
-		
+
 //		Thêm phòng
 		double totalRoomIncurredPrice = 0.0;
 		for (String id : reservationCustom.getRooms()) {
@@ -179,52 +179,53 @@ public class ReservationServ implements IReservationServ {
 			String idReservationRoom = "";
 			do {
 				idReservationRoom = RandomString.make(10);
-			} while(reservationRoomRepo.existsById(idReservationRoom));
+			} while (reservationRoomRepo.existsById(idReservationRoom));
 			reservationRoom.setId(idReservationRoom);
 			reservationRoom.setRoom(roomRepo.findById(id).get());
 			reservationRoom.setReservation(reservationNew);
-			totalRoomIncurredPrice += reservationRoom.getRoom().getIncurredPrice(); 
-			
+			totalRoomIncurredPrice += reservationRoom.getRoom().getIncurredPrice();
+
 			reservationRoomRepo.save(reservationRoom);
 		}
 //		Thêm dịch vụ 
 		double totalServicesPrice = 0.0;
-		for (ServiceEntity service: reservationCustom.getServices()) {
+		for (ServiceEntity service : reservationCustom.getServices()) {
 			ReservationServiceEntity reservationService = new ReservationServiceEntity();
 			String idReservationService = "";
 			do {
 				idReservationService = RandomString.make(10);
-			} while(reservationServiceRepo.existsById(idReservationService));
+			} while (reservationServiceRepo.existsById(idReservationService));
 			reservationService.setId(idReservationService);
 			reservationService.setService(serviceRepo.findById(service.getId()).get());
 			reservationService.setQuantity(service.getQuantity());
-			reservationService.setIntoPrice(service.getQuantity() * serviceRepo.findById(service.getId()).get().getPrice());
+			reservationService
+					.setIntoPrice(service.getQuantity() * serviceRepo.findById(service.getId()).get().getPrice());
 			reservationService.setReservation(reservationNew);
-			
+
 			totalServicesPrice += reservationService.getService().getPrice() * reservationService.getQuantity();
 			reservationServiceRepo.save(reservationService);
 		}
-		
+
 //		Tính toán chi phí
-		
+
 		Double roomtypePrice = roomtypeRepo.findById(reservationCustom.getIdRoomtype()).get().getPrice();
-		
-		long diff = reservationNew.getEndDate().getTime() - reservationNew.getStartDate().getTime(); 
+
+		long diff = reservationNew.getEndDate().getTime() - reservationNew.getStartDate().getTime();
 		long distance = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 		double total = roomtypePrice * distance + totalRoomIncurredPrice + totalServicesPrice;
-		
-		double taxService5Percent = totalServicesPrice * 0.95;
-		double taxInvoice10Percent = total * 0.9;
+
+		double taxService5Percent = totalServicesPrice * 0.05;
+		double taxInvoice10Percent = total * 0.1;
 		double grandTotal = total + taxService5Percent + taxInvoice10Percent;
-		
+
 		reservationNew.setDiscount(0.0);
 		reservationNew.setTaxService(taxService5Percent);
 		reservationNew.setTaxInvoice(taxInvoice10Percent);
 		reservationNew.setTotal(total);
 		reservationNew.setGrandTotal(grandTotal);
-		
+
 		reservationRepo.save(reservationNew);
-		
+
 	}
 
 	@Override
@@ -238,11 +239,34 @@ public class ReservationServ implements IReservationServ {
 		return null;
 	}
 
+//	nếu reservation chứa nhiều room, thì kiểm tra room lớn hơn 1 thì chỉ xóa mỗi room cần xóa
+//	nếu reservation chỉ có 1 room, thì xóa luôn cả reservation
+
+	@Override
+	public void deleteRoomInReservation(ReservationDeleteRoom request) {
+		ReservationEntity reservation = reservationRepo.findById(request.getIdReservation()).get();
+
+		if (reservation.getReservationRoomArr().size() > 1) {
+			reservationRoomRepo.delete(reservation.getReservationRoomArr().stream()
+					.filter(rer -> rer.getRoom().getId().equals(request.getIdRoom()))
+					.findFirst().get());
+		} else if (reservation.getReservationRoomArr().size() == 1){
+			for (ReservationRoomEntity rer : reservation.getReservationRoomArr()) {
+				reservationRoomRepo.deleteById(rer.getId());
+			}
+
+			for (ReservationServiceEntity res : reservation.getReservationServiceArr()) {
+				reservationServiceRepo.deleteById(res.getId());
+			}
+
+			reservationRepo.deleteById(request.getIdReservation());
+		}
+	}
+
 	@Override
 	public void deleteById(String id) {
 		// TODO Auto-generated method stub
 		ReservationEntity reservation = reservationRepo.findById(id).get();
-		reservation.setAccount(null);
 
 		Optional<TransactionEntity> transaction = transactionServ.findByIdReservation(reservation.getId());
 		if (transaction.isPresent()) {

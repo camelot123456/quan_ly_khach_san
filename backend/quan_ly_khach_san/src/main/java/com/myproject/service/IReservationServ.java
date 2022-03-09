@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import com.myproject.entity.ReservationEntity;
 import com.myproject.payload.reservation.ReservationCustom;
+import com.myproject.payload.reservation.ReservationDeleteRoom;
 
 public interface IReservationServ {
 
@@ -23,6 +24,8 @@ public interface IReservationServ {
 	public ReservationEntity update(ReservationEntity reservation, String idAccount);
 	
 	public void deleteById(String id);
+	
+	public void deleteRoomInReservation(ReservationDeleteRoom request);
 	
 	public void deleteMany(String[] ids);
 	

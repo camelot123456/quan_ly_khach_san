@@ -23,6 +23,29 @@ export const doCreateReservation = (apiRequest) => async (dispatch) => {
     }
 }
 
+export const doCancelById = (dataRequest) => async (dispatch) => {
+    try {
+        
+        const reservationResponse = await reservationService.doCancelById(dataRequest)
+        dispatch({
+            type: reservationTypes.CANCEL_BY_ID_ACTION,
+            payload: {
+                apiResponse: reservationResponse.data.apiResponse
+            }
+        })
+    } catch (error) {
+        dispatch({
+            type: reservationTypes.ERROR_ACTION,
+            payload: {
+                apiResponse: {
+                    success: false,
+                    message: error.message,
+                }
+            }
+        })
+    }
+}
+
 export const doSetRoomsId = (idRoom) => {
     return {
         type: reservationTypes.SET_ROOMS_ID_ACTION,

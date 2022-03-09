@@ -65,8 +65,8 @@ function Header() {
                   <Text fontWeight="bold">
                     {jwtDecode(accessToken).claims.name}
                   </Text>
-                  {jwtDecode(accessToken).claims.roles.map((role) => (
-                    <Badge ml="1" colorScheme="green">
+                  {jwtDecode(accessToken).claims.roles.map((role, index) => (
+                    <Badge ml="1" colorScheme="green" key={index}>
                       <Text fontSize="xs">
                         {role.toString().substring("ROLE_".length)}
                       </Text>

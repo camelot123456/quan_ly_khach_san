@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.myproject.entity.AccountEntity;
 import com.myproject.entity.ReservationEntity;
 import com.myproject.entity.ReservationRoomEntity;
 import com.myproject.entity.ReservationServiceEntity;
@@ -70,6 +71,22 @@ public class TransactionServ implements ITransactionServ {
 	public List<TransactionEntity> findAllByIdAccount(String idAccount) {
 		// TODO Auto-generated method stub
 		return transactionRepo.findAllByIdAccount(idAccount);
+	}
+	
+	@Override
+	public void doPayment(TransactionEntity transaction) {
+		ReservationEntity reservation = reservationRepo.findById(transaction.getReservation().getId()).get();
+		AccountEntity account = accountRepo.findById(reservation.getAccount().getId()).get();
+		String id = "";
+		do {
+			id = RandomString.make(10);
+		} while (transactionRepo.existsById(id));
+		
+		transaction.setId(id);
+		transaction.setAccount(account);
+		transaction.setReservation(reservation);
+		transaction.setAmount(reservation.getGrandTotal());
+		transactionRepo.save(transaction);
 	}
 
 	@Override

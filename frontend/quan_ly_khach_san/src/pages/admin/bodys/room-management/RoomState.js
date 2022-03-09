@@ -4,15 +4,25 @@ import dateformat from "dateformat";
 import {
   Box,
   Button,
+  Divider,
   Flex,
+  Heading,
   HStack,
+  ListItem,
+  Select,
   Spacer,
   Tab,
+  Table,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Tbody,
   Text,
+  Th,
+  Thead,
+  Tr,
+  UnorderedList,
   VStack,
   Wrap,
   WrapItem,
@@ -20,6 +30,9 @@ import {
 import { Link, useSearchParams } from "react-router-dom";
 
 import { doShowRoomsAdmin } from "../../../../redux/actions/room-action";
+import { doCancelById } from "../../../../redux/actions/reservation-action";
+import { doCreateTransactionPaymnet } from "../../../../redux/actions/transaction-action"
+import ModalScrollCustom from "../../fragments/ModalScrollCustom";
 
 function RoomState() {
   const [searchParams, setSearchParams] = useSearchParams(0);
@@ -49,6 +62,14 @@ function RoomState() {
         return "#4299E1";
     }
   };
+
+  const handleCancelReservationById = (dataRequest) => {
+    dispatch(doCancelById(dataRequest))
+  }
+
+  const handlePaymentReservationById = (dataRequest) => {
+    dispatch(doCreateTransactionPaymnet(dataRequest))
+  }
 
   useEffect(() => {
     dispatch(
@@ -135,6 +156,8 @@ function RoomState() {
               onFormatDate={formatDate}
               onParseColor={() => parseColor("DEPOSIT")}
               type="DEPOSIT"
+              onCancelRoom={handleCancelReservationById}
+              onPayment={handlePaymentReservationById}
             />
           </TabPanel>
           <TabPanel>
@@ -160,7 +183,8 @@ function RoomState() {
 }
 
 function RoomAll(props) {
-  const { rooms, onFormatDate, onParseColor, type } = props;
+  const { rooms, onFormatDate, onParseColor, type, onCancelRoom } = props;
+
 
   const handleFormatDate = (date) => {
     if (onFormatDate) {
@@ -171,6 +195,12 @@ function RoomAll(props) {
   const handleParseColor = (roomState) => {
     if (onParseColor) {
       return onParseColor(roomState);
+    }
+  };
+
+  const handleCancelRoom = (data) => {
+    if (onCancelRoom) {
+      return onCancelRoom(data);
     }
   };
 
@@ -228,20 +258,18 @@ function RoomAll(props) {
                 <HStack justify="center">
                   {type == "DEPOSIT" ?
                     (<>
-                      <Link style={{ minWidth: "26px", textAlign: "center" }} to="/" >
-                        <Box color="white" borderRadius={4} border="solid 1px" bg="red.800"
-                          _hover={{ borderColor: "white", bg: "red.500" }}
-                        >
-                          <i className="fa fa-ban" aria-hidden="true"></i>
-                        </Box>
-                      </Link>
-                      <Link style={{ minWidth: "26px", textAlign: "center", marginRight: "3px", }} to="/" >
-                        <Box color="white" borderRadius={4} border="solid 1px" bg="green.800"
-                          _hover={{ borderColor: "white", bg: "green.500" }}
-                        >
-                          <i className="fa fa-credit-card" aria-hidden="true"></i>
-                        </Box>
-                      </Link>
+                      <Box color="white" borderRadius={4} border="solid 1px" bg="red.800" minWidth="26px"
+                        textAlign="center" _hover={{ borderColor: "white", bg: "red.500", cursor: "pointer" }} 
+                        onClick={() => handleCancelRoom({idReservation: room.idReservation, idRoom: room.idRoom})}
+                      >
+                        <i className="fa fa-ban" aria-hidden="true"></i>
+                      </Box>
+
+                      <ModalScrollCustom
+                        icon={<i className="fa fa-credit-card" aria-hidden="true"></i>}
+                        className='btn-reservation-deposit'
+                        contentPayment={<ContentPayment />}
+                      />
                     </>) : (<></>)
                   }
 
@@ -301,6 +329,105 @@ function RoomAll(props) {
           </WrapItem>
         ))}
       </Wrap>
+    </>
+  );
+}
+
+function ContentPayment() {
+  return (
+    <>
+      <Flex direction="column">
+        <HStack>
+
+          <Heading>S2 HOTEL</Heading>
+        </HStack>
+        <Divider />
+        <Heading align="center" fontSize={32} >Phiếu thanh toán</Heading>
+        <Text align="center" fontSize={14}>97 Trần Quang khải</Text>
+        <Text align="center" fontSize={14}>18:23 - 23/03/2022</Text>
+        <Text fontSize={14}>Mã khách hàng: 12hnn34mk3</Text>
+        <Text fontSize={14}>Khách hàng: Nguyễn Văn A</Text>
+        <Text fontSize={14}>Lễ tân: Ngô Văn A</Text>
+        <Divider />
+        <Heading align="center" fontSize={18}>Loại phòng</Heading>
+        <Text fontSize={14}>Loại phòng: Phòng vip</Text>
+        <Text fontSize={14}>Ngày đặt: 23-03-2022</Text>
+        <Text fontSize={14}>Ngày trả: 28-03-2022</Text>
+        <Text fontSize={14}>Số người: 4</Text>
+        <Divider />
+        <Heading align="center" fontSize={18}>Phòng</Heading>
+        <Table variant='simple' size='sm'>
+          <Thead>
+            <Tr>
+              <Th>Id</Th>
+              <Th>Phòng</Th>
+              <Th>Tầng</Th>
+              <Th isNumeric>Giá</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Th>R01</Th>
+              <Th>A101</Th>
+              <Th>1</Th>
+              <Th isNumeric>50.000</Th>
+            </Tr>
+          </Tbody>
+        </Table>
+        <Divider />
+        <Heading align="center" fontSize={18}>Dịch vụ</Heading>
+        <Table variant='simple' size='sm'>
+          <Thead>
+            <Tr>
+              <Th>Id</Th>
+              <Th>Tên</Th>
+              <Th>Số lượng</Th>
+              <Th isNumeric>Giá</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Th>S01</Th>
+              <Th>Dịch vụ làm visa</Th>
+              <Th>1</Th>
+              <Th isNumeric>100.000</Th>
+            </Tr>
+            <Tr>
+              <Th>S01</Th>
+              <Th>Dịch vụ làm visa</Th>
+              <Th>1</Th>
+              <Th isNumeric>100.000</Th>
+            </Tr>
+          </Tbody>
+        </Table>
+        <Divider />
+        <Table variant='simple' size='sm'>
+          <Tbody>
+            <Tr>
+              <Th>Tiền phòng:</Th>
+              <Th isNumeric>50.000</Th>
+            </Tr>
+            <Tr>
+              <Th>Thuế dịch vụ (5%):</Th>
+              <Th isNumeric>50.000</Th>
+            </Tr>
+            <Tr>
+              <Th>Thuế VAT (10%):</Th>
+              <Th isNumeric>50.000</Th>
+            </Tr>
+            <Tr>
+              <Th>Tổng cộng:</Th>
+              <Th isNumeric>50.000</Th>
+            </Tr>
+          </Tbody>
+        </Table>
+        <Divider />
+        <Heading align="center" fontSize={18}>Lựa chọn hình thức thanh toán</Heading>
+        <Select placeholder='extra small size' size='xs' mt={4}></Select>
+        <HStack mt={4}>
+          <Button colorScheme='blue'>Thanh toán</Button>
+        </HStack>
+      </Flex>
     </>
   );
 }

@@ -136,7 +136,7 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "or re.id like %?1% "
 			+ "or concat(re.[start_date], '') like %?1% "
 			+ "or concat(re.end_date, '') like %?1%) "
-			+ "order by re.modified_at asc",
+			+ "order by re.modified_at, r.id, r.room_num asc",
 			nativeQuery = true)
 	public List<Object[]> findAllRoomsTransactionIsNull(String keyword);
 	
@@ -160,7 +160,7 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "or re.id like %?1% "
 			+ "or concat(re.[start_date], '') like %?1% "
 			+ "or concat(re.end_date, '') like %?1%) "
-			+ "order by re.modified_at asc",
+			+ "order by re.modified_at, r.id, r.room_num asc",
 			nativeQuery = true)
 	public List<Object[]> findAllRoomsTransactionIsNotNull(String keyword);
 	

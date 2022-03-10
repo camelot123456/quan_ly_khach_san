@@ -60,7 +60,7 @@ function Header() {
               </Badge>
             ))}
           </Box>
-          <Menu isLazy>
+          <Menu isLazy >
             <MenuButton>
               <Avatar
                 src={jwtDecode(accessToken).claims.avatarUrl}
@@ -68,7 +68,7 @@ function Header() {
                 size="md"
               />
             </MenuButton>
-            <MenuList>
+            <MenuList style={{ margin: 0 }}>
               {/* MenuItems are not rendered unless Menu is open */}
               <MenuItem>Profile</MenuItem>
               <MenuItem>Setting</MenuItem>

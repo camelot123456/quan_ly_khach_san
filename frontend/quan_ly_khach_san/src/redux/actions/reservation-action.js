@@ -46,6 +46,28 @@ export const doCancelById = (dataRequest) => async (dispatch) => {
     }
 }
 
+export const doFindForTransaction = (idReservation) => async (dispatch) => {
+    try {
+        const reservationResponse = await reservationService.doFindForTransaction(idReservation)
+        dispatch({
+            type: reservationTypes.FIND_FOR_RESERVATION,
+            payload: {
+                reservation: reservationResponse.data
+            }
+        })
+    } catch (error) {
+        dispatch({
+            type: reservationTypes.ERROR_ACTION,
+            payload: {
+                apiResponse: {
+                    success: false,
+                    message: error.message,
+                }
+            }
+        })
+    }
+}
+
 export const doSetRoomsId = (idRoom) => {
     return {
         type: reservationTypes.SET_ROOMS_ID_ACTION,

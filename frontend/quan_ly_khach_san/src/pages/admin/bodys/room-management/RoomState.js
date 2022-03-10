@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import dateformat from "dateformat";
 import {
   Box,
   Button,
@@ -27,10 +26,11 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
+import {formatDate} from '../../../../commons/dateformat-common'
 import { doShowRoomsAdmin } from "../../../../redux/actions/room-action";
-import { doCancelById } from "../../../../redux/actions/reservation-action";
+import { doCancelById, doFindForTransaction } from "../../../../redux/actions/reservation-action";
 import { doCreateTransactionPaymnet } from "../../../../redux/actions/transaction-action"
 import ModalScrollCustom from "../../fragments/ModalScrollCustom";
 
@@ -39,12 +39,8 @@ function RoomState() {
   const [roomState, setRoomState] = useState("all");
 
   const rooms = useSelector((state) => state.roomReducer.rooms);
-
+  
   const dispatch = useDispatch();
-
-  const formatDate = (date) => {
-    return dateformat(date, "dd/mm/yyyy");
-  };
 
   const parseColor = (roomState) => {
     switch (roomState) {
@@ -62,6 +58,10 @@ function RoomState() {
         return "#4299E1";
     }
   };
+
+  const handleFindReservationForTransaction = (idReservation) => {
+    dispatch(doFindForTransaction(idReservation))
+  }
 
   const handleCancelReservationById = (dataRequest) => {
     dispatch(doCancelById(dataRequest))
@@ -158,6 +158,7 @@ function RoomState() {
               type="DEPOSIT"
               onCancelRoom={handleCancelReservationById}
               onPayment={handlePaymentReservationById}
+              onFindReservationForTransaction={handleFindReservationForTransaction}
             />
           </TabPanel>
           <TabPanel>
@@ -183,12 +184,12 @@ function RoomState() {
 }
 
 function RoomAll(props) {
-  const { rooms, onFormatDate, onParseColor, type, onCancelRoom } = props;
+  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, reservation, onFindReservationForTransaction } = props;
 
 
-  const handleFormatDate = (date) => {
+  const handleFormatDate = (date, format) => {
     if (onFormatDate) {
-      return onFormatDate(date);
+      return onFormatDate(date, format);
     }
   };
 
@@ -203,6 +204,12 @@ function RoomAll(props) {
       return onCancelRoom(data);
     }
   };
+
+  const handleFindReservationForTransaction = (idReservation) => {
+    if (onFindReservationForTransaction) {
+      onFindReservationForTransaction(idReservation);
+    }
+  }
 
   return (
     <>
@@ -247,11 +254,11 @@ function RoomAll(props) {
                   </Text>
                   <Text color="white" textAlign="center">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{" "}
-                    {handleFormatDate(room.startDate)}
+                    {handleFormatDate(room.startDate, "dd/mm/yyyy")}
                   </Text>
                   <Text color="white" textAlign="center">
                     <i className="fa fa-calendar" aria-hidden="true"></i>{" "}
-                    {handleFormatDate(room.endDate)}
+                    {handleFormatDate(room.endDate, "dd/mm/yyyy")}
                   </Text>
                 </Box>
                 <Spacer />
@@ -268,6 +275,8 @@ function RoomAll(props) {
                       <ModalScrollCustom
                         icon={<i className="fa fa-credit-card" aria-hidden="true"></i>}
                         className='btn-reservation-deposit'
+                        onBtnClick={handleFindReservationForTransaction}
+                        data={room.idReservation}
                         contentPayment={<ContentPayment />}
                       />
                     </>) : (<></>)
@@ -333,29 +342,45 @@ function RoomAll(props) {
   );
 }
 
-function ContentPayment() {
+function ContentPayment(props) {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const reservation = useSelector((state) => state.reservationReducer.reservation);
+  
+  const handlePayment = (idReservation) => {
+    dispatch(doCreateTransactionPaymnet(idReservation))
+    navigate("/admin/room")
+  }
+
   return (
     <>
       <Flex direction="column">
         <HStack>
-
-          <Heading>S2 HOTEL</Heading>
+          <Heading bgGradient='linear(to-r, #7928CA, #FF0080)' bgClip='text'>
+            <i className="fa fa-star-o" aria-hidden="true"></i>
+            <i className="fa fa-star-o" aria-hidden="true"></i>
+            <i className="fa fa-star-o" aria-hidden="true"></i>
+            S2 HOTEL
+            <i className="fa fa-star-o" aria-hidden="true"></i>
+            <i className="fa fa-star-o" aria-hidden="true"></i>
+            <i className="fa fa-star-o" aria-hidden="true"></i>
+          </Heading>
         </HStack>
         <Divider />
         <Heading align="center" fontSize={32} >Phiếu thanh toán</Heading>
-        <Text align="center" fontSize={14}>97 Trần Quang khải</Text>
-        <Text align="center" fontSize={14}>18:23 - 23/03/2022</Text>
-        <Text fontSize={14}>Mã khách hàng: 12hnn34mk3</Text>
-        <Text fontSize={14}>Khách hàng: Nguyễn Văn A</Text>
-        <Text fontSize={14}>Lễ tân: Ngô Văn A</Text>
+        <Text fontSize={14}>{reservation.reservation.idReservation}</Text>
+        <Text align="center" fontSize={14}>{formatDate(reservation.reservation.createdAt, "hh:MM:ss - dd/mm/yyyy")}</Text>
+        <Text fontSize={14}>Mã khách hàng: {reservation.reservation.idAccount}</Text>
+        <Text fontSize={14}>Khách hàng: {reservation.reservation.nameAccount}</Text>
         <Divider />
-        <Heading align="center" fontSize={18}>Loại phòng</Heading>
-        <Text fontSize={14}>Loại phòng: Phòng vip</Text>
-        <Text fontSize={14}>Ngày đặt: 23-03-2022</Text>
-        <Text fontSize={14}>Ngày trả: 28-03-2022</Text>
-        <Text fontSize={14}>Số người: 4</Text>
+        {/* <Heading align="center" fontSize={14}>Loại phòng</Heading> */}
+        <Text fontSize={14}>Loại phòng: {reservation.reservation.nameRoomtype}</Text>
+        <Text fontSize={14}>Ngày đặt: {formatDate(reservation.reservation.startDate, "dd/mm/yyyy")}</Text>
+        <Text fontSize={14}>Ngày trả: {formatDate(reservation.reservation.endDate, "dd/mm/yyyy")}</Text>
+        <Text fontSize={14}>Số người: {reservation.reservation.customerNum}</Text>
         <Divider />
-        <Heading align="center" fontSize={18}>Phòng</Heading>
+        {/* <Heading align="center" fontSize={14}>Phòng</Heading> */}
         <Table variant='simple' size='sm'>
           <Thead>
             <Tr>
@@ -366,38 +391,38 @@ function ContentPayment() {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Th>R01</Th>
-              <Th>A101</Th>
-              <Th>1</Th>
-              <Th isNumeric>50.000</Th>
-            </Tr>
+            {reservation.rooms.map((room, index) => (
+              <Tr key={index}>
+                <Th>{room.id}</Th>
+                <Th>{room.roomNum}</Th>
+                <Th>{room.floor}</Th>
+                <Th isNumeric>{room.incurredPrice}</Th>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
         <Divider />
-        <Heading align="center" fontSize={18}>Dịch vụ</Heading>
+        {/* <Heading align="center" fontSize={14}>Dịch vụ</Heading> */}
         <Table variant='simple' size='sm'>
           <Thead>
             <Tr>
               <Th>Id</Th>
               <Th>Tên</Th>
               <Th>Số lượng</Th>
-              <Th isNumeric>Giá</Th>
+              <Th>Giá</Th>
+              <Th isNumeric>Thành tiền</Th>
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Th>S01</Th>
-              <Th>Dịch vụ làm visa</Th>
-              <Th>1</Th>
-              <Th isNumeric>100.000</Th>
-            </Tr>
-            <Tr>
-              <Th>S01</Th>
-              <Th>Dịch vụ làm visa</Th>
-              <Th>1</Th>
-              <Th isNumeric>100.000</Th>
-            </Tr>
+            {reservation.services.map((service, index) => (
+              <Tr key={index}>
+                <Th>{service.idService}</Th>
+                <Th>{service.name}</Th>
+                <Th>{service.quantity}</Th>
+                <Th>{service.price}</Th>
+                <Th isNumeric>{service.intoPrice}</Th>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
         <Divider />
@@ -405,27 +430,35 @@ function ContentPayment() {
           <Tbody>
             <Tr>
               <Th>Tiền phòng:</Th>
-              <Th isNumeric>50.000</Th>
+              <Th isNumeric>{reservation.reservation.priceRoomtype}</Th>
+            </Tr>
+            <Tr>
+              <Th>Tổng:</Th>
+              <Th isNumeric>{Math.ceil(reservation.reservation.total)}</Th>
             </Tr>
             <Tr>
               <Th>Thuế dịch vụ (5%):</Th>
-              <Th isNumeric>50.000</Th>
+              <Th isNumeric>{Math.ceil(reservation.reservation.taxService)}</Th>
             </Tr>
             <Tr>
               <Th>Thuế VAT (10%):</Th>
-              <Th isNumeric>50.000</Th>
+              <Th isNumeric>{Math.ceil(reservation.reservation.taxInvoice)}</Th>
             </Tr>
             <Tr>
-              <Th>Tổng cộng:</Th>
-              <Th isNumeric>50.000</Th>
+              <Th color="red">Tổng cộng:</Th>
+              <Th color="red" isNumeric>{Math.ceil(reservation.reservation.grandTotal)}</Th>
             </Tr>
           </Tbody>
         </Table>
-        <Divider />
-        <Heading align="center" fontSize={18}>Lựa chọn hình thức thanh toán</Heading>
-        <Select placeholder='extra small size' size='xs' mt={4}></Select>
-        <HStack mt={4}>
-          <Button colorScheme='blue'>Thanh toán</Button>
+        <HStack mt={4} justify="end">
+          <Button colorScheme='blue' onClick={() => handlePayment({
+            reservation: {
+              id: reservation.reservation.idReservation
+            },
+            account: {
+              id: reservation.reservation.idAccount
+            }
+          })}>Thanh toán</Button>
         </HStack>
       </Flex>
     </>

@@ -48,6 +48,19 @@ function Sidebar() {
           <Text>Quản lý đặt phòng</Text>
         </Box>
       </Link>
+      <Link to="/admin/transactions">
+        <Box
+          w="100%"
+          p={4}
+          color="white"
+          transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
+          cursor="pointer"
+          _hover={{ bg: "#EDF2F7", color: "#3e3e3e" }}
+          _active={{ bg: "#3e3e3e", color: "#EDF2F7" }}
+        >
+          <Text>Quản lý hóa đơn</Text>
+        </Box>
+      </Link>
       <Box
         w="100%"
         p={4}

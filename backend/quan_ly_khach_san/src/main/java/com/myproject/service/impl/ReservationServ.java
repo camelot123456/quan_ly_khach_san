@@ -1,5 +1,6 @@
 package com.myproject.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +24,7 @@ import com.myproject.entity.TransactionEntity;
 import com.myproject.entity.enums.EAuthProvider;
 import com.myproject.payload.reservation.ReservationCustom;
 import com.myproject.payload.reservation.ReservationDeleteRoom;
+import com.myproject.payload.reservation.ReservationForTransaction;
 import com.myproject.repository.IAccountRepo;
 import com.myproject.repository.IAccountRoleRepo;
 import com.myproject.repository.IReservationRepo;
@@ -102,6 +104,30 @@ public class ReservationServ implements IReservationServ {
 	public Optional<ReservationEntity> findById(String id) {
 		// TODO Auto-generated method stub
 		return reservationRepo.findById(id);
+	}	
+
+
+	@Override
+	public Optional<ReservationForTransaction> findReservationForTransaction(String idReservation) {
+		// TODO Auto-generated method stub
+		Object[] records = reservationRepo.findReservationForTransaction(idReservation).get(0);
+		ReservationForTransaction forTransaction = new ReservationForTransaction();
+		forTransaction.setIdRoomtype((String) records[0]);
+		forTransaction.setNameRoomtype((String) records[1]);
+		forTransaction.setPriceRoomtype((Double) records[2]);
+		forTransaction.setIdReservation((String) records[3]);
+		forTransaction.setStartDate((Date) records[4]);
+		forTransaction.setEndDate((Date) records[5]);
+		forTransaction.setCreatedAt((Date) records[6]);
+		forTransaction.setCustomerNum((Integer) records[7]);
+		forTransaction.setTaxService((Double) records[8]);
+		forTransaction.setTaxInvoice((Double) records[9]);
+		forTransaction.setTotal((Double) records[10]);
+		forTransaction.setGrandTotal((Double) records[11]);
+		forTransaction.setDiscount((Double) records[12]);
+		forTransaction.setIdAccount((String) records[13]);
+		forTransaction.setNameAccount((String) records[14]);
+		return Optional.of(forTransaction);
 	}
 
 	@Override

@@ -65,9 +65,28 @@ public class ServiceServ implements IServiceServ{
 	}
 	
 	@Override
-	public List<ServiceEntity> findAllByIdReservation(String idReservation) {
+	public List<ServiceOfInvoice> findAllByIdReservation(String idReservation) {
 		// TODO Auto-generated method stub
-		return serviceRepo.findAllByIdReservation(idReservation);
+		List<Object[]> services = serviceRepo.findAllByIdReservation(idReservation);
+		List<ServiceOfInvoice> serviceOfInvoices = null;
+		if (services.size() > 0) {
+			serviceOfInvoices = new ArrayList<ServiceOfInvoice>();
+			for (Object[] record : services) {
+				ServiceOfInvoice serviceOfInvoice = new ServiceOfInvoice();
+				serviceOfInvoice.setIdReservationService((String) record[0]);
+				serviceOfInvoice.setCreatedAt((Date) record[1]);
+				serviceOfInvoice.setModifiedAt((Date) record[2]);
+				serviceOfInvoice.setName((String) record[3]);
+				serviceOfInvoice.setAvatarUrl((String) record[4]);
+				serviceOfInvoice.setIdService((String) record[5]);
+				serviceOfInvoice.setPrice((Double) record[6]);
+				serviceOfInvoice.setQuantity((Integer) record[7]);
+				serviceOfInvoice.setIntoPrice(((Integer) record[7]) * ((Double) record[6]));
+				
+				serviceOfInvoices.add(serviceOfInvoice);
+			}
+		}
+		return serviceOfInvoices;
 	}
 
 	@Override

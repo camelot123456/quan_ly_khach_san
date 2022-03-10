@@ -12,11 +12,6 @@ import com.myproject.entity.TransactionEntity;
 
 public interface ITransactionRepo extends JpaRepository<TransactionEntity, String>{
 	
-	@Query(countName = "select count(*) from transactions t",
-			value = "select * from transactions t",
-			nativeQuery = true)
-	public Page<TransactionEntity> pagedNoKeyword(Pageable pageable);
-	
 	@Query(value = "select * from transactions t "
 			+ "where t.id like %?2% "
 			+ "or t.code like %?2%",

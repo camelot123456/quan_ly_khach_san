@@ -14,7 +14,7 @@ public interface IServiceServ {
 	
 	public List<ServiceEntity> findAll();
 	
-	public List<ServiceEntity> findAllByIdReservation(String idReservation);
+	public List<ServiceOfInvoice> findAllByIdReservation(String idReservation);
 	
 	public List<ServiceOfInvoice> findAllByIdTransaction(String idTransaction);
 	

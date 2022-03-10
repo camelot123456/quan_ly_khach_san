@@ -17,16 +17,22 @@ import React from "react";
 import '../../../App.css'
 
 function ModalScrollCustom(props) {
-  const { style, icon, className, contentPayment} = props;
+  const { style, icon, className, contentPayment, onBtnClick, data} = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const btnRef = React.useRef();
+
+  const handlerFindReservationForTransaction = (idReservation) => {
+    onOpen();
+    if (onBtnClick) {
+      onBtnClick(idReservation);
+    }
+  }
   return (
     <>
       <Box
         mt={3}
         ref={btnRef}
-        onClick={onOpen}
+        onClick={() => handlerFindReservationForTransaction(data)}
         className={className}
       >
         {icon}
@@ -41,13 +47,13 @@ function ModalScrollCustom(props) {
         <ModalOverlay />
         <ModalContent>
           
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Payment</ModalHeader>
           <ModalCloseButton />
           <ModalBody >
             {contentPayment}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose}>Đóng</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

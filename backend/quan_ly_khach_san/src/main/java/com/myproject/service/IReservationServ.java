@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import com.myproject.entity.ReservationEntity;
 import com.myproject.payload.reservation.ReservationCustom;
 import com.myproject.payload.reservation.ReservationDeleteRoom;
+import com.myproject.payload.reservation.ReservationForTransaction;
 
 public interface IReservationServ {
 
@@ -22,6 +23,8 @@ public interface IReservationServ {
 	public ReservationEntity save(ReservationEntity reservation, String idAccount);
 	
 	public ReservationEntity update(ReservationEntity reservation, String idAccount);
+	
+	public Optional<ReservationForTransaction> findReservationForTransaction(String idReservation);
 	
 	public void deleteById(String id);
 	

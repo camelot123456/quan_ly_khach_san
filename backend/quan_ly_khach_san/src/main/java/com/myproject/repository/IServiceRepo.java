@@ -18,14 +18,14 @@ public interface IServiceRepo extends JpaRepository<ServiceEntity, String> {
 			nativeQuery = true)
 	public Page<ServiceEntity> pagedByKeyword(String keyword, Pageable pageable);
 	
-	@Query(value = "select s.* "
+	@Query(value = "select res.id as id_res, s.created_at, s.modified_at, s.name, s.avatar, s.id as id_s, s.price, res.quantity, res.into_price "
 			+ "from reservations re inner join reservation_service res "
 			+ "on re.id = res.id_reservation inner join [services] s "
 			+ "on res.id_service = s.id inner join accounts a "
 			+ "on re.id_account = a.id "
 			+ "where re.id = ?1",
 			nativeQuery = true)
-	public List<ServiceEntity> findAllByIdReservation(String idReservation);
+	public List<Object[]> findAllByIdReservation(String idReservation);
 	
 	@Query(value = "select res.id as id_res, s.created_at, s.modified_at, s.name, s.avatar, s.id as id_s, s.price, res.quantity, res.into_price " 
 			+ "from [services] s inner join reservation_service res "

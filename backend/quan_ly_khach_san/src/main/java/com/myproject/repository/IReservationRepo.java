@@ -20,5 +20,17 @@ public interface IReservationRepo extends JpaRepository<ReservationEntity, Strin
 			+ "where a.id=?1",
 			nativeQuery = true)
 	public List<ReservationEntity> findByIdAccount(String idAccount);
+	
+	@Query(value = "select rt.id as idRoomtype, rt.name as nameRoomtype, rt.price, re.id as idReservation, re.[start_date], re.end_date , "
+			+ "re.created_at, re.customer_num, re.tax_service, re.tax_invoice, "
+			+ "re.total, re.grand_total, re.discount, a.id as idAccount, a.name as nameAccount "
+			+ "from roomtypes rt inner join rooms r "
+			+ "on rt.id = r.id_roomtype inner join reservation_room rer "
+			+ "on r.id = rer.id_room inner join reservations re "
+			+ "on re.id = rer.id_reservation inner join accounts a "
+			+ "on re.id_account = a.id "
+			+ "where re.id = ?1",
+			nativeQuery = true)
+	public List<Object[]> findReservationForTransaction(String idReservation);
 
 }

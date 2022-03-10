@@ -66,4 +66,5 @@ public class ServiceEntity {
 	@Transient
 	private Integer quantity;
 	
+	
 }

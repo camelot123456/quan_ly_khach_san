@@ -49,9 +49,7 @@ public class TransactionServ implements ITransactionServ {
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePAge, sort);
-		if (keyword == "" || keyword == null) {
-			return transactionRepo.pagedNoKeyword(pageRequest);
-		}
+		keyword = keyword == null ? "" : keyword;
 		return transactionRepo.pagedByKeyword(keyword, pageRequest);
 	}
 

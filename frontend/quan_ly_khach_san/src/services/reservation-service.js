@@ -9,8 +9,8 @@ const doCancelById = (dataRequest) => {
     return httpCommon().delete(`${URL_BASE}/api/admin/reservations/delete`, {data: dataRequest})
 }
 
-const doPaymentById = (idReservation) => {
-    return httpCommon().post(`${URL_BASE}/api/admin/reservations/payment`, idReservation)
+const doFindForTransaction = (idReservation) => {
+    return httpCommon().get(`${URL_BASE}/api/admin/reservations/findForTransaction?idReservation=${idReservation}`)
 }
 
-export default { doCreateReservation, doCancelById }
+export default { doCreateReservation, doCancelById, doFindForTransaction }

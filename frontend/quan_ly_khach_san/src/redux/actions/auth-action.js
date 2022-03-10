@@ -7,7 +7,6 @@ export const doLogin = (authRequest) => async (dispatch) => {
     const authResponse = await authService.doLogin(authRequest);
     Promise.resolve(
       localStorage.setItem(ACCESS_TOKEN, authResponse.data.accessToken),
-
       dispatch({
         type: authTypes.LOGIN_ACTION,
         payload: {
@@ -17,14 +16,17 @@ export const doLogin = (authRequest) => async (dispatch) => {
           },
           authResponse: authResponse.data,
         },
-      })
+      }),
     );
   } catch (error) {
     dispatch({
       type: authTypes.ERROR_ACTION,
       payload: {
-        success: false,
-        message: error.message,
+        apiResponse: {
+          success: false,
+          message: error.message,
+        },
+        authResponse: {},
       },
     });
   }
@@ -35,8 +37,8 @@ export const doLogout = () => {
   return {
     type: authTypes.LOGOUT_ACTION,
     payload: {
-      apiResponse: null,
-      authResponse: null,
+      apiResponse: {},
+      authResponse: {},
     },
   };
 };

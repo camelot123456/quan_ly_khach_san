@@ -25,6 +25,9 @@ import {
   VStack,
   Wrap,
   WrapItem,
+  AlertIcon,
+  Alert,
+  useToast
 } from "@chakra-ui/react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -35,12 +38,14 @@ import { doCreateTransactionPaymnet } from "../../../../redux/actions/transactio
 import ModalScrollCustom from "../../fragments/ModalScrollCustom";
 
 function RoomState() {
+
+  const toast = useToast()
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams(0);
   const [roomState, setRoomState] = useState("all");
 
   const rooms = useSelector((state) => state.roomReducer.rooms);
-  
-  const dispatch = useDispatch();
+  const reservationResponse = useSelector((state) => state.reservationReducer.apiResponse);
 
   const parseColor = (roomState) => {
     switch (roomState) {
@@ -65,6 +70,13 @@ function RoomState() {
 
   const handleCancelReservationById = (dataRequest) => {
     dispatch(doCancelById(dataRequest))
+    toast({
+      title: 'Hủy Phiếu Đặt Phòng',
+      description: reservationResponse.message,
+      status: reservationResponse.success ? 'success' : 'error',
+      duration: 9000,
+      isClosable: true,
+    })
   }
 
   const handlePaymentReservationById = (dataRequest) => {
@@ -87,6 +99,7 @@ function RoomState() {
   return (
     <>
       <Tabs isFitted variant="enclosed" index={+searchParams.get("tab2") || 0}>
+{/* -----------------------------------------------tab room state------------------------------------------------- */}  
         <TabList color="white">
           <Link to="/admin/rooms?tab1=0&tab2=0">
             <Tab borderRadius={8} h={70} bg="#4299E1" mr={10} w={220} 
@@ -126,13 +139,13 @@ function RoomState() {
             </Tab>
           </Link>
         </TabList>
-
+{/* -----------------------------------------------nút chuyển hướng sang trang đặt phòng------------------------------------------------- */}  
         <HStack mt={4} justify="start">
           <Link to="/admin/rooms/reservation">
             <Button colorScheme="blue">Đặt phòng</Button>
           </Link>
         </HStack>
-
+{/* -----------------------------------------------RoomList------------------------------------------------- */}  
         <TabPanels>
           <TabPanel>
             <RoomAll
@@ -184,8 +197,9 @@ function RoomState() {
 }
 
 function RoomAll(props) {
-  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, reservation, onFindReservationForTransaction } = props;
+  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, onFindReservationForTransaction } = props;
 
+  const reservationTransaction = useSelector((state) => state.reservationReducer.reservationTransaction);
 
   const handleFormatDate = (date, format) => {
     if (onFormatDate) {
@@ -213,7 +227,7 @@ function RoomAll(props) {
 
   return (
     <>
-      <Wrap marginTop={4} justify="flex-start" spacing={6}>
+      {rooms ? (<Wrap marginTop={4} justify="flex-start" spacing={6}>
         {rooms.map((room, index) => (
           <WrapItem key={index + 1} boxShadow="2xl">
             <Box p={2} borderRadius={4} w="185px" bg={handleParseColor(room.roomState)} >
@@ -277,7 +291,7 @@ function RoomAll(props) {
                         className='btn-reservation-deposit'
                         onBtnClick={handleFindReservationForTransaction}
                         data={room.idReservation}
-                        contentPayment={<ContentPayment />}
+                        contentPayment={<ContentPayment reservationTransaction={reservationTransaction}/>}
                       />
                     </>) : (<></>)
                   }
@@ -337,17 +351,22 @@ function RoomAll(props) {
             </Box>
           </WrapItem>
         ))}
-      </Wrap>
+      </Wrap>):(
+        <Alert status='info'>
+          <AlertIcon />
+          Danh sách trống !
+        </Alert>
+      )}
     </>
   );
 }
 
 function ContentPayment(props) {
-
+  
+  const {reservationTransaction} = props
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const reservation = useSelector((state) => state.reservationReducer.reservation);
-  
+  console.log(reservationTransaction);
   const handlePayment = (idReservation) => {
     dispatch(doCreateTransactionPaymnet(idReservation))
     navigate("/admin/room")
@@ -369,16 +388,16 @@ function ContentPayment(props) {
         </HStack>
         <Divider />
         <Heading align="center" fontSize={32} >Phiếu thanh toán</Heading>
-        <Text fontSize={14}>{reservation.reservation.idReservation}</Text>
-        <Text align="center" fontSize={14}>{formatDate(reservation.reservation.createdAt, "hh:MM:ss - dd/mm/yyyy")}</Text>
-        <Text fontSize={14}>Mã khách hàng: {reservation.reservation.idAccount}</Text>
-        <Text fontSize={14}>Khách hàng: {reservation.reservation.nameAccount}</Text>
+        <Text fontSize={14} align="center">{reservationTransaction.reservation.idReservation}</Text>
+        <Text fontSize={14} align="center">{formatDate(reservationTransaction.reservation.createdAt, "hh:MM:ss - dd/mm/yyyy") || ''}</Text>
+        <Text fontSize={14}>Mã khách hàng: {reservationTransaction.reservation.idAccount || ''}</Text>
+        <Text fontSize={14}>Khách hàng: {reservationTransaction.reservation.nameAccount || ''}</Text>
         <Divider />
         {/* <Heading align="center" fontSize={14}>Loại phòng</Heading> */}
-        <Text fontSize={14}>Loại phòng: {reservation.reservation.nameRoomtype}</Text>
-        <Text fontSize={14}>Ngày đặt: {formatDate(reservation.reservation.startDate, "dd/mm/yyyy")}</Text>
-        <Text fontSize={14}>Ngày trả: {formatDate(reservation.reservation.endDate, "dd/mm/yyyy")}</Text>
-        <Text fontSize={14}>Số người: {reservation.reservation.customerNum}</Text>
+        <Text fontSize={14}>Loại phòng: {reservationTransaction.reservation.nameRoomtype}</Text>
+        <Text fontSize={14}>Ngày đặt: {formatDate(reservationTransaction.reservation.startDate, "dd/mm/yyyy") || ''}</Text>
+        <Text fontSize={14}>Ngày trả: {formatDate(reservationTransaction.reservation.endDate, "dd/mm/yyyy") || ''}</Text>
+        <Text fontSize={14}>Số người: {reservationTransaction.reservation.customerNum || 0}</Text>
         <Divider />
         {/* <Heading align="center" fontSize={14}>Phòng</Heading> */}
         <Table variant='simple' size='sm'>
@@ -391,12 +410,12 @@ function ContentPayment(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {reservation.rooms.map((room, index) => (
+            {reservationTransaction.rooms.map((room, index) => (
               <Tr key={index}>
-                <Th>{room.id}</Th>
-                <Th>{room.roomNum}</Th>
-                <Th>{room.floor}</Th>
-                <Th isNumeric>{room.incurredPrice}</Th>
+                <Th>{room.id || ''}</Th>
+                <Th>{room.roomNum || ''}</Th>
+                <Th>{room.floor || 0}</Th>
+                <Th isNumeric>{room.incurredPrice || 0}</Th>
               </Tr>
             ))}
           </Tbody>
@@ -414,13 +433,13 @@ function ContentPayment(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {reservation.services.map((service, index) => (
+            {reservationTransaction.services.map((service, index) => (
               <Tr key={index}>
-                <Th>{service.idService}</Th>
-                <Th>{service.name}</Th>
-                <Th>{service.quantity}</Th>
-                <Th>{service.price}</Th>
-                <Th isNumeric>{service.intoPrice}</Th>
+                <Th>{service.idService || ''}</Th>
+                <Th>{service.name || ''}</Th>
+                <Th>{service.quantity || 0}</Th>
+                <Th>{service.price || 0}</Th>
+                <Th isNumeric>{service.intoPrice || 0}</Th>
               </Tr>
             ))}
           </Tbody>
@@ -430,33 +449,33 @@ function ContentPayment(props) {
           <Tbody>
             <Tr>
               <Th>Tiền phòng:</Th>
-              <Th isNumeric>{reservation.reservation.priceRoomtype}</Th>
+              <Th isNumeric>{reservationTransaction.reservation.priceRoomtype || 0}</Th>
             </Tr>
             <Tr>
               <Th>Tổng:</Th>
-              <Th isNumeric>{Math.ceil(reservation.reservation.total)}</Th>
+              <Th isNumeric>{Math.ceil(reservationTransaction.reservation.total) || 0}</Th>
             </Tr>
             <Tr>
               <Th>Thuế dịch vụ (5%):</Th>
-              <Th isNumeric>{Math.ceil(reservation.reservation.taxService)}</Th>
+              <Th isNumeric>{reservationTransaction.reservation.taxService || 0}</Th>
             </Tr>
             <Tr>
               <Th>Thuế VAT (10%):</Th>
-              <Th isNumeric>{Math.ceil(reservation.reservation.taxInvoice)}</Th>
+              <Th isNumeric>{reservationTransaction.reservation.taxInvoice || 0}</Th>
             </Tr>
             <Tr>
               <Th color="red">Tổng cộng:</Th>
-              <Th color="red" isNumeric>{Math.ceil(reservation.reservation.grandTotal)}</Th>
+              <Th color="red" isNumeric>{Math.ceil(reservationTransaction.reservation.grandTotal) || 0}</Th>
             </Tr>
           </Tbody>
         </Table>
         <HStack mt={4} justify="end">
           <Button colorScheme='blue' onClick={() => handlePayment({
             reservation: {
-              id: reservation.reservation.idReservation
+              id: reservationTransaction.reservation.idReservation
             },
             account: {
-              id: reservation.reservation.idAccount
+              id: reservationTransaction.reservation.idAccount
             }
           })}>Thanh toán</Button>
         </HStack>

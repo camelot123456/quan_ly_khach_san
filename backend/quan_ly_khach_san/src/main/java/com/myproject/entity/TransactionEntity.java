@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -77,6 +78,21 @@ public class TransactionEntity {
 	@ManyToOne
 	@JoinColumn(name = "[id_reservation]")
 	private ReservationEntity reservation;
+	
+//	----------------------------Transient-----------------------------------
+	
+	@Transient
+	private String idAccount;
+	
+	@Transient
+	private String nameAccount;
+	
+	@Transient
+	private String idReservation;
+	
+	@Transient
+	private String avatarAccount;
+	
 }
 
 

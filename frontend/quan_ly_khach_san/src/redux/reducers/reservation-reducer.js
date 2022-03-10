@@ -3,6 +3,11 @@ import reservationTypes from "../types/reservation-type";
 const initialState = {
   apiResponse: {},
   reservation: {},
+  reservationTransaction: {
+    reservation: {},
+    rooms: [],
+    services: []
+  },
   reservations: [],
   rooms: [],
   services: [],
@@ -14,6 +19,8 @@ const reservationReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         apiResponse: payload.apiResponse,
+        rooms: payload.rooms,
+        services: payload.services
       };
 
     case reservationTypes.CANCEL_BY_ID_ACTION:
@@ -22,10 +29,10 @@ const reservationReducer = (state = initialState, { type, payload }) => {
         apiResponse: payload.apiResponse,
       };
 
-    case reservationTypes.FIND_FOR_RESERVATION:
+    case reservationTypes.FIND_FOR_TRANSACTION_ACTION:
       return {
         ...state,
-        reservation: payload.reservation,
+        reservationTransaction: payload.reservation,
       };
 
     case reservationTypes.SET_ROOMS_ID_ACTION:
@@ -57,6 +64,12 @@ const reservationReducer = (state = initialState, { type, payload }) => {
         });
       }
       return stateServiceNew;
+    
+      case reservationTypes.ERROR_ACTION:
+        return {
+          ...state,
+          apiResponse: payload.apiResponse,
+        }
     default:
       return state;
   }

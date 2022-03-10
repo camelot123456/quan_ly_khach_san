@@ -14,7 +14,6 @@ import { Link, useSearchParams } from "react-router-dom";
 
 function RoomTab() {
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(searchParams.get("tab1"));
   return (
     <>
       <Heading py={4}>Quản lý đặt phòng</Heading>

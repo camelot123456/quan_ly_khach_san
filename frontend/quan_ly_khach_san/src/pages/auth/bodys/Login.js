@@ -20,19 +20,18 @@ import { doLogin } from "../../../redux/actions/auth-action";
 import { ACCESS_TOKEN } from "../../../constants";
 
 function Login() {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    Promise.all([
-      dispatch(doLogin({ email, password }))
-    ]).then(() => {
-      navigate("/home");
-    });
+    await dispatch(doLogin({ email, password }))
+    navigate("/home")
+    
   };
 
   return (

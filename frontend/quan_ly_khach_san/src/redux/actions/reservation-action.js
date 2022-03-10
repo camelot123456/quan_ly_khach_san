@@ -3,11 +3,16 @@ import reservationService from '../../services/reservation-service'
 
 export const doCreateReservation = (apiRequest) => async (dispatch) => {
     try {
-        const reservationResponse = await reservationService.doCreateReservation(apiRequest)
+        await reservationService.doCreateReservation(apiRequest)
         dispatch({
             type: reservationTypes.CREATE_RESERVATION_ACTION,
             payload: {
-                apiResponse: reservationResponse.data.apiResponse
+                apiResponse: {
+                    success: true,
+                    message: "Đã tạo phiếu đặt phòng thành công.",
+                },
+                rooms: [],
+                services: []
             }
         })
     } catch (error) {
@@ -16,7 +21,7 @@ export const doCreateReservation = (apiRequest) => async (dispatch) => {
             payload: {
                 apiResponse: {
                     success: false,
-                    message: error.message,
+                    message: "Thêm phiếu đặt phòng thất bại.",
                 }
             }
         })
@@ -26,11 +31,14 @@ export const doCreateReservation = (apiRequest) => async (dispatch) => {
 export const doCancelById = (dataRequest) => async (dispatch) => {
     try {
         
-        const reservationResponse = await reservationService.doCancelById(dataRequest)
+        await reservationService.doCancelById(dataRequest)
         dispatch({
             type: reservationTypes.CANCEL_BY_ID_ACTION,
             payload: {
-                apiResponse: reservationResponse.data.apiResponse
+                apiResponse: {
+                    success: true,
+                    message: 'Đã hủy thành công phiếu đặt phòng này.'
+                }
             }
         })
     } catch (error) {
@@ -39,7 +47,7 @@ export const doCancelById = (dataRequest) => async (dispatch) => {
             payload: {
                 apiResponse: {
                     success: false,
-                    message: error.message,
+                    message: 'Hủy thất bại phiếu đặt phòng này.'
                 }
             }
         })
@@ -50,7 +58,7 @@ export const doFindForTransaction = (idReservation) => async (dispatch) => {
     try {
         const reservationResponse = await reservationService.doFindForTransaction(idReservation)
         dispatch({
-            type: reservationTypes.FIND_FOR_RESERVATION,
+            type: reservationTypes.FIND_FOR_TRANSACTION_ACTION,
             payload: {
                 reservation: reservationResponse.data
             }

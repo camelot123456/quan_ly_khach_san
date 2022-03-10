@@ -13,6 +13,11 @@ import {
   Image,
   Center,
   HStack,
+  Alert,
+  AlertIcon,
+  Box,
+  SkeletonCircle,
+  SkeletonText,
 } from "@chakra-ui/react";
 
 import {formatDate} from '../../../../commons/dateformat-common'
@@ -21,8 +26,6 @@ import { getTransactionsList } from "../../../../redux/actions/transaction-actio
 function TransactionList() {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactionReducer.transactions);
-
-  console.log(transactions)
 
   useEffect(() => {
     dispatch(getTransactionsList({
@@ -35,44 +38,53 @@ function TransactionList() {
   }, []);
 
   return (
-    <Table variant="striped" colorScheme="blue">
-      <TableCaption>Imperial to metric conversion factors</TableCaption>
-      <Thead>
-        <Tr>
-          <Th>Stt</Th>
-          <Th>Id</Th>
-          <Th>Tên</Th>
-          <Th>Ngày thanh toán</Th>
-          <Th>Giá (VND)</Th>
-          <Th>Công cụ</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {transactions.map((transaction, index) => (
-          <Tr key={index}>
-            <Td>{index + 1}</Td>
-            <Td>{transaction.id}</Td>
-            <Td>{transaction.account.name || ""}</Td>
-            <Td>{formatDate(transaction.createdAt, "dd/mm/yyyy")}</Td>
-            <Td>{transaction.amount}</Td>
-            <Td>
-              <HStack>
-                <Link to="/">
-                  <Center p={2} bg="green" borderRadius={4} color="white">
-                    <i className="fa fa-pencil" aria-hidden="true"></i>
-                  </Center>
-                </Link>
-                <Link to="/">
-                  <Center  p={2} bg="red" borderRadius={4} color="white">
-                    <i className="fa fa-trash-o" aria-hidden="true"></i>
-                  </Center>
-                </Link>
-              </HStack>
-            </Td>
+    <>
+      {transactions ? (
+        <Table variant="striped" colorScheme="blue">
+        <TableCaption>Imperial to metric conversion factors</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>Stt</Th>
+            <Th>Id giao dịch</Th>
+            <Th>Tên</Th>
+            <Th>Ngày thanh toán</Th>
+            <Th>Tổng tiền (VND)</Th>
+            <Th>Công cụ</Th>
           </Tr>
-        ))}
-      </Tbody>
-    </Table>
+        </Thead>
+        <Tbody>
+          {transactions.map((transaction, index) => (
+            <Tr key={index}>
+              <Td>{index + 1}</Td>
+              <Td>{transaction.id}</Td>
+              <Td>{transaction.nameAccount || ""}</Td>
+              <Td>{formatDate(transaction.createdAt, "dd/mm/yyyy")}</Td>
+              <Td>{transaction.amount}</Td>
+              <Td>
+                <HStack>
+                  <Link to="/">
+                    <Center p={2} bg="green" borderRadius={4} color="white">
+                      <i className="fa fa-pencil" aria-hidden="true"></i>
+                    </Center>
+                  </Link>
+                  <Link to="/">
+                    <Center  p={2} bg="red" borderRadius={4} color="white">
+                      <i className="fa fa-trash-o" aria-hidden="true"></i>
+                    </Center>
+                  </Link>
+                </HStack>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+      ) : (
+        <Box padding='6' boxShadow='lg' bg='white'>
+          <SkeletonCircle size='10' />
+          <SkeletonText mt='4' noOfLines={20} spacing='4' />
+        </Box>
+      )}
+    </>
   );
 }
 

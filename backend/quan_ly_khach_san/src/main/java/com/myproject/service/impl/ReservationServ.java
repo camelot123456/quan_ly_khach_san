@@ -200,6 +200,8 @@ public class ReservationServ implements IReservationServ {
 
 //		Thêm phòng
 		double totalRoomIncurredPrice = 0.0;
+		if (reservationCustom.getRooms().length == 0)
+			return;
 		for (String id : reservationCustom.getRooms()) {
 			ReservationRoomEntity reservationRoom = new ReservationRoomEntity();
 			String idReservationRoom = "";
@@ -237,7 +239,7 @@ public class ReservationServ implements IReservationServ {
 		Double roomtypePrice = roomtypeRepo.findById(reservationCustom.getIdRoomtype()).get().getPrice();
 
 		long diff = reservationNew.getEndDate().getTime() - reservationNew.getStartDate().getTime();
-		long distance = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+		long distance = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
 		double total = roomtypePrice * distance + totalRoomIncurredPrice + totalServicesPrice;
 
 		double taxService5Percent = totalServicesPrice * 0.05;

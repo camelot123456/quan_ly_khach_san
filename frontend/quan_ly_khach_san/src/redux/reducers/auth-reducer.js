@@ -1,8 +1,8 @@
 import authTypes from "../types/auth-type";
 
 const initialState = {
-  apiResponse: null,
-  authResponse: null,
+  apiResponse: {},
+  authResponse: {}
 };
 
 const authReducer = (state = initialState, { type, payload }) => {
@@ -16,8 +16,8 @@ const authReducer = (state = initialState, { type, payload }) => {
     case authTypes.ERROR_ACTION:
       return {
         ...state,
-        authResponse: null,
-        apiResponse: payload,
+        authResponse: payload.authResponse,
+        apiResponse: payload.authResponse,
       };
     case authTypes.LOGOUT_ACTION:
       return {

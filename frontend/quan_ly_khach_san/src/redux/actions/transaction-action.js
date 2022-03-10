@@ -18,7 +18,8 @@ export const getTransactionsList = (pagedRequest) => async (dispatch) => {
                 apiResponse: {
                     success: false,
                     message: error.message,
-                }
+                },
+                transactions: []
             }
         })
     }

@@ -34,10 +34,10 @@ function Header() {
     setAccessToken(accessToken);
   }, []);
 
-  const handleLogout = () => {
-    Promise.all([dispatch(doLogout()), setAccessToken(null)]).then(() =>
-      navigate("/auth/login")
-    );
+  const handleLogout = async () => {
+    await dispatch(doLogout())
+    navigate("/auth/login")
+    setAccessToken(null)
   };
 
   return (

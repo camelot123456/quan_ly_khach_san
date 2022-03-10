@@ -23,7 +23,8 @@ export const doShowRoomsAdmin = (pagedRequest) => async (dispatch) => {
                 apiResponse: {
                     success: false,
                     message: error.message,
-                }
+                },
+                rooms: []
             }
         })
     }

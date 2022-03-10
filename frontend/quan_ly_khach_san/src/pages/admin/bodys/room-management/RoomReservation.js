@@ -35,6 +35,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast 
 } from "@chakra-ui/react";
 
 import { doCheckRoomEmpty } from "../../../../redux/actions/room-action";
@@ -51,12 +52,15 @@ import {
 function RoomReservation() {
   const dispatch = useDispatch();
 
+  const toast = useToast()
   const [customerNum, setCustomerNum] = useState(1);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [roomtype, setRoomtype] = useState(null);
   const [keyword, setKeyword] = useState("");
 
+  
+  const reservationResponse = useSelector((state => state.reservationReducer.apiResponse))
   const roomsChecked = useSelector((state) => state.roomReducer.roomsChecked);
   const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
   const services = useSelector((state) => state.serviceReducer.services);
@@ -102,9 +106,7 @@ function RoomReservation() {
 
   return (
     <>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
+      <Formik initialValues={initialValues} validationSchema={validationSchema}
         onSubmit={(values) => {
           var data = {
             customer: {
@@ -124,6 +126,13 @@ function RoomReservation() {
 
           console.log(data);
           dispatch(doCreateReservation(data));
+          toast({
+            title: 'Tạo phiếu đặt phòng.',
+            description: reservationResponse.message,
+            status: reservationResponse.sussess ? 'success' : 'error',
+            duration: 9000,
+            isClosable: true,
+          })
         }}
       >
         {(formikProps) => {
@@ -144,29 +153,13 @@ function RoomReservation() {
             <Form>
               <Heading py={4}>Đặt phòng</Heading>
               <Divider />
-              <Grid
-                templateRows="repeat(1, 1fr)"
-                templateColumns="repeat(2, 1fr)"
-                gap={4}
-                mt={4}
-              >
-                <GridItem
-                  bg="#EDF2F7"
-                  borderRadius={8}
-                  p={4}
-                  colSpan={1}
-                  boxShadow="lg"
-                >
-                  <Heading size="lg" color="blue.500">
-                    Chọn phòng
-                  </Heading>
+              <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(2, 1fr)" gap={4} mt={4}>
+                <GridItem bg="#EDF2F7" borderRadius={8} p={4} colSpan={1} boxShadow="lg" >
 
-                  <Select
-                    placeholder="Chọn loại phòng ..."
-                    size="sm"
-                    bg="blue.100"
-                    mt={4}
-                    borderRadius="6px"
+{/* -----------------------------------------------Chọn loại phòng------------------------------------------------- */}
+                  <Heading size="lg" color="blue.500">Chọn phòng</Heading>
+
+                  <Select placeholder="Chọn loại phòng ..." size="sm" bg="blue.100" mt={4} borderRadius="6px"
                     onChange={(e) => handleFindRoomtypeById(e.target.value)}
                   >
                     {roomtypes.map((rt) => (
@@ -178,40 +171,27 @@ function RoomReservation() {
 
                   <RoomTypeElement roomtype={roomtype} />
 
-                  <HStack
-                    w="100%"
-                    p={3}
-                    bg="blue.100"
-                    borderRadius="6px"
-                    mt={4}
-                  >
+{/* -----------------------------------------------Chọn ngày thuê------------------------------------------------- */}
+                  <HStack w="100%" p={3} bg="blue.100" borderRadius="6px" mt={4} >
                     <Text fontSize={12}>Chọn ngày thuê: </Text>
                     <DatePicker
                       selectsRange={true}
                       startDate={startDate}
                       endDate={endDate}
+                      withPortal
                       onChange={(update) => {
                         setDateRange(update);
                       }}
-                      withPortal
                     />
+{/* -----------------------------------------------Chọn số lượng người thuê------------------------------------------------- */}
                     <Text fontSize={12}>Số lượng khách thuê: </Text>
-                    <Input
-                      type="number"
-                      onChange={(e) => setCustomerNum(e.target.value)}
-                      defaultValue={1}
-                      min={1}
-                      max={20}
-                      bg="white"
-                      size="xs"
-                      maxW={16}
-                    ></Input>
+                    <Input type="number" defaultValue={1} min={1} max={20} bg="white" size="xs" maxW={16}
+                      onChange={(e) => setCustomerNum(e.target.value)} ></Input>
                     <Spacer />
+
+{/* -----------------------------------------------Nút tìm kiếm phòng------------------------------------------------- */}
                     {startDate && endDate && (
-                      <Button
-                        size="xs"
-                        colorScheme="blue"
-                        fontSize="14px"
+                      <Button size="xs" colorScheme="blue" fontSize="14px"
                         onClick={() =>
                           handleCheckRoomEmpty({
                             idRoomtype: roomtype.id,
@@ -224,93 +204,51 @@ function RoomReservation() {
                         Tìm phòng
                       </Button>
                     )}
+
                   </HStack>
+{/* -----------------------------------------------RoomListElement------------------------------------------------- */}
                   <TableRoomElement rooms={roomsChecked} />
-                  <Heading size="lg" color="blue.500" mt={8}>
-                    Chọn dịch vụ
-                  </Heading>
+
+                  <Heading size="lg" color="blue.500" mt={8}>Chọn dịch vụ</Heading>
+{/* -----------------------------------------------ServiceListElement------------------------------------------------- */}
                   <TableServiceElement services={services} />
                 </GridItem>
 
-                <GridItem
-                  bg="#EDF2F7"
-                  borderRadius={8}
-                  p={4}
-                  colSpan={1}
-                  boxShadow="lg"
-                >
-                  <Heading size="lg" color="blue.500">
-                    Thông tin khách hàng
-                  </Heading>
+                <GridItem bg="#EDF2F7" borderRadius={8} p={4} colSpan={1} boxShadow="lg" >
+                  <Heading size="lg" color="blue.500">Thông tin khách hàng</Heading>
+{/* -----------------------------------------------form tìm kiếm khách hàng------------------------------------------------- */}
                   <InputGroup mt={4} size="sm">
-                    <Input
+                    <Input borderRadius="20px" borderColor="blue.100" fontStyle="italic" type="search"
                       placeholder="Nhập Id, email, số điện thoại để tìm kiếm khách hàng ..."
-                      borderRadius="20px"
-                      borderColor="blue.100"
-                      fontStyle="italic"
-                      type="search"
                       onChange={(e) => setKeyword(e.target.value)}
                     />
                     <InputRightElement type="button">
-                      <Button
-                        h="1.75rem"
-                        borderRadius="20px"
-                        onClick={() => handleFindByKeyword()}
-                      >
+                      <Button h="1.75rem" borderRadius="20px" onClick={() => handleFindByKeyword()} >
                         <i className="fa fa-search" aria-hidden="true"></i>
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+
                   <HStack align="start">
                     <Box width="30%" mr={4}>
-                      <Image
-                        mt={4}
-                        boxSize="200px"
-                        objectFit="cover"
-                        borderRadius="6px"
-                        src={account.avatar || ""}
-                        alt="Dan Abramov"
-                      />
+                      <Image mt={4} boxSize="200px" objectFit="cover" borderRadius="6px" src={account.avatar || ""} alt="Ảnh đại diện của khách" />
                     </Box>
+
+{/* -----------------------------------------------form thông tin khách hàng------------------------------------------------- */}                    
                     <Box width="70%">
-                      <FastField
-                        name="id"
-                        type="hidden"
-                        component={FormField.InputField}
-                      />
-                      <FastField
-                        name="name"
-                        type="text"
-                        component={FormField.InputField}
-                        label="Họ & tên"
-                      />
-                      <FastField
-                        name="email"
-                        component={FormField.InputField}
-                        type="email"
-                        label="Email"
-                      />
-                      <FastField
-                        name="address"
-                        component={FormField.InputField}
-                        type="text"
-                        label="Địa chỉ"
-                      />
-                      <FastField
-                        name="phoneNum"
-                        component={FormField.InputField}
-                        type="text"
-                        label="Số điện thoại"
-                      />
+                      <FastField name="id" type="hidden" component={FormField.InputField} />
+                      <FastField name="name" type="text" component={FormField.InputField} label="Họ & tên" />
+                      <FastField name="email" type="email" component={FormField.InputField} label="Email" />
+                      <FastField name="address" component={FormField.InputField} type="text" label="Địa chỉ" />
+                      <FastField name="phoneNum" component={FormField.InputField} type="text" label="Số điện thoại" />
                     </Box>
                   </HStack>
-
+{/* -----------------------------------------------Nút xử lý chức năng đặt phòng------------------------------------------------- */}
                   <HStack mt={8} justify="right">
                     <Button colorScheme="blue">Báo giá</Button>
-                    <Button colorScheme="blue" type="submit">
-                      Đặt phòng
-                    </Button>
+                    <Button colorScheme="blue" type="submit">Đặt phòng</Button>
                   </HStack>
+
                 </GridItem>
               </Grid>
             </Form>
@@ -347,18 +285,8 @@ function TableServiceElement(props) {
                 <Td>{service.id}</Td>
                 <Td>{service.name}</Td>
                 <Th>
-                  <Input
-                    defaultValue="0"
-                    width={50}
-                    type="number"
-                    max={10}
-                    min={0}
-                    borderColor="blue.100"
-                    size="sm"
-                    onChange={(e) =>
-                      handleSetServices(service.id, e.target.value)
-                    }
-                  ></Input>
+                  <Input defaultValue="0" width={50} type="number" max={10} min={0} borderColor="blue.100" size="sm"
+                    onChange={(e) => handleSetServices(service.id, e.target.value)} />
                 </Th>
                 <Td isNumeric>{service.price}</Td>
               </Tr>
@@ -438,11 +366,7 @@ function RoomTypeElement(props) {
       {roomtype ? (
         <HStack mt={4} align="start">
           <Box w="40%">
-            <Image
-              src={roomtype.avatarUrl}
-              alt={roomtype.name}
-              borderRadius="8px"
-            />
+            <Image src={roomtype.avatarUrl} alt={roomtype.name} borderRadius="8px" />
           </Box>
           <Box w="60%">
             <Heading fontSize={18} textAlign="start">

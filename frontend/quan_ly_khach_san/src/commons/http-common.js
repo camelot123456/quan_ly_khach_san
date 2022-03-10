@@ -10,7 +10,7 @@ export const httpCommon = () => {
                 'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
             }
         })
-    }
+    } 
     return axios.create({
         headers: {
             'Content-Type': 'application/json'

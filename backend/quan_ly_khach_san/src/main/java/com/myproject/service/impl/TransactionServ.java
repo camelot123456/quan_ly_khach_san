@@ -1,10 +1,13 @@
 package com.myproject.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -46,11 +49,36 @@ public class TransactionServ implements ITransactionServ {
 	public Page<TransactionEntity> paged(int currentPage, int sizePAge, String sortField, String sortDir,
 			String keyword) {
 		// TODO Auto-generated method stub
+		keyword = keyword == null ? "" : keyword;
+		List<Object[]> transactions = transactionRepo.pagedByKeyword(keyword);
+		List<TransactionEntity> transactionsNew = null;
+		
+		if (transactions.size() > 0) {
+			transactionsNew = new ArrayList<TransactionEntity>();
+			for (Object[] record : transactions) {
+				TransactionEntity transaction = new TransactionEntity();
+				transaction.setId((String) record[0]);
+				transaction.setAmount((Double) record[1]);
+				transaction.setCreatedAt((Date) record[2]);
+				transaction.setCreatedBy((String) record[3]);
+				transaction.setModifiedAt((Date) record[4]);
+				transaction.setModifiedBy((String) record[5]);
+//				transaction.setStatus((ETransactionStatus) record[6]);
+				transaction.setIdAccount((String) record[7]);
+				transaction.setIdReservation((String) record[8]);
+				transaction.setAvatarAccount((String) record[9]);
+				transaction.setNameAccount((String) record[10]);
+				transactionsNew.add(transaction);
+			}
+		}
+		
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePAge, sort);
-		keyword = keyword == null ? "" : keyword;
-		return transactionRepo.pagedByKeyword(keyword, pageRequest);
+		
+		PageImpl<TransactionEntity> page = new PageImpl<TransactionEntity>(transactionsNew, pageRequest, transactionsNew.size());
+		
+		return page;
 	}
 
 	@Override

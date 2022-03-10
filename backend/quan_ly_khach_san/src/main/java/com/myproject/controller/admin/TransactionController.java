@@ -40,7 +40,7 @@ public class TransactionController {
 			@Param("sortDir") String sortDir,
 			@Param("keyword") String keyword) {
 		
-		Page<TransactionEntity> transactions = transactionServ.paged(sizePage, currentPage, sortField, sortDir, keyword);
+		Page<TransactionEntity> transactions = transactionServ.paged(currentPage, sizePage, sortField, sortDir, keyword);
 		
 		PagedResponse pagedResponse = new PagedResponse(currentPage, sizePage, sortField, sortDir, keyword, transactions.getTotalPages(), transactions.getTotalElements());
 		

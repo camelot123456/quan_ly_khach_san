@@ -24,7 +24,8 @@ const transactionReducer = (state = initialState, { type, payload }) => {
     case transactionTypes.ERROR_ACTION:
       return { 
           ...state, 
-          apiResponse: payload.apiResponse
+          apiResponse: payload.apiResponse,
+          transactions: payload.transactions,
         };
     default:
       return state;

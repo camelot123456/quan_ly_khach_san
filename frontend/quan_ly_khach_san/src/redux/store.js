@@ -8,7 +8,8 @@ const composeEnhencer = applyMiddleware(thunk)
 
 const store = createStore(
     rootReducer,
-    composeWithDevTools(composeEnhencer)
+    // composeWithDevTools(composeEnhencer)
+    applyMiddleware(thunk)
 )
 
 export default store

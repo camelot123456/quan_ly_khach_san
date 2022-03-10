@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import jwtDecode from "jwt-decode";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
@@ -22,19 +22,28 @@ import {
 
 import { ACCESS_TOKEN, APP_NAME } from "../../../constants";
 import { doLogout } from "../../../redux/actions/auth-action";
+import { parseJwt } from "../../../commons/jwt-common";
 
 function Header() {
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem(ACCESS_TOKEN)
-  );
+  const [auth, setAuth] = useState(false)
+  const ref = useRef('');
+
+  const accessToken = useSelector((state => state.authReducer.authResponse))
+  console.log(accessToken)
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setAccessToken(accessToken);
-  }, []);
+    const accessToken = localStorage.getItem(ACCESS_TOKEN)
+    if (parseJwt(accessToken)) {
+      ref.current = parseJwt(accessToken)
+      setAuth(true)
+    }
+  }, [auth]);
 
   const handleLogout = () => {
-    Promise.all([dispatch(doLogout())]).then(() => setAccessToken(null));
+    setAuth(false)
+    dispatch(doLogout())
   };
 
   return (
@@ -57,15 +66,15 @@ function Header() {
           </Heading>
         </HStack>
         <Spacer />
-        {accessToken ? (
+        {auth ? (
           <Menu isLazy>
             <MenuButton>
               <HStack>
                 <Box ml="3" align="end">
                   <Text fontWeight="bold">
-                    {jwtDecode(accessToken).claims.name}
+                    {ref.current.claims.name}
                   </Text>
-                  {jwtDecode(accessToken).claims.roles.map((role, index) => (
+                  {ref.current.claims.roles.map((role, index) => (
                     <Badge ml="1" colorScheme="green" key={index}>
                       <Text fontSize="xs">
                         {role.toString().substring("ROLE_".length)}
@@ -74,8 +83,8 @@ function Header() {
                   ))}
                 </Box>
                 <Avatar
-                  src={jwtDecode(accessToken).claims.avatarUrl}
-                  alt={jwtDecode(accessToken).claims.name}
+                  src={ref.current.claims.avatarUrl}
+                  alt={ref.current.claims.name}
                   size="md"
                 />
               </HStack>

@@ -30,6 +30,12 @@ const roomReducer = (state = initialState, { type, payload }) => {
         roomsChecked: payload.roomsChecked,
         apiResponse: payload.apiResponse,
       };
+    case roomTypes.ERROR_ACTION:
+      return {
+        ...state,
+        rooms: payload.rooms,
+        apiResponse: payload.apiResponse,
+      };
 
     default:
       return state;

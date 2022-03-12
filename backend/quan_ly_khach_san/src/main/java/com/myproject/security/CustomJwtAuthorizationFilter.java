@@ -33,7 +33,7 @@ public class CustomJwtAuthorizationFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		if (request.getRequestURI().startsWith("/auth/")) {
+		if (request.getRequestURI().startsWith("/auth/") || request.getRequestURI().startsWith("/img/")) {
 			filterChain.doFilter(request, response);
 		} else {
 			if (request.getHeader("Authorization").startsWith("Bearer ") || request.getHeader("Authorization") != null) {

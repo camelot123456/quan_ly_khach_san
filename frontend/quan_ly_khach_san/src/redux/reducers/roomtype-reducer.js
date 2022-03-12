@@ -28,6 +28,21 @@ const roomtypeReducer = (state = initialState, { type, payload }) => {
         apiResponse: payload.apiResponse,
         roomtypes: payload.roomtypes,
       };
+      case roomtypeTypes.DELETE_ROOMTYPE_BY_ID_ACTION:
+        return {
+          ...state,
+          apiResponse: payload.apiResponse
+        };
+    case roomtypeTypes.CREATE_ROOMTYPE_ACTION:
+      return {
+        ...state,
+        apiResponse: payload.apiResponse
+      }
+    case roomtypeTypes.ERROR_ACTION:
+      return {
+        ...state,
+        apiResponse: payload.apiResponse
+      }
     default:
       return state;
   }

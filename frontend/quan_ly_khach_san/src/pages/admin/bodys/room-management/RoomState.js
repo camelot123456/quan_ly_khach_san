@@ -27,7 +27,9 @@ import {
   WrapItem,
   AlertIcon,
   Alert,
-  useToast
+  useToast,
+  SkeletonCircle,
+  SkeletonText
 } from "@chakra-ui/react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -42,14 +44,14 @@ function RoomState() {
   const toast = useToast()
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams(0);
-  const [roomState, setRoomState] = useState("all");
+  const [roomState, setRoomState] = useState("using");
 
   const rooms = useSelector((state) => state.roomReducer.rooms);
   const reservationResponse = useSelector((state) => state.reservationReducer.apiResponse);
 
   const parseColor = (roomState) => {
     switch (roomState) {
-      case "ALL":
+      case "CHECKOUT":
         return "#4299E1";
       case "EMPTY":
         return "#A0AEC0";
@@ -101,25 +103,26 @@ function RoomState() {
       <Tabs isFitted variant="enclosed" index={+searchParams.get("tab2") || 0}>
 {/* -----------------------------------------------tab room state------------------------------------------------- */}  
         <TabList color="white">
-          <Link to="/admin/rooms?tab1=0&tab2=0">
-            <Tab borderRadius={8} h={70} bg="#4299E1" mr={10} w={220} 
-              onClick={() => setRoomState("all")} >
-              Tất cả:{" "}
-            </Tab>
-          </Link>
 
-          <Link to="/admin/rooms?tab1=0&tab2=1">
+          <Link to="/admin/rooms?tab1=0&tab2=0">
             <Tab borderRadius={8} h={70} bg="#48BB78" mr={10} w={220} 
               onClick={() => setRoomState("using")} >
               Đang ở:{" "}
             </Tab>
           </Link>
 
-          <Link to="/admin/rooms?tab1=0&tab2=2">
+          <Link to="/admin/rooms?tab1=0&tab2=1">
             <Tab borderRadius={8} h={70} bg="#9F7AEA" mr={10} w={220}
               onClick={() => setRoomState("deposit")}
             >
               Đặt cọc:{" "}
+            </Tab>
+          </Link>
+
+          <Link to="/admin/rooms?tab1=0&tab2=2">
+            <Tab borderRadius={8} h={70} bg="#4299E1" mr={10} w={220} 
+              onClick={() => setRoomState("checkout")} >
+              Trả phòng:{" "}
             </Tab>
           </Link>
 
@@ -147,17 +150,10 @@ function RoomState() {
         </HStack>
 {/* -----------------------------------------------RoomList------------------------------------------------- */}  
         <TabPanels>
+          
           <TabPanel>
             <RoomAll
-              rooms={rooms}
-              onFormatDate={formatDate}
-              onParseColor={parseColor}
-              type="ALL"
-            />
-          </TabPanel>
-          <TabPanel>
-            <RoomAll
-              rooms={rooms}
+              rooms={rooms || []}
               onFormatDate={formatDate}
               onParseColor={() => parseColor("USING")}
               type="USING"
@@ -165,7 +161,7 @@ function RoomState() {
           </TabPanel>
           <TabPanel>
             <RoomAll
-              rooms={rooms}
+              rooms={rooms || []}
               onFormatDate={formatDate}
               onParseColor={() => parseColor("DEPOSIT")}
               type="DEPOSIT"
@@ -176,7 +172,15 @@ function RoomState() {
           </TabPanel>
           <TabPanel>
             <RoomAll
-              rooms={rooms}
+              rooms={rooms || []}
+              onFormatDate={formatDate}
+              onParseColor={() => parseColor("CHECKOUT")}
+              type="CHECKOUT"
+            />
+          </TabPanel>
+          <TabPanel>
+            <RoomAll
+              rooms={rooms || []}
               onFormatDate={formatDate}
               onParseColor={() => parseColor("EMPTY")}
               type="EMPTY"
@@ -184,7 +188,7 @@ function RoomState() {
           </TabPanel>
           <TabPanel>
             <RoomAll
-              rooms={rooms}
+              rooms={rooms || []}
               onFormatDate={formatDate}
               onParseColor={() => parseColor("REPAIR")}
               type="REPAIR"
@@ -227,7 +231,7 @@ function RoomAll(props) {
 
   return (
     <>
-      {rooms ? (<Wrap marginTop={4} justify="flex-start" spacing={6}>
+      {rooms.length > 0 ? (<Wrap marginTop={4} justify="flex-start" spacing={6}>
         {rooms.map((room, index) => (
           <WrapItem key={index + 1} boxShadow="2xl">
             <Box p={2} borderRadius={4} w="185px" bg={handleParseColor(room.roomState)} >
@@ -291,7 +295,8 @@ function RoomAll(props) {
                         className='btn-reservation-deposit'
                         onBtnClick={handleFindReservationForTransaction}
                         data={room.idReservation}
-                        contentPayment={<ContentPayment reservationTransaction={reservationTransaction}/>}
+                        title="Payment"
+                        content={<ContentPayment reservationTransaction={reservationTransaction}/>}
                       />
                     </>) : (<></>)
                   }

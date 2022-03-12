@@ -1,12 +1,16 @@
 package com.myproject.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myproject.entity.RoomTypeEntity;
 import com.myproject.payload.roomtype.RoomtypeCustom;
+import com.myproject.payload.roomtype.RoomtypeFormCreate;
 
 public interface IRoomtypeServ {
 
@@ -25,6 +29,8 @@ public interface IRoomtypeServ {
 //	----------------------------- INSERT -----------------------------
 	
 	public RoomTypeEntity save(RoomTypeEntity roomType);
+	
+	public void createWithAvatar(RoomtypeFormCreate roomType, MultipartFile multipartFile) throws FileNotFoundException, IOException;
 	
 //	----------------------------- UPDATE -----------------------------
 	

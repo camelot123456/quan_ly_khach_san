@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.myproject.payload.ApiResponse;
 import com.myproject.service.IMailSenderServ;
-import com.myproject.util.FileUitl;
+import com.myproject.util.FileUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,7 +48,7 @@ public class MailSenderController {
 				mailObject.getToEmail(), 
 				mailObject.getSubEmail(), 
 				mailObject.getBodyEmail(), 
-				FileUitl.convertToFile(multipartFile));
+				FileUtil.convertToFile(multipartFile));
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -60,7 +60,7 @@ public class MailSenderController {
 				mailObject.getFromEmail(), 
 				mailObject.getToEmail(), 
 				mailObject.getSubEmail(), 
-				FileUitl.convertToFile(multipartFile));
+				FileUtil.convertToFile(multipartFile));
 		return ResponseEntity.noContent().build();
 	}
 	

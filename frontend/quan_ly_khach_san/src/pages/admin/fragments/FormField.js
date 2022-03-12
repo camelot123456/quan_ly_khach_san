@@ -52,4 +52,28 @@ function TextareaField(props) {
   );
 }
 
-export default {InputField, TextareaField};
+function FileField(props) {
+  const { field, form, type, label, placeholder, disabled, accept } = props;
+  const { name, value, onChange, onBlur } = field;
+
+  return (
+    <FormControl mt={2}>
+      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      <input
+        accept={accept}
+        size="sm"
+        bg="white"
+        type={type}
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        disabled={disabled}
+      />
+    </FormControl>
+  );
+}
+
+export default {InputField, TextareaField, FileField};

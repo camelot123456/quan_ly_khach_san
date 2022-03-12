@@ -17,22 +17,21 @@ import React from "react";
 import '../../../App.css'
 
 function ModalScrollCustom(props) {
-  const { style, icon, className, contentPayment, onBtnClick, data} = props;
+  const { icon, className, content, onBtnClick, data, title, closeOnOverlayClick} = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
 
-  const handlerFindReservationForTransaction = (idReservation) => {
+  const handleClick = (arg) => {
     onOpen();
     if (onBtnClick) {
-      onBtnClick(idReservation);
+      onBtnClick(arg);
     }
   }
   return (
     <>
       <Box
-        mt={3}
         ref={btnRef}
-        onClick={() => handlerFindReservationForTransaction(data)}
+        onClick={() => handleClick(data)}
         className={className}
       >
         {icon}
@@ -43,17 +42,18 @@ function ModalScrollCustom(props) {
         finalFocusRef={btnRef}
         isOpen={isOpen}
         scrollBehavior="inside" // outside
+        closeOnOverlayClick={closeOnOverlayClick}
         >
         <ModalOverlay />
         <ModalContent>
           
-          <ModalHeader>Payment</ModalHeader>
+          <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody >
-            {contentPayment}
+            {content}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Đóng</Button>
+            {/* <Button onClick={onClose}>Đóng</Button> */}
           </ModalFooter>
         </ModalContent>
       </Modal>

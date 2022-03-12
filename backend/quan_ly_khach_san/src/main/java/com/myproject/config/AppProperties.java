@@ -41,6 +41,7 @@ public class AppProperties {
 		private String emailSystem;
 		private PagedDefault pagedDefault;
 		private String imageRoomUrlDefault;
+		private String uriSaveImage;
 		
 		@Getter
 		@Setter

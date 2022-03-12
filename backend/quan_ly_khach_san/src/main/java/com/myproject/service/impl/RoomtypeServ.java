@@ -1,5 +1,7 @@
 package com.myproject.service.impl;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,17 +13,32 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.myproject.config.AppProperties;
 import com.myproject.entity.RoomTypeEntity;
+import com.myproject.entity.RoomTypePhotoEntity;
 import com.myproject.payload.roomtype.RoomtypeCustom;
+import com.myproject.payload.roomtype.RoomtypeFormCreate;
+import com.myproject.repository.IRoomTypePhotoRepo;
 import com.myproject.repository.IRoomtypeRepo;
 import com.myproject.service.IRoomtypeServ;
+import com.myproject.util.FileUtil;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class RoomtypeServ implements IRoomtypeServ{
 
 	@Autowired
 	private IRoomtypeRepo roomtypeRepo;
+	
+	@Autowired
+	private IRoomTypePhotoRepo roomtypePhotoRepo;
+	
+	@Autowired
+	private AppProperties appProperties;
 	
 //	----------------------------- SELECT -----------------------------	
 
@@ -113,6 +130,47 @@ public class RoomtypeServ implements IRoomtypeServ{
 		}
 		return null;
 	}
+	
+	@Transactional
+	@Override
+	public void createWithAvatar(RoomtypeFormCreate roomType, MultipartFile file) throws FileNotFoundException, IOException {
+		String id = "";
+		do {
+			id = RandomString.make(10);
+		} while (roomtypeRepo.existsById(id));
+		RoomTypeEntity roomtypeNew = new RoomTypeEntity();
+		roomtypeNew.setId(id);
+		roomtypeNew.setName(roomType.getName());
+		roomtypeNew.setPrice(roomType.getPrice());
+		roomtypeNew.setDescription(roomType.getDescription());
+		RoomTypeEntity roomTypeAfterCreate = roomtypeRepo.save(roomtypeNew);
+		
+		RoomTypePhotoEntity typePhoto = new RoomTypePhotoEntity();
+		String idRtp = "";
+		do {
+			idRtp = RandomString.make(10);
+		} while (roomtypePhotoRepo.existsById(idRtp));
+		typePhoto.setId(idRtp);
+		typePhoto.setAvatarState(true);
+		typePhoto.setRoomType(roomTypeAfterCreate);
+		
+		if (roomType.getTypeImage() == 1 ) {
+			if (file != null) {
+				String nameFile = file.getName() + "_" + RandomString.make(64) + ".png";
+				FileUtil.saveFile(file, nameFile, appProperties.getSystemConstant().getUriSaveImage() + "/roomtype");
+				typePhoto.setUrl(nameFile);
+			} else {
+				typePhoto.setUrl(appProperties.getSystemConstant().getImageRoomUrlDefault());
+			}
+		} else {
+			if (roomType.getAvatarUrl().startsWith("https://") || roomType.getAvatarUrl().startsWith("http://")) {
+				typePhoto.setUrl(roomType.getAvatarUrl());
+			}else {
+				typePhoto.setUrl(appProperties.getSystemConstant().getImageRoomUrlDefault());
+			}
+		}
+		roomtypePhotoRepo.save(typePhoto);
+	}
 
 //	----------------------------- UPDATE -----------------------------
 	
@@ -130,6 +188,7 @@ public class RoomtypeServ implements IRoomtypeServ{
 	@Override
 	public void deleteById(String id) {
 		// TODO Auto-generated method stub
+		roomtypePhotoRepo.findAllByIdRoomtype(id).stream().forEach(rtp -> roomtypePhotoRepo.deleteById(rtp.getId()));
 		roomtypeRepo.deleteById(id);
 	}
 

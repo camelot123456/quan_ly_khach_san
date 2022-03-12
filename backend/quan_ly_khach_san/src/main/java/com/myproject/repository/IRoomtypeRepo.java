@@ -31,14 +31,15 @@ public interface IRoomtypeRepo extends JpaRepository<RoomTypeEntity, String>{
 			+ "or rt.[description] like %?2% "
 			+ "or concat(rt.[created_at], '') like %?2% "
 			+ "or concat(rt.modified_at, '') like %?2% "
-			+ "or concat(rt.price, '') like %?2% )",
+			+ "or concat(rt.price, '') like %?2% ) "
+			+ "order by rt.modified_at desc",
 			nativeQuery = true)
 	public List<Object[]> pagedRoomtype(Boolean avatarState, String keyword);
 	
 	@Query(value = "select rt.*, rtp.url as avatarUrl "
 			+ "from roomtype_photo rtp inner join roomtypes rt "
 			+ "on rtp.id_roomtype = rt.id "
-			+ "where rtp.avatar_state = ?1", 
+			+ "where rtp.avatar_state = ?1 ", 
 			nativeQuery = true)
 	public List<Object[]> findAllByAvatarState(Boolean avatarState);
 	

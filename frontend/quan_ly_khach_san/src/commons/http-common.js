@@ -17,3 +17,21 @@ export const httpCommon = () => {
         }
     })
 }
+
+export const httpFormDataCommon = () => {
+    if (localStorage.getItem(ACCESS_TOKEN)) {
+        return axios.create({
+            headers: {
+                'Accept': 'multipart/form-data, application/json',
+                'Content-Type': 'multipart/form-data, application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+            }
+        })
+    } 
+    return axios.create({
+        headers: {
+            'Accept': 'multipart/form-data, application/json',
+                'Content-Type': 'multipart/form-data, application/json'
+        }
+    })
+}

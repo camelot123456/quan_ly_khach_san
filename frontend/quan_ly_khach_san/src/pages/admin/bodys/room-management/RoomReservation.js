@@ -90,8 +90,8 @@ function RoomReservation() {
     phoneNum: Yup.string().required("Trường này không được để trống."),
   });
 
-  const handleCheckRoomEmpty = (apiRequest) => {
-    dispatch(doCheckRoomEmpty(apiRequest));
+  const handleCheckRoomEmpty = async (apiRequest) => {
+    await dispatch(doCheckRoomEmpty(apiRequest));
   };
 
   const handleFindRoomtypeById = (idRoomtype) => {
@@ -107,7 +107,7 @@ function RoomReservation() {
   return (
     <>
       <Formik initialValues={initialValues} validationSchema={validationSchema}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           var data = {
             customer: {
               id: values.id,
@@ -125,7 +125,7 @@ function RoomReservation() {
           };
 
           console.log(data);
-          dispatch(doCreateReservation(data));
+          await dispatch(doCreateReservation(data));
           toast({
             title: 'Tạo phiếu đặt phòng.',
             description: reservationResponse.message,
@@ -139,8 +139,8 @@ function RoomReservation() {
           // ... do something here ...
           const { values, errors, touched, setFieldValue } = formikProps;
 
-          const handleFindByKeyword = () => {
-            dispatch(doFindByIdEmailPhoneNum(keyword));
+          const handleFindByKeyword = async () => {
+            await dispatch(doFindByIdEmailPhoneNum(keyword));
             setFieldValue("name", account.name || "");
             setFieldValue("email", account.email || "");
             setFieldValue("address", account.address || "");

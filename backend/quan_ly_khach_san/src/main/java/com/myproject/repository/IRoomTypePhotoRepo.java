@@ -15,6 +15,13 @@ public interface IRoomTypePhotoRepo extends JpaRepository<RoomTypePhotoEntity, S
 			nativeQuery = true)
 	public List<RoomTypePhotoEntity> findAllById(String id);
 	
+	@Query(value = "select rtp.* "
+			+ "from roomtype_photo rtp inner join roomtypes rt "
+			+ "on rtp.id_roomtype = rt.id "
+			+ "where rt.id=?1",
+			nativeQuery = true)
+	public List<RoomTypePhotoEntity> findAllByIdRoomtype(String idRoomtype);
+	
 	@Modifying
 	@Transactional
 	@Query(value = "update roomtype_photo rtp set rtp.avatar_state=?2 where rtp.id=?1",

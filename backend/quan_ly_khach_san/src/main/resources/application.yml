@@ -66,7 +66,8 @@ app:
    systemConstant:
       emailSystem: nguyensybao1403@gmail.com
       avatarUrlDefault: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
-      imageRoomUrlDefault: "https://cdn.iconscout.com/icon/premium/png-256-thumb/double-bed-2812332-2342442.png"
+      imageRoomUrlDefault: "https://cdn.iconscout.com/icon/premium/png-256-thumb/bedroom-2199068-1832572.png"
+      uriSaveImage: "src/main/resources/static/img"
       pagedDefault:
          currentPage: 0
          sizePage: 20

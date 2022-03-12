@@ -41,7 +41,7 @@ public class RoomServ implements IRoomServ {
 		keyword = keyword == null ? "" : keyword;
 		return roomRepo.pagedByKeyword(keyword, pageRequest);
 	}
-	
+
 	@Override
 	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNull(int currentPage,
 			int sizePage, String sortField, String sortDir, String keyword) {
@@ -63,7 +63,7 @@ public class RoomServ implements IRoomServ {
 				r.setIdReservation((String) record[7]);
 				r.setStartDate((Date) record[8]);
 				r.setEndDate((Date) record[9]);
-				r.setIdTransaction( (String) record[10]);
+				r.setIdTransaction((String) record[10]);
 				roomNewArr.add(r);
 			}
 		}
@@ -189,64 +189,6 @@ public class RoomServ implements IRoomServ {
 	 * account, reservation set null
 	 * 
 	 */
-	@Override
-	public Page<RoomRoomtypeReservationReservationroomAccount> pagedRoomsAllForAdminPage(int currentPage, int sizePage,
-			String sortField, String sortDir, String keyword) {
-		keyword = keyword == null ? "" : keyword;
-		List<Object[]> rooms = roomRepo.pagedRoomsAllForAdminPage(keyword);
-		List<RoomRoomtypeReservationReservationroomAccount> roomsNew = null;
-		if (rooms.size() > 0) {
-			roomsNew = new ArrayList<RoomRoomtypeReservationReservationroomAccount>();
-			for (Object[] record : rooms) {
-//				lấy thông tin ngày đặt và trả trong reservation sau đó đi kiểm tra với ngày hiện tại
-				RoomRoomtypeReservationReservationroomAccount room = new RoomRoomtypeReservationReservationroomAccount();
-				Date startDate = (Date) record[8];
-				Date endDate = (Date) record[9];
-				Date now = new Date();
-				room.setIdRoom((String) record[0]);
-				room.setRoomNum((String) record[1]);
-				room.setRoomState((String) record[2]);
-				room.setFloor((String) record[3]);
-				room.setIdRoomType((String) record[6]);
-//				nếu như ngày đặt và ngày trả chưa có sẽ set account info = null
-				if (startDate == null || endDate == null) {
-					room.setNameAccount(null);
-					room.setPhoneNum(null);
-					room.setIdReservation(null);
-					room.setStartDate(null);
-					room.setEndDate(null);
-					room.setIdTransaction(null);
-				} else {
-//					nếu ngày hôm nay nằm trong [ngày đặt, ngày trả] thì set account info
-					if (startDate.before(now) && endDate.after(now)) {
-						room.setNameAccount((String) record[4]);
-						room.setPhoneNum((String) record[5]);
-						room.setIdReservation((String) record[7]);
-						room.setStartDate((Date) record[8]);
-						room.setEndDate((Date) record[9]);
-						room.setIdTransaction((String) record[10]);
-//					Nếu hôm nay không nằm trong [ngày đặt, ngày trả] thì set account info = null
-					} else {
-						room.setNameAccount(null);
-						room.setPhoneNum(null);
-						room.setIdReservation(null);
-						room.setStartDate(null);
-						room.setEndDate(null);
-						room.setIdTransaction(null);
-					}
-				}
-
-				roomsNew.add(room);
-			}
-		}
-		Sort sort = Sort.by(sortField);
-		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
-		Page<RoomRoomtypeReservationReservationroomAccount> roomPaged = new PageImpl<RoomRoomtypeReservationReservationroomAccount>(
-				roomsNew, pageRequest, roomsNew.size());
-		return roomPaged;
-
-	}
 
 	public List<RoomEntity> findAllRoomsInReservationByCustomerNumAndIdRoomtype(String idRoomtype, Integer customerNum,
 			Date startDate, Date endDate) {
@@ -305,23 +247,19 @@ public class RoomServ implements IRoomServ {
 		}
 		return roomsResult;
 	}
-	
-
 
 	@Override
 	public Page<RoomRoomtypeReservationReservationroomAccount> findAllByRoomstate(String roomState, int currentPage,
 			int sizePage, String sortField, String sortDir, String keyword) {
 		// TODO Auto-generated method stub
-		if (roomState.equalsIgnoreCase("using")) {
-			return findAllRoomsTransactionIsNotNull(currentPage, sizePage, sortField, sortDir, keyword);
-		} else if (roomState.equalsIgnoreCase("deposit")) {
+		if (roomState.equalsIgnoreCase("deposit")) {
 			return findAllRoomsTransactionIsNull(currentPage, sizePage, sortField, sortDir, keyword);
 		} else if (roomState.equalsIgnoreCase("empty")) {
 			return null;
 		} else if (roomState.equalsIgnoreCase("repair")) {
 			return null;
 		}
-		return pagedRoomsAllForAdminPage(currentPage, sizePage, sortField, sortDir, keyword);
+		return findAllRoomsTransactionIsNotNull(currentPage, sizePage, sortField, sortDir, keyword);
 	}
 
 	@Override

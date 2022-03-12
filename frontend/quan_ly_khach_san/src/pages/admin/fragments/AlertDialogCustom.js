@@ -7,12 +7,13 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Button,
+  Box,
 } from "@chakra-ui/react";
 
 function AlertDialogCustom(props) {
   const {
     nameBtnCall,
-    colorBtnCall,
+    className,
     title,
     content,
     nameBtnNegative,
@@ -34,9 +35,9 @@ function AlertDialogCustom(props) {
 
   return (
     <>
-      <Button size="sm" colorScheme={colorBtnCall} onClick={() => setIsOpen(true)}>
+      <Box size="sm" className={className} onClick={() => setIsOpen(true)}>
         {nameBtnCall}
-      </Button>
+      </Box>
 
       <AlertDialog
         isOpen={isOpen}

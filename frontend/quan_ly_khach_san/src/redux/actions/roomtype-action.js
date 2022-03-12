@@ -98,6 +98,30 @@ export const doCreateRoomtype = (dataRequest) => async (dispatch) => {
     }
 }
 
+export const doUpdateRoomtype = (dataRequest) => async (dispatch) => {
+    try {
+        await roomtypeService.doUpdateRoomtype(dataRequest);
+        dispatch({
+            type: roomtypeTypes.UPDATE_ROOMTYPE_ACTION,
+            payload: {
+                apiResponse: {
+                    success: true,
+                    message: "Cập nhập loại phòng thành công."
+                },
+                roomtype: dataRequest
+            }
+        })
+    } catch (error) {
+        dispatch({
+            type: roomtypeTypes.ERROR_ACTION,
+            payload: {
+                message: "Cập nhập loại phòng thất bại.",
+                success: false
+            }
+        })
+    }
+}
+
 export const doDeleteRoomtypeById = (idRoomtype) => async (dispatch) => {
     try {
         await roomtypeService.doDeleteRoomtypeById(idRoomtype);

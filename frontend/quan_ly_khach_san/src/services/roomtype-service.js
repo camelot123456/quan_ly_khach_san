@@ -20,6 +20,13 @@ const doCreateRoomtype = (formData) => {
   );
 };
 
+const doUpdateRoomtype = (formData) => {
+  return httpFormDataCommon().put(
+    `${URL_BASE}/api/admin/roomtypes/update`,
+    formData
+  );
+};
+
 const doDeleteRoomtypeById = (idRoomtype) => {
   return httpCommon().delete(
     `${URL_BASE}/api/admin/roomtypes/delete`,
@@ -32,5 +39,6 @@ export default {
   doFindRoomtypeById,
   doShowRoomtypeByAvatarStateList,
   doCreateRoomtype,
-  doDeleteRoomtypeById
+  doDeleteRoomtypeById,
+  doUpdateRoomtype
 };

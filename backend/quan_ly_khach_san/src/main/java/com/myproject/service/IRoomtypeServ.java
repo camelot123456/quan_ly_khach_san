@@ -30,15 +30,17 @@ public interface IRoomtypeServ {
 	
 	public RoomTypeEntity save(RoomTypeEntity roomType);
 	
-	public void createWithAvatar(RoomtypeFormCreate roomType, MultipartFile multipartFile) throws FileNotFoundException, IOException;
+	public void createWithAvatar(RoomtypeFormCreate roomType, MultipartFile multipartFile) throws FileNotFoundException, IOException ;
 	
 //	----------------------------- UPDATE -----------------------------
 	
 	public RoomTypeEntity update(RoomTypeEntity roomType);
 	
+	public void updateWithAvatar(RoomtypeFormCreate formCreate);
+	
 //	----------------------------- DELETE -----------------------------
 	
-	public void deleteById(String id);
+	public void deleteById(String id) throws IOException;
 	
 	public void deleteMany(String[] ids);
 	

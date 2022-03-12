@@ -108,7 +108,9 @@ public class RoomtypeServ implements IRoomtypeServ{
 				roomtypeCustomNew.setModifiedAt((Date) record[3]);
 				roomtypeCustomNew.setName((String) record[4]);
 				roomtypeCustomNew.setPrice((Double) record[5]);
-				roomtypeCustomNew.setAvatarUrl((String) record[6]);
+				roomtypeCustomNew.setIdRoomtypePhoto((String) record[6]);
+				roomtypeCustomNew.setAvatarUrl((String) record[7]);
+				roomtypeCustomNew.setIsImgFile((Boolean) record[8]);
 				roomtypeCustoms.add(roomtypeCustomNew);
 			}
 		}
@@ -154,15 +156,17 @@ public class RoomtypeServ implements IRoomtypeServ{
 		typePhoto.setAvatarState(true);
 		typePhoto.setRoomType(roomTypeAfterCreate);
 		
-		if (roomType.getTypeImage() == 1 ) {
+		if (roomType.getIsImgFile()) {
+			typePhoto.setIsImgFile(true);
 			if (file != null) {
-				String nameFile = file.getName() + "_" + RandomString.make(64) + ".png";
+				String nameFile = RandomString.make(128) + "." + file.getContentType().substring("image\\".length());
 				FileUtil.saveFile(file, nameFile, appProperties.getSystemConstant().getUriSaveImage() + "/roomtype");
 				typePhoto.setUrl(nameFile);
 			} else {
 				typePhoto.setUrl(appProperties.getSystemConstant().getImageRoomUrlDefault());
 			}
 		} else {
+			typePhoto.setIsImgFile(false);
 			if (roomType.getAvatarUrl().startsWith("https://") || roomType.getAvatarUrl().startsWith("http://")) {
 				typePhoto.setUrl(roomType.getAvatarUrl());
 			}else {
@@ -182,13 +186,45 @@ public class RoomtypeServ implements IRoomtypeServ{
 		}
 		return null;
 	}
+	
+	@Transactional
+	@Override
+	public void updateWithAvatar(RoomtypeFormCreate roomType) {
+		if (roomtypeRepo.existsById(roomType.getId())) {
+			RoomTypeEntity roomtypeOld = roomtypeRepo.findById(roomType.getId()).get();
+			roomtypeOld.setName(roomType.getName());
+			roomtypeOld.setPrice(roomType.getPrice());
+			roomtypeOld.setDescription(roomType.getDescription());
+			
+			RoomTypePhotoEntity roomtypePhoto1 = roomtypeOld.getRoomTypePhotoArr().stream()
+				.filter(rtp -> rtp.getAvatarState() == true)
+				.findFirst().get();
+			roomtypePhoto1.setAvatarState(false);
+			
+			roomtypePhotoRepo.save(roomtypePhoto1);
+			
+			RoomTypePhotoEntity roomtypePhoto2 = roomtypeOld.getRoomTypePhotoArr().stream()
+				.filter(rtp -> rtp.getId().equals(roomType.getIdRoomtypePhoto()))
+				.findFirst().get();
+			roomtypePhoto2.setAvatarState(true);
+			
+			roomtypePhotoRepo.save(roomtypePhoto2);
+			
+			roomtypeRepo.save(roomtypeOld);
+		}
+	}
 
 //	----------------------------- DELETE -----------------------------
 	
 	@Override
-	public void deleteById(String id) {
+	public void deleteById(String id) throws IOException {
 		// TODO Auto-generated method stub
-		roomtypePhotoRepo.findAllByIdRoomtype(id).stream().forEach(rtp -> roomtypePhotoRepo.deleteById(rtp.getId()));
+		for (RoomTypePhotoEntity rtp : roomtypePhotoRepo.findAllByIdRoomtype(id)) {
+			roomtypePhotoRepo.deleteById(rtp.getId());
+			if (!rtp.getUrl().startsWith("http://") || !rtp.getUrl().startsWith("https://")) {
+				FileUtil.deleteFile(rtp.getUrl(), appProperties.getSystemConstant().getUriSaveImage() + "/roomtype");
+			}
+		}
 		roomtypeRepo.deleteById(id);
 	}
 

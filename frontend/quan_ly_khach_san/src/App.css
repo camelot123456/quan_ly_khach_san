@@ -103,3 +103,30 @@
 .btn-detail-roomtype-list:hover {
   background-color: green;
 }
+
+.image-roomtypephoto-list {
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: .5;
+}
+
+.image-roomtypephoto-list:hover {
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 1;
+  border: 1px solid red !important;
+}
+
+.image-roomtypephoto-list.active {
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 1;
+  border: 1px solid red !important;
+}
+
+.image-roomtypephoto-list.click {
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 1;
+  border: 1px solid green !important;
+}

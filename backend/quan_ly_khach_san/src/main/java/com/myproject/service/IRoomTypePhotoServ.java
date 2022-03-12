@@ -10,6 +10,8 @@ public interface IRoomTypePhotoServ {
 	
 	public List<RoomTypePhotoEntity> findAll();
 	
+	public List<RoomTypePhotoEntity> findAllByIdRoomtype(String idRoomtype);
+	
 	public RoomTypePhotoEntity save(RoomTypePhotoEntity roomtypePhoto);
 	
 	public RoomTypePhotoEntity updateAvatarState(RoomTypePhotoEntity roomtypePhoto);

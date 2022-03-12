@@ -34,4 +34,11 @@ public class FileUtil {
 		
 	}
 	
+	public static void deleteFile(String fileName, String uri) throws IOException {
+		Path path = Paths.get(uri);
+		Path pathFile = path.resolve(fileName);
+		Files.deleteIfExists(pathFile);
+		
+	}
+	
 }

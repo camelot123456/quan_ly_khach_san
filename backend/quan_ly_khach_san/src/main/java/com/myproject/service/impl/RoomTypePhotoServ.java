@@ -28,6 +28,13 @@ public class RoomTypePhotoServ implements IRoomTypePhotoServ {
 		// TODO Auto-generated method stub
 		return roomTypePhotoRepo.findAll();
 	}
+	
+
+	@Override
+	public List<RoomTypePhotoEntity> findAllByIdRoomtype(String idRoomtype) {
+		// TODO Auto-generated method stub
+		return roomTypePhotoRepo.findAllByIdRoomtype(idRoomtype);
+	}
 
 //	trong tất cả ảnh của loại phòng đó, chỉ có duy nhất một ảnh được set làm avatar
 //	khi thêm mới cần để mặc định no avatar
@@ -73,5 +80,6 @@ public class RoomTypePhotoServ implements IRoomTypePhotoServ {
 			roomTypePhotoRepo.deleteById(id);
 		}
 	}
+
 
 }

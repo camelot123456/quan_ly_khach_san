@@ -54,7 +54,7 @@ spring:
 app:
    auth:
       tokenSecret: nguyensybao14032000
-      tokenExpirationMsec: 86400000
+      tokenExpirationMsec: 864000000
    cors:
       allowedOrigins: http://localhost:3000
    oauth2:

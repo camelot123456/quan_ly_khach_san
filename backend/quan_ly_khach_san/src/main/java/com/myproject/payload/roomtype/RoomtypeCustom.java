@@ -17,6 +17,8 @@ public class RoomtypeCustom {
 	private String description;
 	private Date createdAt;
 	private Date modifiedAt;
+	private String idRoomtypePhoto;
 	private String avatarUrl;
+	private Boolean isImgFile;
 	
 }

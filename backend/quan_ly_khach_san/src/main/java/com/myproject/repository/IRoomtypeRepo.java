@@ -22,7 +22,7 @@ public interface IRoomtypeRepo extends JpaRepository<RoomTypeEntity, String>{
 			nativeQuery = true)
 	public Page<RoomTypeEntity> pagedRoomTypeByKeyword(String keyword, Pageable pageable);
 	
-	@Query(value = "select rt.*, rtp.url "
+	@Query(value = "select rt.*, rtp.id as id_rtp, rtp.url, rtp.is_img_file "
 			+ "from roomtypes rt inner join roomtype_photo rtp "
 			+ "on rt.id = rtp.id_roomtype "
 			+ "where rtp.avatar_state = ?1 "

@@ -13,7 +13,8 @@ public class RoomtypeFormCreate {
 	private String name;
 	private Double price;
 	private String description;
-	private Integer typeImage;
 	private String avatarUrl;
+	private String idRoomtypePhoto;
+	private Boolean isImgFile;
 	
 }

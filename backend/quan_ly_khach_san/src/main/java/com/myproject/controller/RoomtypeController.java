@@ -1,5 +1,6 @@
 package com.myproject.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,7 +74,7 @@ public class RoomtypeController {
 	}
 	
 	@DeleteMapping("/roomtype")
-	public ResponseEntity<?> doDeleteOneRoomType(@RequestBody EntityResponse entityResponse) {
+	public ResponseEntity<?> doDeleteOneRoomType(@RequestBody EntityResponse entityResponse) throws IOException {
 		roomtypeServ.deleteById(entityResponse.getId());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}

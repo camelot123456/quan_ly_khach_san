@@ -36,28 +36,32 @@ public class CustomJwtAuthorizationFilter extends OncePerRequestFilter{
 		if (request.getRequestURI().startsWith("/auth/") || request.getRequestURI().startsWith("/img/")) {
 			filterChain.doFilter(request, response);
 		} else {
-			if (request.getHeader("Authorization").startsWith("Bearer ") || request.getHeader("Authorization") != null) {
-				String accessToken = request.getHeader("Authorization").substring("Bearer ".length());
-				
-				Algorithm algorithm = Algorithm.HMAC256(appProperties.getAuth().getTokenSecret().getBytes());
-				
-				JWTVerifier verifier = JWT.require(algorithm).build();
-				DecodedJWT jwt = verifier.verify(accessToken);
-				
-				String email = jwt.getSubject();
-				Map<String, Object> claims = jwt.getClaim("claims").asMap();
-				List<String> roles = (List<String>) claims.get("roles");
-				List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-				for (String role : roles) {
-					authorities.add(new SimpleGrantedAuthority(role));
+			try {
+				if (request.getHeader("Authorization").startsWith("Bearer ") || request.getHeader("Authorization") != null) {
+					String accessToken = request.getHeader("Authorization").substring("Bearer ".length());
+					
+					Algorithm algorithm = Algorithm.HMAC256(appProperties.getAuth().getTokenSecret().getBytes());
+					
+					JWTVerifier verifier = JWT.require(algorithm).build();
+					DecodedJWT jwt = verifier.verify(accessToken);
+					
+					String email = jwt.getSubject();
+					Map<String, Object> claims = jwt.getClaim("claims").asMap();
+					List<String> roles = (List<String>) claims.get("roles");
+					List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+					for (String role : roles) {
+						authorities.add(new SimpleGrantedAuthority(role));
+					}
+					
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+					
+					filterChain.doFilter(request, response);
+				} else {
+					filterChain.doFilter(request, response);
 				}
-				
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				
-				filterChain.doFilter(request, response);
-			} else {
-				filterChain.doFilter(request, response);
+			} catch (NullPointerException e) {
+				// TODO: handle exception
 			}
 		}
 	}

@@ -35,6 +35,9 @@ public class RoomTypePhotoEntity {
 	@Column(name = "[url]", columnDefinition = "nvarchar(255)")
 	private String url;
 	
+	@Column(name = "[is_img_file]", columnDefinition = "bit")
+	private Boolean isImgFile;
+	
 //	1 room_type_photo - 1 room_type
 	@JsonBackReference("roomtype_photo-roomtype")
 	@ManyToOne(fetch = FetchType.LAZY)

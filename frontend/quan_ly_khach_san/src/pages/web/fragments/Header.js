@@ -29,7 +29,6 @@ function Header() {
   const ref = useRef('');
 
   const accessToken = useSelector((state => state.authReducer.authResponse))
-  console.log(accessToken)
 
   const dispatch = useDispatch();
 

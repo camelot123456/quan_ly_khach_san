@@ -245,9 +245,6 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
             {edit && (
               <>
                 <HStack justify="center">
-                  {/* {getImageUrl(roomtypePhotoActive) ? (
-                  <Image borderRadius={6} mt={4} src={roomtypePhotoActive.url} alt={roomtypePhotoActive.id}/>) : (
-                  <Image borderRadius={6} mt={4} src={`${PATH_IMG_ROOMTYPE}/${roomtypePhotoActive.url}`} alt={roomtypePhotoActive.id}/>)} */}
                   <Image borderRadius={6} mt={4} src={!roomtypePhotoActive.imgFile ? roomtypePhotoActive.url : `${URL_BASE}/${PATH_IMG_ROOMTYPE}/${roomtypePhotoActive.url}`} alt={roomtypePhotoActive.id}/>
                 </HStack>
                 <Wrap>

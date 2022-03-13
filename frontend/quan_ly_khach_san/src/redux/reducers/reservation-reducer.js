@@ -1,7 +1,6 @@
 import reservationTypes from "../types/reservation-type";
 
 const initialState = {
-  apiResponse: {},
   reservation: {},
   reservationTransaction: {
     reservation: {},
@@ -15,24 +14,50 @@ const initialState = {
 
 const reservationReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+
     case reservationTypes.CREATE_RESERVATION_ACTION:
+      var rooms = {...state.rooms}
+      var services = {...state.services}
+      rooms = []
+      services = []
       return {
         ...state,
-        apiResponse: payload.apiResponse,
-        rooms: payload.rooms,
-        services: payload.services
+        rooms: rooms,
+        services: services
+      };
+
+    case reservationTypes.ERROR_CREATE_RESERVATION_ACTION:
+      var rooms = {...state.rooms}
+      var services = {...state.services}
+      rooms = []
+      services = []
+      return {
+        ...state,
+        rooms: rooms,
+        services: services
       };
 
     case reservationTypes.CANCEL_BY_ID_ACTION:
       return {
-        ...state,
-        apiResponse: payload.apiResponse,
+        ...state
+      };
+    
+    case reservationTypes.ERROR_CANCEL_BY_ID_ACTION:
+      return {
+        ...state
       };
 
     case reservationTypes.FIND_FOR_TRANSACTION_ACTION:
+      var reservationTransaction = {...state.reservationTransaction}
+      reservationTransaction = payload.reservation
       return {
         ...state,
-        reservationTransaction: payload.reservation,
+        reservationTransaction: reservationTransaction,
+      };
+
+    case reservationTypes.ERROR_FIND_FOR_TRANSACTION_ACTION:
+      return {
+        ...state
       };
 
     case reservationTypes.SET_ROOMS_ID_ACTION:
@@ -66,9 +91,11 @@ const reservationReducer = (state = initialState, { type, payload }) => {
       return stateServiceNew;
     
       case reservationTypes.ERROR_ACTION:
+        var apiResponseNew = {...state.apiResponse}
+        apiResponseNew = payload.apiResponse
         return {
           ...state,
-          apiResponse: payload.apiResponse,
+          apiResponse: apiResponseNew,
         }
     default:
       return state;

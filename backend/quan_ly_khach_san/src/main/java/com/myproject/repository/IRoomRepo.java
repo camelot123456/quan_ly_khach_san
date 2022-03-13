@@ -2,8 +2,6 @@ package com.myproject.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,22 +11,26 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 
 //----------------------------- SELECT -----------------------------
 	
-	@Query(value = "select * from rooms r "
+	@Query(value = "select r.* "
+			+ "from rooms r inner join roomtypes rt "
+			+ "on r.id_roomtype = rt.id "
 			+ "where r.id like %?1% "
 			+ "or concat(r.customer_num,'') like %?1% "
-			+ "or r.floor like %?1% "
+			+ "or concat(r.[floor],'') like %?1% "
 			+ "or r.room_state like %?1% "
 			+ "or r.room_num like %?1% "
-			+ "or concat(r.incurred_price,'') like %?1%",
+			+ "or concat(r.incurred_price,'') like %?1% "
+			+ "or r.id_roomtype like %?1% "
+			+ "order by r.modified_at desc",
 			nativeQuery = true)
-	public Page<RoomEntity> pagedByKeyword(String keyword, Pageable pageable);
+	public List<Object[]> pagedByKeyword(String keyword);
 	
 	@Query(value = "select r.* "
 			+ "from reservations re inner join reservation_room rer "
 			+ "on re.id = rer.id_reservation inner join rooms r "
 			+ "on rer.id_room = r.id inner join accounts a "
 			+ "on re.id_account = a.id "
-			+ "where re.id = ?1",
+			+ "where re.id = ?1 ",
 			nativeQuery = true)
 	public List<RoomEntity> findAllByIdReservation(String idReservation);
 	
@@ -66,7 +68,7 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "where t.id is null and ("
 			+ "r.room_num like %?1% "
 			+ "or r.room_state like %?1% "
-			+ "or r.[floor] like %?1% "
+			+ "or concat(r.[floor], '') like %?1% "
 			+ "or a.name like %?1% "
 			+ "or a.phone_num like %?1% "
 			+ "or rt.id like %?1% "
@@ -90,7 +92,7 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "re.[start_date] <= getdate() and re.end_date >= getdate())"
 			+ "and (r.room_num like %?1% "
 			+ "or r.room_state like %?1% "
-			+ "or r.[floor] like %?1% "
+			+ "or concat(r.[floor], '') like %?1% "
 			+ "or a.name like %?1% "
 			+ "or a.phone_num like %?1% "
 			+ "or rt.id like %?1% "

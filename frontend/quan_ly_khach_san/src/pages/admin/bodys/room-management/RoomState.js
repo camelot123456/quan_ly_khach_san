@@ -7,8 +7,6 @@ import {
   Flex,
   Heading,
   HStack,
-  ListItem,
-  Select,
   Spacer,
   Tab,
   Table,
@@ -21,15 +19,12 @@ import {
   Th,
   Thead,
   Tr,
-  UnorderedList,
   VStack,
   Wrap,
   WrapItem,
   AlertIcon,
   Alert,
-  useToast,
-  SkeletonCircle,
-  SkeletonText
+  useToast
 } from "@chakra-ui/react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -38,16 +33,28 @@ import { doShowRoomsAdmin } from "../../../../redux/actions/room-action";
 import { doCancelById, doFindForTransaction } from "../../../../redux/actions/reservation-action";
 import { doCreateTransactionPaymnet } from "../../../../redux/actions/transaction-action"
 import ModalScrollCustom from "../../fragments/ModalScrollCustom";
+import AlertDialogCustom from "../../fragments/AlertDialogCustom";
 
 function RoomState() {
 
   const toast = useToast()
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams(0);
-  const [roomState, setRoomState] = useState("using");
+  const [roomState, setRoomState] = useState(() => {
+    if (searchParams.get("tab2") == "0") {
+      return "using"
+    } else if (searchParams.get("tab2") == "1") {
+      return "deposit"
+    } else if (searchParams.get("tab2") == "2") {
+      return "checkout"
+    } else if (searchParams.get("tab2") == "3") {
+      return "empty"
+    } else if (searchParams.get("tab2") == "4") {
+      return "repair"
+    }
+  });
 
-  const rooms = useSelector((state) => state.roomReducer.rooms);
-  const reservationResponse = useSelector((state) => state.reservationReducer.apiResponse);
+  const rooms = useSelector((state) => state.roomReducer.roomsState);
 
   const parseColor = (roomState) => {
     switch (roomState) {
@@ -72,12 +79,31 @@ function RoomState() {
 
   const handleCancelReservationById = (dataRequest) => {
     dispatch(doCancelById(dataRequest))
-    toast({
-      title: 'Hủy Phiếu Đặt Phòng',
-      description: reservationResponse.message,
-      status: reservationResponse.success ? 'success' : 'error',
-      duration: 9000,
-      isClosable: true,
+    .then((res) => {
+      dispatch(
+        doShowRoomsAdmin({
+          roomState: "deposit",
+          currentPage: 0,
+          sizePage: 20,
+          sortField: "id",
+          sortDir: "asc",
+          keyword: "",
+        })
+      );
+      toast({
+        description: "Huỷ phiếu đặt phòng thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch((err) => {
+      toast({
+        description: "Huỷ phiếu đặt phòng thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
     })
   }
 
@@ -95,7 +121,7 @@ function RoomState() {
         sortDir: "asc",
         keyword: "",
       })
-    );
+    )
   }, [roomState]);
 
   return (
@@ -283,12 +309,15 @@ function RoomAll(props) {
                 <HStack justify="center">
                   {type == "DEPOSIT" ?
                     (<>
-                      <Box color="white" borderRadius={4} border="solid 1px" bg="red.800" minWidth="26px"
-                        textAlign="center" _hover={{ borderColor: "white", bg: "red.500", cursor: "pointer" }} 
-                        onClick={() => handleCancelRoom({idReservation: room.idReservation, idRoom: room.idRoom})}
-                      >
-                        <i className="fa fa-ban" aria-hidden="true"></i>
-                      </Box>
+                      <AlertDialogCustom 
+                        nameBtnCall={<i className="fa fa-ban" aria-hidden="true"></i>}
+                        className="btn-cancel-deposit"
+                        title="Hủy phiếu đặt phòng"
+                        content="Bạn có muốn hủy phòng này không ?"
+                        nameBtnNegative="Xác nhận"
+                        nameBtnPositive="Hủy"
+                        onBtnNegative={() => handleCancelRoom({idReservation: room.idReservation, idRoom: room.idRoom})}
+                      />
 
                       <ModalScrollCustom
                         icon={<i className="fa fa-credit-card" aria-hidden="true"></i>}

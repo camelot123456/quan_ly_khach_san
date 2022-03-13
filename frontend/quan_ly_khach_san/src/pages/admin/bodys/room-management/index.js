@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import RoomState from "./RoomState";
 import RoomtypeList from "./RoomtypeList";
+import RoomList from "./RoomList";
 import { Link, useSearchParams } from "react-router-dom";
 
 function RoomTab() {
@@ -40,7 +41,7 @@ function RoomTab() {
             <RoomState />
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <RoomList />
           </TabPanel>
           <TabPanel>
             <RoomtypeList />

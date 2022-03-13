@@ -52,7 +52,22 @@
   cursor: pointer
 }
 
-.btn-add-roomtype {
+.btn-cancel-deposit {
+  background-color: #E53E3E;
+  color: white; 
+  border-radius: 4px;
+  border: solid 1px;
+  min-width: 26px; 
+  text-align: center
+}
+
+.btn-cancel-deposit:hover {
+  border-color: white;
+  background-color: red; 
+  cursor: pointer
+}
+
+.btn-add-roomtype, .btn-add-room {
   background-color: #086F83;
   color: white; 
   border-radius: 4px;
@@ -64,13 +79,13 @@
   justify-content: center;
 }
 
-.btn-add-roomtype:hover {
+.btn-add-roomtype:hover, .btn-add-room:hover {
   border-color: white;
   background-color: #00B5D8; 
   cursor: pointer
 }
 
-.btn-delete-roomtype-list {
+.btn-delete-roomtype-list, .btn-delete-room-list {
   background-color: #E53E3E;
   color: white;
   padding: 2px;
@@ -83,11 +98,11 @@
   align-items: center;
 }
 
-.btn-delete-roomtype-list:hover {
+.btn-delete-roomtype-list:hover, .btn-delete-room-list:hover {
   background-color: red;
 }
 
-.btn-detail-roomtype-list {
+.btn-detail-roomtype-list, .btn-detail-room-list {
   background-color: #38A169;
   color: white;
   padding: 2px;
@@ -100,7 +115,7 @@
   align-items: center;
 }
 
-.btn-detail-roomtype-list:hover {
+.btn-detail-roomtype-list:hover, .btn-detail-room-list:hover {
   background-color: green;
 }
 

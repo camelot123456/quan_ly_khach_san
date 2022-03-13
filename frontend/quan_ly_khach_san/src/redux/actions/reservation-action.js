@@ -1,79 +1,61 @@
 import reservationTypes from '../types/reservation-type'
 import reservationService from '../../services/reservation-service'
 
-export const doCreateReservation = (apiRequest) => async (dispatch) => {
-    try {
-        await reservationService.doCreateReservation(apiRequest)
-        dispatch({
-            type: reservationTypes.CREATE_RESERVATION_ACTION,
-            payload: {
-                apiResponse: {
-                    success: true,
-                    message: "Đã tạo phiếu đặt phòng thành công.",
-                },
-                rooms: [],
-                services: []
-            }
+export const doCreateReservation = (apiRequest) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        reservationService.doCreateReservation(apiRequest)
+        .then(res => {
+            dispatch({
+                type: reservationTypes.CREATE_RESERVATION_ACTION
+            })
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: reservationTypes.ERROR_ACTION,
-            payload: {
-                apiResponse: {
-                    success: false,
-                    message: "Thêm phiếu đặt phòng thất bại.",
-                }
-            }
+        .catch(err => {
+            dispatch({
+                type: reservationTypes.ERROR_CREATE_RESERVATION_ACTION
+            })
+            reject()
         })
-    }
+    })
 }
 
 export const doCancelById = (dataRequest) => async (dispatch) => {
-    try {
-        
-        await reservationService.doCancelById(dataRequest)
-        dispatch({
-            type: reservationTypes.CANCEL_BY_ID_ACTION,
-            payload: {
-                apiResponse: {
-                    success: true,
-                    message: 'Đã hủy thành công phiếu đặt phòng này.'
-                }
-            }
+    return new Promise((resolve, reject) => {
+        reservationService.doCancelById(dataRequest)
+        .then(res => {
+            dispatch({
+                type: reservationTypes.CANCEL_BY_ID_ACTION
+            })
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: reservationTypes.ERROR_ACTION,
-            payload: {
-                apiResponse: {
-                    success: false,
-                    message: 'Hủy thất bại phiếu đặt phòng này.'
-                }
-            }
+        .catch(err => {
+            dispatch({
+                type: reservationTypes.ERROR_CANCEL_BY_ID_ACTION
+            })
+            reject()
         })
-    }
+    })
 }
 
-export const doFindForTransaction = (idReservation) => async (dispatch) => {
-    try {
-        const reservationResponse = await reservationService.doFindForTransaction(idReservation)
-        dispatch({
-            type: reservationTypes.FIND_FOR_TRANSACTION_ACTION,
-            payload: {
-                reservation: reservationResponse.data
-            }
-        })
-    } catch (error) {
-        dispatch({
-            type: reservationTypes.ERROR_ACTION,
-            payload: {
-                apiResponse: {
-                    success: false,
-                    message: error.message,
+export const doFindForTransaction = (idReservation) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        reservationService.doFindForTransaction(idReservation)
+        .then(res => {
+            dispatch({
+                type: reservationTypes.FIND_FOR_TRANSACTION_ACTION,
+                payload: {
+                    reservationTransaction: res.data
                 }
-            }
+            })
+            resolve()
         })
-    }
+        .catch(err => {
+            dispatch({
+                type: reservationTypes.ERROR_FIND_FOR_TRANSACTION_ACTION               
+            })   
+            reject()         
+        })
+    })
 }
 
 export const doSetRoomsId = (idRoom) => {

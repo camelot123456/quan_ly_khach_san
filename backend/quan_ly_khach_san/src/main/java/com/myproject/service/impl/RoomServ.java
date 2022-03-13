@@ -13,15 +13,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.myproject.entity.RoomEntity;
+import com.myproject.entity.RoomTypeEntity;
+import com.myproject.entity.enums.ERoomState;
 import com.myproject.payload.room.RoomDetailForAdmin;
 import com.myproject.payload.room.RoomRoomtypeReservationReservationroomAccount;
 import com.myproject.repository.IAccountRepo;
 import com.myproject.repository.IRoomRepo;
+import com.myproject.repository.IRoomtypeRepo;
 import com.myproject.service.IRoomServ;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class RoomServ implements IRoomServ {
@@ -31,15 +35,38 @@ public class RoomServ implements IRoomServ {
 
 	@Autowired
 	private IAccountRepo accountRepo;
+	
+	@Autowired
+	private IRoomtypeRepo roomtypeRepo;
 
 	@Override
 	public Page<RoomEntity> paged(int currentPage, int sizePage, String sortField, String sortDir, String keyword) {
 		// TODO Auto-generated method stub
+		keyword = keyword == null ? "" : keyword;
+		List<Object[]> rooms = roomRepo.pagedByKeyword(keyword);
+		List<RoomEntity> roomsNew = null;
+		if (rooms.size() > 0) {
+			roomsNew = new ArrayList<RoomEntity>();
+			for (Object[] record : rooms) {
+				RoomEntity r = new RoomEntity();
+				r.setId((String) record[0]);
+				r.setCreatedAt((Date) record[1]);
+				r.setCustomerNum((Integer) record[2]);
+				r.setDescription((String) record[3]);
+				r.setFloor((Integer) record[4]);
+				r.setIncurredPrice((Double) record[5]);
+				r.setModifiedAt((Date) record[6]);
+				r.setRoomNum((String) record[7]);
+				r.setRoomState(ERoomState.valueOf((String) record[8]));
+				r.setIdRoomtype((String) record[9]);
+				roomsNew.add(r);
+			}
+		}
+		
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
-		keyword = keyword == null ? "" : keyword;
-		return roomRepo.pagedByKeyword(keyword, pageRequest);
+		return new PageImpl<RoomEntity>(roomsNew, pageRequest, roomsNew.size());
 	}
 
 	@Override
@@ -56,7 +83,7 @@ public class RoomServ implements IRoomServ {
 				r.setIdRoom((String) record[0]);
 				r.setRoomNum((String) record[1]);
 				r.setRoomState((String) record[2]);
-				r.setFloor((String) record[3]);
+				r.setFloor((Integer) record[3]);
 				r.setNameAccount((String) record[4]);
 				r.setPhoneNum((String) record[5]);
 				r.setIdRoomType((String) record[6]);
@@ -91,7 +118,7 @@ public class RoomServ implements IRoomServ {
 				r.setIdRoom((String) record[0]);
 				r.setRoomNum((String) record[1]);
 				r.setRoomState((String) record[2]);
-				r.setFloor((String) record[3]);
+				r.setFloor((Integer) record[3]);
 				r.setNameAccount((String) record[4]);
 				r.setPhoneNum((String) record[5]);
 				r.setIdRoomType((String) record[6]);
@@ -283,17 +310,42 @@ public class RoomServ implements IRoomServ {
 	@Override
 	public RoomEntity save(RoomEntity room) {
 		// TODO Auto-generated method stub
-		if (!roomRepo.existsById(room.getId())) {
-			return roomRepo.save(room);
-		}
-		return null;
+		String id = "";
+		do {
+			id = RandomString.make(10);
+		} while (roomRepo.existsById(id));
+		RoomTypeEntity roomtype = roomtypeRepo.findById(room.getIdRoomtype()).get();
+		
+		RoomEntity roomNew = new RoomEntity();
+		roomNew.setId(id);
+		roomNew.setRoomNum(room.getRoomNum());
+		roomNew.setCustomerNum(room.getCustomerNum());
+		roomNew.setIncurredPrice(room.getIncurredPrice());
+		roomNew.setDescription(room.getDescription());
+		roomNew.setRoomState(ERoomState.EMPTY);
+		roomNew.setFloor(room.getFloor());
+		roomNew.setRoomType(roomtype);
+		
+		return roomRepo.save(roomNew);
 	}
 
 	@Override
 	public RoomEntity update(RoomEntity room) {
 		// TODO Auto-generated method stub
+		System.out.println(room.getId());
 		if (roomRepo.existsById(room.getId())) {
-			return roomRepo.save(room);
+			RoomTypeEntity roomtype = roomtypeRepo.findById(room.getIdRoomtype()).get();
+			
+			RoomEntity roomNew = roomRepo.findById(room.getId()).get();
+			roomNew.setRoomNum(room.getRoomNum());
+			roomNew.setCustomerNum(room.getCustomerNum());
+			roomNew.setIncurredPrice(room.getIncurredPrice());
+			roomNew.setDescription(room.getDescription());
+			roomNew.setRoomState(ERoomState.EMPTY);
+			roomNew.setFloor(room.getFloor());
+			roomNew.setRoomType(roomtype);
+			
+			return roomRepo.save(roomNew);
 		}
 		return null;
 	}

@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -68,8 +69,8 @@ public class RoomEntity {
 	@Column(name = "[room_state]", columnDefinition = "varchar(7)")
 	private ERoomState roomState;
 	
-	@Column(name = "[floor]", columnDefinition = "char(2)")
-	private String floor;
+	@Column(name = "[floor]", columnDefinition = "int")
+	private Integer floor;
 	
 //	1 room - n comment
 	@JsonManagedReference("comment-room")
@@ -89,6 +90,8 @@ public class RoomEntity {
 	
 //--------------------------transient-----------------------------------
 	
+	@Transient
+	private String idRoomtype;
  
 }
 

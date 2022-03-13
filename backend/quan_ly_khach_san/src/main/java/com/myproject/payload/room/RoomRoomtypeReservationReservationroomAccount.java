@@ -15,7 +15,7 @@ public class RoomRoomtypeReservationReservationroomAccount {
 	private String idRoom;
 	private String roomNum;
 	private String roomState;
-	private String floor;
+	private Integer floor;
 	private String nameAccount;
 	private String phoneNum;
 	private String idRoomType;

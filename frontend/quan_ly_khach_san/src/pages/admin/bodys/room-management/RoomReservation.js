@@ -48,20 +48,22 @@ import {
   doSetRoomsId,
   doSetServices,
 } from "../../../../redux/actions/reservation-action";
+import RoomTypeElement from "../../fragments/RoomtypeElement";
+import { useNavigate } from "react-router-dom";
 
 function RoomReservation() {
   const dispatch = useDispatch();
-
   const toast = useToast()
-  const [customerNum, setCustomerNum] = useState(1);
+  const navigate = useNavigate();
+
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
+
+  const [customerNum, setCustomerNum] = useState(1);
   const [roomtype, setRoomtype] = useState(null);
   const [keyword, setKeyword] = useState("");
 
-  
-  const reservationResponse = useSelector((state => state.reservationReducer.apiResponse))
-  const roomsChecked = useSelector((state) => state.roomReducer.roomsChecked);
+  const roomsChecked = useSelector((state) => state.roomReducer.rooms);
   const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
   const services = useSelector((state) => state.serviceReducer.services);
   const account = useSelector((state) => state.accountReducer.account);
@@ -72,7 +74,7 @@ function RoomReservation() {
     (state) => state.reservationReducer.services
   );
 
-  const initialValues = {
+  var initialValues = {
     id: "",
     name: "",
     address: "",
@@ -107,7 +109,7 @@ function RoomReservation() {
   return (
     <>
       <Formik initialValues={initialValues} validationSchema={validationSchema}
-        onSubmit={async (values) => {
+        onSubmit={(values) => {
           var data = {
             customer: {
               id: values.id,
@@ -125,13 +127,23 @@ function RoomReservation() {
           };
 
           console.log(data);
-          await dispatch(doCreateReservation(data));
-          toast({
-            title: 'Tạo phiếu đặt phòng.',
-            description: reservationResponse.message,
-            status: reservationResponse.sussess ? 'success' : 'error',
-            duration: 9000,
-            isClosable: true,
+          dispatch(doCreateReservation(data))
+          .then((res) => {
+            toast({
+              description: "Tạo phiếu đặt phòng thành công",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+            navigate("/admin/rooms?tab1=0&tab2=1")
+          })
+          .catch((err) => {
+            toast({
+              description: "Tạo phiếu đặt phòng thất bại",
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
           })
         }}
       >
@@ -354,38 +366,6 @@ function TableRoomElement(props) {
           )}
         </Tbody>
       </Table>
-    </>
-  );
-}
-
-function RoomTypeElement(props) {
-  const { roomtype } = props;
-
-  return (
-    <>
-      {roomtype ? (
-        <HStack mt={4} align="start">
-          <Box w="40%">
-            <Image src={roomtype.avatarUrl} alt={roomtype.name} borderRadius="8px" />
-          </Box>
-          <Box w="60%">
-            <Heading fontSize={18} textAlign="start">
-              {roomtype.name}
-            </Heading>
-            <Badge colorScheme="purple" fontSize={14}>
-              {roomtype.price} VND/Day
-            </Badge>
-            <Text fontSize={14} lineHeight="1.2" textAlign="justify">
-              {roomtype.description}
-            </Text>
-          </Box>
-        </HStack>
-      ) : (
-        <Alert status="warning" mt={4}>
-          <AlertIcon />
-          Vui lòng chọn loại phòng !
-        </Alert>
-      )}
     </>
   );
 }

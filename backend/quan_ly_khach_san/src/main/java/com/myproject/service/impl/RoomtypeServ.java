@@ -221,7 +221,7 @@ public class RoomtypeServ implements IRoomtypeServ{
 		// TODO Auto-generated method stub
 		for (RoomTypePhotoEntity rtp : roomtypePhotoRepo.findAllByIdRoomtype(id)) {
 			roomtypePhotoRepo.deleteById(rtp.getId());
-			if (!rtp.getUrl().startsWith("http://") || !rtp.getUrl().startsWith("https://")) {
+			if (rtp.getIsImgFile()) {
 				FileUtil.deleteFile(rtp.getUrl(), appProperties.getSystemConstant().getUriSaveImage() + "/roomtype");
 			}
 		}

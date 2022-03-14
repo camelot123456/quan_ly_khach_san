@@ -46,23 +46,34 @@ function RoomtypeList() {
   const toast = useToast()
   const dispatch = useDispatch();
   const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
-  const roomtypeResponse = useSelector((state) => state.roomtypeReducer.apiResponse);
 
   useEffect(() => {
     dispatch(doShowRoomtypeList());
   }, []);
 
-  const handleDeleteRoomtypeById = async (idRoomtype) => {
-    await dispatch(doDeleteRoomtypeById(idRoomtype));
-    await dispatch(doShowRoomtypeList())
-    toast({
-      title: 'Xóa loại phòng',
-      description: roomtypeResponse.message,
-      status: roomtypeResponse.success ? 'success' : 'error',
-      duration: 9000,
-      isClosable: true,
+  const handleDeleteRoomtypeById = (idRoomtype) => {
+    dispatch(doDeleteRoomtypeById(idRoomtype))
+    .then((res) => {
+      toast({
+        title: 'Thông báo',
+        description: "Xóa loại phòng thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
     })
-    
+    .catch((err) => {
+      toast({
+        title: 'Thông báo',
+        description: "Xóa loại phòng thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .finally(() => {
+      dispatch(doShowRoomtypeList())
+    })
   }
 
   return (
@@ -137,6 +148,8 @@ function RoomtypeList() {
 
 function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
 
+  console.log(roomtype);
+
   const dispatch = useDispatch();
   const toast = useToast()
   const [avatar1, setAvatar1] = useState()
@@ -149,7 +162,7 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
 
   useEffect(async () => {
     await dispatch(showRoomtypePhotoByIdRoomtype(idRoomtype))
-    dispatch(setRoomtypePhotoActive(roomtype.id, roomtype.avatarUrl, roomtype.isImgFile))
+    dispatch(setRoomtypePhotoActive(roomtype.idRoomtypePhoto, roomtype.avatarUrl, roomtype.isImgFile))
   }, [])
 
   if (roomtype===undefined) {
@@ -183,12 +196,13 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
   }
 
   const handleSetRoomtypePhotoActive = async (idImage, urlImage, imgFile) => {
+    console.log({idImage, urlImage, imgFile})
     dispatch(setRoomtypePhotoActive(idImage, urlImage, imgFile))
   }
 
   return (
     <Formik validationSchema={validationSchema} initialValues={initialValues}
-      onSubmit={async (values) => {
+      onSubmit={(values) => {
 
         if (edit) {
           var formData = new FormData(document.getElementById('form-roomtype'))
@@ -201,16 +215,28 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
           }
           console.log(data)
           formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
-          await dispatch(doUpdateRoomtype(formData));
-          await dispatch(doShowRoomtypeList())
-          toast({
-            title: 'Cập nhập loại phòng.',
-            description: roomtypeResponse.message,
-            status: roomtypeResponse.sussess ? 'success' : 'error',
-            duration: 9000,
-            isClosable: true,
+          dispatch(doUpdateRoomtype(formData))
+          .then(response => {
+            toast({
+              title: 'Thông báo',
+              description: "Cập nhập loại phòng thành công",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
           })
-          
+          .catch((err) => {
+            toast({
+              title: 'Thông báo',
+              description: "Cập nhập loại phòng thất bại",
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .finally(() => {
+            dispatch(doShowRoomtypeList())
+          })
         }
         else {
           var formData = new FormData(document.getElementById('form-roomtype'))
@@ -224,14 +250,27 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
           console.log(data)
           formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
           formData.append("avatar-file", document.forms['form-roomtype'].avatarFile.files[0])
-          await dispatch(doCreateRoomtype(formData));
-          await dispatch(doShowRoomtypeList())
-          toast({
-            title: 'Thêm mới loại phòng.',
-            description: roomtypeResponse.message,
-            status: roomtypeResponse.sussess ? 'success' : 'error',
-            duration: 9000,
-            isClosable: true,
+          dispatch(doCreateRoomtype(formData))
+          .then(response => {
+            toast({
+              title: 'Thông báo',
+              description: "Thêm mới loại phòng thành công",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .catch((err) => {
+            toast({
+              title: 'Thông báo',
+              description: "Thêm mới loại phòng thất bại",
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .finally(() => {
+            dispatch(doShowRoomtypeList())
           })
         }
       }}

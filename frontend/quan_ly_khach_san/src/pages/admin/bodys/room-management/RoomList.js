@@ -67,13 +67,6 @@ function RoomList() {
         duration: 9000,
         isClosable: true,
       })
-      dispatch(findAll({
-        currentPage: 0,
-        sizePage: 20,
-        sortField: "id",
-        sortDir: "asc",
-        keyword: "",
-      }));
     })
     .catch(err => {
       toast({
@@ -83,8 +76,15 @@ function RoomList() {
         duration: 9000,
         isClosable: true,
       })
+    }).finally(() => {
+      dispatch(findAll({
+        currentPage: 0,
+        sizePage: 20,
+        sortField: "id",
+        sortDir: "asc",
+        keyword: "",
+      }));
     })
-    
   }
 
   return (
@@ -215,13 +215,6 @@ function ContentFormRoom ({edit, idRoom, room}) {
               duration: 9000,
               isClosable: true,
             })
-            dispatch(findAll({
-              currentPage: 0,
-              sizePage: 20,
-              sortField: "id",
-              sortDir: "asc",
-              keyword: "",
-            }));
           })
           .catch(err => {
             toast({
@@ -231,6 +224,15 @@ function ContentFormRoom ({edit, idRoom, room}) {
               duration: 9000,
               isClosable: true,
             })
+          })
+          .finally(() => {
+            dispatch(findAll({
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }));
           })
         }
         else {
@@ -252,13 +254,6 @@ function ContentFormRoom ({edit, idRoom, room}) {
               duration: 9000,
               isClosable: true,
             })
-            dispatch(findAll({
-              currentPage: 0,
-              sizePage: 20,
-              sortField: "id",
-              sortDir: "asc",
-              keyword: "",
-            }));
           })
           .catch(err => {
             toast({
@@ -268,6 +263,15 @@ function ContentFormRoom ({edit, idRoom, room}) {
               duration: 9000,
               isClosable: true,
             })
+          })
+          .finally(() => {
+            dispatch(findAll({
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }));
           })
         }
       }}

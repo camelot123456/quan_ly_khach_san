@@ -1,149 +1,93 @@
 import roomtypeService from "../../services/roomtype-service";
 import roomtypeTypes from '../types/roomtype-type'
 
-export const doShowRoomtypeList = () => async (dispatch) => {
-    try {
-        const roomtypeResponse = await roomtypeService.doShowRoomtypeList();
-        dispatch({
-            type: roomtypeTypes.SHOW_ROOMTYPE_LIST_ACTION,
-            payload: {
-                roomtypes: roomtypeResponse.data.roomtypes,
-                paged: roomtypeResponse.data.paged,
-                apiResponse: {
-                    success: true,
-                    message: "Successfully."
+export const doShowRoomtypeList = () => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomtypeService.doShowRoomtypeList()
+        .then((res) => {
+            dispatch({
+                type: roomtypeTypes.SHOW_ROOMTYPE_LIST_ACTION,
+                payload: {
+                    roomtypes: res.data.roomtypes,
+                    paged: res.data.paged,
                 }
-            }
+            })
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: roomtypeTypes.ERROR_ACTION,
-            payload: {
-                message: error.message,
-                success: false
-            }
+        .catch((err) => {
+            reject()
         })
-    }
+    })
 }
 
-export const doFindRoomtypeById = (idRoomtype) => async (dispatch) => {
-    try {
-        const roomtypeResponse = await roomtypeService.doFindRoomtypeById(idRoomtype);
-        dispatch({
-            type: roomtypeTypes.FIND_ROOMTYPE_BY_ID_ACTION,
-            payload: {
-                roomtype: roomtypeResponse.data.roomtype,
-                apiResponse: {
-                    success: true,
-                    message: "Successfully."
+export const doFindRoomtypeById = (idRoomtype) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomtypeService.doFindRoomtypeById(idRoomtype)
+        .then((res) => {
+            dispatch({
+                type: roomtypeTypes.FIND_ROOMTYPE_BY_ID_ACTION,
+                payload: {
+                    roomtype: res.data.roomtype
                 }
-            }
+            })
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: roomtypeTypes.ERROR_ACTION,
-            payload: {
-                message: error.message,
-                success: false
-            }
+        .catch((err) => {
+            reject()
         })
-    }
+    })
 }
 
-export const doShowRoomtypeByAvatarStateList = () => async (dispatch) => {
-    try {
-        const roomtypeResponse = await roomtypeService.doShowRoomtypeByAvatarStateList();
-        dispatch({
-            type: roomtypeTypes.SHOW_ROOMTYPE_BY_AVATAR_STATE_LIST_ACTION,
-            payload: {
-                roomtypes: roomtypeResponse.data,
-                apiResponse: {
-                    success: true,
-                    message: "Successfully."
+export const doShowRoomtypeByAvatarStateList = () => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomtypeService.doShowRoomtypeByAvatarStateList()
+        .then((res) => {
+            dispatch({
+                type: roomtypeTypes.SHOW_ROOMTYPE_BY_AVATAR_STATE_LIST_ACTION,
+                payload: {
+                    roomtypes: res.data
                 }
-            }
+            })
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: roomtypeTypes.ERROR_ACTION,
-            payload: {
-                message: error.message,
-                success: false
-            }
+        .catch((err) => {
+            reject()
         })
-    }
+    })
 }
 
-export const doCreateRoomtype = (dataRequest) => async (dispatch) => {
-    try {
-        await roomtypeService.doCreateRoomtype(dataRequest);
-        dispatch({
-            type: roomtypeTypes.CREATE_ROOMTYPE_ACTION,
-            payload: {
-                apiResponse: {
-                    success: true,
-                    message: "Thêm mới loại phòng thành công."
-                },
-                roomtype: dataRequest
-            }
+export const doCreateRoomtype = (dataRequest) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomtypeService.doCreateRoomtype(dataRequest)
+        .then((res) => {
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: roomtypeTypes.ERROR_ACTION,
-            payload: {
-                message: "Thêm mới loại phòng thất bại.",
-                success: false
-            }
+        .catch(err => {
+            reject()
         })
-    }
+    })
 }
 
-export const doUpdateRoomtype = (dataRequest) => async (dispatch) => {
-    try {
-        await roomtypeService.doUpdateRoomtype(dataRequest);
-        dispatch({
-            type: roomtypeTypes.UPDATE_ROOMTYPE_ACTION,
-            payload: {
-                apiResponse: {
-                    success: true,
-                    message: "Cập nhập loại phòng thành công."
-                },
-                roomtype: dataRequest
-            }
+export const doUpdateRoomtype = (dataRequest) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomtypeService.doUpdateRoomtype(dataRequest)
+        .then((res) => {
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: roomtypeTypes.ERROR_ACTION,
-            payload: {
-                message: "Cập nhập loại phòng thất bại.",
-                success: false
-            }
+        .catch(err => {
+            reject()
         })
-    }
+    })
 }
 
 export const doDeleteRoomtypeById = (idRoomtype) => async (dispatch) => {
-    try {
-        await roomtypeService.doDeleteRoomtypeById(idRoomtype);
-        dispatch({
-            type: roomtypeTypes.DELETE_ROOMTYPE_BY_ID_ACTION,
-            payload: {
-                apiResponse: {
-                    success: true,
-                    message: "Xóa loại phòng thành công."
-                },
-                roomtype: {
-                    id: idRoomtype
-                }
-            }
+    return new Promise((resolve, reject) => {
+        roomtypeService.doDeleteRoomtypeById(idRoomtype)
+        .then((res) => {
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: roomtypeTypes.ERROR_ACTION,
-            payload: {
-                message: "Xóa loại phòng thất bại.",
-                success: false
-            }
+        .catch(err => {
+            reject()
         })
-    }
+    })
 }

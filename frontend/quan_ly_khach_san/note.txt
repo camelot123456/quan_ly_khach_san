@@ -1,3 +1,3 @@
 1.thêm sửa xóa roomtypes --> ok
-2.thêm sửa xóa rooms
+2.thêm sửa xóa rooms --> ok
 3.show list account, customer

@@ -80,16 +80,6 @@ function RoomState() {
   const handleCancelReservationById = (dataRequest) => {
     dispatch(doCancelById(dataRequest))
     .then((res) => {
-      dispatch(
-        doShowRoomsAdmin({
-          roomState: "deposit",
-          currentPage: 0,
-          sizePage: 20,
-          sortField: "id",
-          sortDir: "asc",
-          keyword: "",
-        })
-      );
       toast({
         description: "Huỷ phiếu đặt phòng thành công",
         status: 'success',
@@ -104,6 +94,18 @@ function RoomState() {
         duration: 9000,
         isClosable: true,
       })
+    })
+    .finally(() => {
+      dispatch(
+        doShowRoomsAdmin({
+          roomState: "deposit",
+          currentPage: 0,
+          sizePage: 20,
+          sortField: "id",
+          sortDir: "asc",
+          keyword: "",
+        })
+      );
     })
   }
 
@@ -139,8 +141,7 @@ function RoomState() {
 
           <Link to="/admin/rooms?tab1=0&tab2=1">
             <Tab borderRadius={8} h={70} bg="#9F7AEA" mr={10} w={220}
-              onClick={() => setRoomState("deposit")}
-            >
+              onClick={() => setRoomState("deposit")} >
               Đặt cọc:{" "}
             </Tab>
           </Link>
@@ -154,16 +155,14 @@ function RoomState() {
 
           <Link to="/admin/rooms?tab1=0&tab2=3">
             <Tab borderRadius={8} h={70} bg="#A0AEC0" mr={10} w={220}
-              onClick={() => setRoomState("empty")}
-            >
+              onClick={() => setRoomState("empty")} >
               Trống:{" "}
             </Tab>
           </Link>
 
           <Link to="/admin/rooms?tab1=0&tab2=4">
             <Tab borderRadius={8} h={70} bg="#F56565" mr={10} w={220}
-              onClick={() => setRoomState("repair")}
-            >
+              onClick={() => setRoomState("repair")} >
               Sửa chữa:{" "}
             </Tab>
           </Link>
@@ -176,7 +175,7 @@ function RoomState() {
         </HStack>
 {/* -----------------------------------------------RoomList------------------------------------------------- */}  
         <TabPanels>
-          
+    
           <TabPanel>
             <RoomAll
               rooms={rooms || []}
@@ -398,12 +397,35 @@ function RoomAll(props) {
 function ContentPayment(props) {
   
   const {reservationTransaction} = props
+  console.log(reservationTransaction)
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(reservationTransaction);
+  const toast = useToast()
+
   const handlePayment = (idReservation) => {
     dispatch(doCreateTransactionPaymnet(idReservation))
-    navigate("/admin/room")
+    .then((res) => {
+      toast({
+        title: 'Thông báo',
+        description: "Đã thanh toán thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch((err) => {
+      toast({
+        title: 'Thông báo',
+        description: "Thanh toán thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .finally(() => {
+      navigate("/admin/transactions")
+    })
   }
 
   return (
@@ -422,7 +444,7 @@ function ContentPayment(props) {
         </HStack>
         <Divider />
         <Heading align="center" fontSize={32} >Phiếu thanh toán</Heading>
-        <Text fontSize={14} align="center">{reservationTransaction.reservation.idReservation}</Text>
+        <Text fontSize={14} align="center">{reservationTransaction.reservation.idReservation || ''}</Text>
         <Text fontSize={14} align="center">{formatDate(reservationTransaction.reservation.createdAt, "hh:MM:ss - dd/mm/yyyy") || ''}</Text>
         <Text fontSize={14}>Mã khách hàng: {reservationTransaction.reservation.idAccount || ''}</Text>
         <Text fontSize={14}>Khách hàng: {reservationTransaction.reservation.nameAccount || ''}</Text>
@@ -467,7 +489,7 @@ function ContentPayment(props) {
             </Tr>
           </Thead>
           <Tbody>
-            {reservationTransaction.services.map((service, index) => (
+            {reservationTransaction.services && reservationTransaction.services.map((service, index) => (
               <Tr key={index}>
                 <Th>{service.idService || ''}</Th>
                 <Th>{service.name || ''}</Th>

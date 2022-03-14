@@ -49,7 +49,7 @@ const reservationReducer = (state = initialState, { type, payload }) => {
 
     case reservationTypes.FIND_FOR_TRANSACTION_ACTION:
       var reservationTransaction = {...state.reservationTransaction}
-      reservationTransaction = payload.reservation
+      reservationTransaction = payload.reservationTransaction
       return {
         ...state,
         reservationTransaction: reservationTransaction,

@@ -50,9 +50,6 @@ export const doFindForTransaction = (idReservation) => (dispatch) => {
             resolve()
         })
         .catch(err => {
-            dispatch({
-                type: reservationTypes.ERROR_FIND_FOR_TRANSACTION_ACTION               
-            })   
             reject()         
         })
     })

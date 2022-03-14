@@ -46,6 +46,51 @@ public interface IAccountRepo extends JpaRepository<AccountEntity, String>{
 	
 	public Boolean existsByEmail(String email);
 	
+	@Query(value = "select distinct a.* "
+			+ "from accounts a inner join account_role ar "
+			+ "on a.id = ar.id_account inner join roles r "
+			+ "on ar.id_role = r.id "
+			+ "where a.auth_provider = 'NO_ACCOUNT'"
+			+ "and a.id like %?1% "
+			+ "or a.[address] like %?1% "
+			+ "or a.auth_provider like %?1% "
+			+ "or a.email like %?1% "
+			+ "or a.name like %?1% "
+			+ "or a.phone_num like %?1% "
+			+ "order by a.modified_at desc",
+			nativeQuery = true)
+	public List<Object[]> findAllCustomerNoAccount(String keyword);
+	
+	@Query(value = "select distinct a.* "
+			+ "from accounts a inner join account_role ar "
+			+ "on a.id = ar.id_account inner join roles r "
+			+ "on ar.id_role = r.id "
+			+ "where a.auth_provider in ('LOCAL', 'GOOGLE', 'FACEBOOK') and r.code = 'MEMBER' "
+			+ "and a.id like %?1% "
+			+ "or a.[address] like %?1% "
+			+ "or a.auth_provider like %?1% "
+			+ "or a.email like %?1% "
+			+ "or a.name like %?1% "
+			+ "or a.phone_num like %?1% "
+			+ "order by a.modified_at desc",
+			nativeQuery = true)
+	public List<Object[]> findAllCustomerAccount(String keyword);
+	
+	@Query(value = "select distinct a.* "
+			+ "from accounts a inner join account_role ar "
+			+ "on a.id = ar.id_account inner join roles r "
+			+ "on ar.id_role = r.id "
+			+ "where a.auth_provider = 'LOCAL' and r.code in ('DIRECTOR', 'RECEPTIONIST', 'ACCOUNTANT', 'BUSINESS') "
+			+ "and a.id like %?1% "
+			+ "or a.[address] like %?1% "
+			+ "or a.auth_provider like %?1% "
+			+ "or a.email like %?1% "
+			+ "or a.name like %?1% "
+			+ "or a.phone_num like %?1% "
+			+ "order by a.modified_at desc",
+			nativeQuery = true)
+	public List<Object[]> findAllInternal(String keyword);
+	
 //	----------------------------- INSERT -----------------------------
 	
 	

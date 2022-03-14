@@ -19,6 +19,8 @@ public interface IRoleServ {
 	
 	public Optional<RoleEntity> findByCode(String code);
 	
+	public List<RoleEntity> findAllByCode(String code);
+	
 //	----------------------------- INSERT -----------------------------
 	
 	public RoleEntity save(RoleEntity role);

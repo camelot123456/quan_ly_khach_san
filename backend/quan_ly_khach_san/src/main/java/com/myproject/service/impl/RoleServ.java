@@ -39,12 +39,15 @@ public class RoleServ implements IRoleServ{
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
-		if (keyword == "" || keyword == null) {
-			return roleRepo.pagedNoKeyword(pageRequest);
-		}
+		keyword = keyword == null ? "" : keyword;
 		return roleRepo.pagedByKeyword(keyword, pageRequest);
 	}
 	
+	@Override
+	public List<RoleEntity> findAllByCode(String code) {
+		// TODO Auto-generated method stub
+		return roleRepo.findAllByCode(code);
+	}
 
 	@Override
 	public Optional<RoleEntity> findByCode(String code) {

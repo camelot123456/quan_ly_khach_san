@@ -5,4 +5,8 @@ const doShowRoles = () => {
     return httpCommon().get(`${URL_BASE}/api/roles`)
 }
 
-export default {doShowRoles}
+const showRoleByCode = (code) => {
+    return httpCommon().get(`${URL_BASE}/api/admin/roles?code=${code}`)
+}
+
+export default {doShowRoles, showRoleByCode}

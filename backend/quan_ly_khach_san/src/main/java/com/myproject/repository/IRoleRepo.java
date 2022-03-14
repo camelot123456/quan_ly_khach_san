@@ -1,5 +1,6 @@
 package com.myproject.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,11 +14,6 @@ public interface IRoleRepo extends JpaRepository<RoleEntity, String>{
 
 //	----------------------------- SELECT -----------------------------
 	
-	@Query(countName = "select count(*) from roles",
-			value = "select * from roles",
-			nativeQuery = true)
-	public Page<RoleEntity> pagedNoKeyword(Pageable pageable);
-	
 	@Query(value = "select * from roles r "
 			+ "where r.id like %?1% "
 			+ "or r.name like %?1% "
@@ -26,6 +22,14 @@ public interface IRoleRepo extends JpaRepository<RoleEntity, String>{
 	public Page<RoleEntity> pagedByKeyword(String keyword, Pageable pageable);
 	
 	public Optional<RoleEntity> findByCode(String code);
+	
+	@Query(value = "select * from roles r "
+			+ "where r.id like %?1% "
+			+ "or r.name like %?1% "
+			+ "or r.code like %?1% "
+			+ "order by r.modified_at desc",
+			nativeQuery = true)
+	public List<RoleEntity> findAllByCode(String code);
 	
 //	----------------------------- INSERT -----------------------------
 	

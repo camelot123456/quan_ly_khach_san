@@ -92,7 +92,7 @@ function RoomList() {
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
           title="Phòng"
-          className="btn-add-room"
+          className="btn-add"
           content={<ContentFormRoom edit={false} />}
           closeOnOverlayClick={false}
       />
@@ -124,13 +124,13 @@ function RoomList() {
                   <ModalScrollCustom 
                     icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
                     title="Phòng"
-                    className="btn-detail-room-list"
+                    className="btn-detail-list"
                     content={<ContentFormRoom edit={true} idRoom={room.id} room={room}/>}
                     closeOnOverlayClick={false}
                   />
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
-                    className="btn-delete-room-list"
+                    className="btn-delete-list"
                     title="Xóa phòng"
                     content="Bạn có muốn xóa phòng này không ?"
                     nameBtnNegative="Xóa"

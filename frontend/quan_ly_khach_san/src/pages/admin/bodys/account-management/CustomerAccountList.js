@@ -42,7 +42,7 @@ import { PATH_IMG_ROOMTYPE, URL_BASE } from "../../../../constants";
 import {formatDate} from '../../../../commons/dateformat-common'
 import {setRoomtypePhotoActive, showRoomtypePhotoByIdRoomtype} from '../../../../redux/actions/roomtypePhoto-action'
 
-function RoomtypeList() {
+function CustomerAccountList() {
   const toast = useToast()
   const dispatch = useDispatch();
   const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
@@ -81,7 +81,7 @@ function RoomtypeList() {
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
           title="Loại phòng"
-          className="btn-add"
+          className="btn-add-roomtype"
           content={<ContentFormRoomtype edit={false} />}
           closeOnOverlayClick={false}
       />
@@ -104,7 +104,6 @@ function RoomtypeList() {
               <Td>{index + 1}</Td>
               <Td>{roomtype.id}</Td>
               <Td>
-                {console.log(roomtype.avatarUrl.startsWith("https://"))}
                 { roomtype.avatarUrl.startsWith("https://") || roomtype.avatarUrl.startsWith("http://") ? (
                   <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={roomtype.avatarUrl} alt={roomtype.name} />
                   ) : (
@@ -118,13 +117,13 @@ function RoomtypeList() {
                   <ModalScrollCustom 
                     icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
                     title="Loại phòng"
-                    className="btn-detail-list"
+                    className="btn-detail-roomtype-list"
                     content={<ContentFormRoomtype edit={true} idRoomtype={roomtype.id} roomtype={roomtype}/>}
                     closeOnOverlayClick={false}
                   />
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
-                    className="btn-delete-list"
+                    className="btn-delete-roomtype-list"
                     title="Xóa loại phòng"
                     content="Bạn có muốn xóa loại phòng này không ?"
                     nameBtnNegative="Xóa"
@@ -156,6 +155,7 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
   const [avatar1, setAvatar1] = useState()
   const [avatar2, setAvatar2] = useState()
   const [tab, setTab] = useState(1)
+  const roomtypeResponse = useSelector((state) => state.roomtypeReducer.apiResponse);
   const roomtypePhotos = useSelector((state) => state.roomtypePhotoReducer.roomtypePhotos)
   const roomtypePhotoActive = useSelector((state) => state.roomtypePhotoReducer.roomtypePhotoActive)
 
@@ -360,4 +360,4 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
   )
 }
 
-export default RoomtypeList;
+export default CustomerAccountList;

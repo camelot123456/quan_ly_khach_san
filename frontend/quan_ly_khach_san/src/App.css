@@ -67,7 +67,7 @@
   cursor: pointer
 }
 
-.btn-add-roomtype, .btn-add-room {
+.btn-add {
   background-color: #086F83;
   color: white; 
   border-radius: 4px;
@@ -79,13 +79,13 @@
   justify-content: center;
 }
 
-.btn-add-roomtype:hover, .btn-add-room:hover {
+.btn-add:hover {
   border-color: white;
   background-color: #00B5D8; 
   cursor: pointer
 }
 
-.btn-delete-roomtype-list, .btn-delete-room-list {
+.btn-delete-list {
   background-color: #E53E3E;
   color: white;
   padding: 2px;
@@ -98,11 +98,11 @@
   align-items: center;
 }
 
-.btn-delete-roomtype-list:hover, .btn-delete-room-list:hover {
+.btn-delete-list:hover {
   background-color: red;
 }
 
-.btn-detail-roomtype-list, .btn-detail-room-list {
+.btn-detail-list {
   background-color: #38A169;
   color: white;
   padding: 2px;
@@ -115,7 +115,7 @@
   align-items: center;
 }
 
-.btn-detail-roomtype-list:hover, .btn-detail-room-list:hover {
+.btn-detail-list:hover {
   background-color: green;
 }
 
@@ -144,4 +144,22 @@
   cursor: pointer;
   opacity: 1;
   border: 1px solid green !important;
+}
+
+.btn-admmin-sidebar-link {
+  width: 100%;
+  padding: 16px;
+  color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-admmin-sidebar-link:hover {
+  background-color: #EDF2F7;
+  color: #3e3e3e;
+}
+
+.btn-admmin-sidebar-link:active {
+  background-color: #3e3e3e;
+  color: #EDF2F7;
 }

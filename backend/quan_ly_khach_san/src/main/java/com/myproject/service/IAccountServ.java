@@ -21,6 +21,15 @@ public interface IAccountServ {
 
 	public Page<AccountEntity> paged(Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword);
 
+	public Page<AccountEntity> pagedCustomerNoAccount(int sizePage, int currentPage, String sortField, String sortDir, String keyword);
+	
+	public Page<AccountEntity> pagedCustomerAccount(int sizePage, int currentPage, String sortField, String sortDir, String keyword);
+	
+	public Page<AccountEntity> pagedInternal(int sizePage, int currentPage, String sortField, String sortDir, String keyword);
+	
+	public Page<AccountEntity> pagedByType(String type, int sizePage, int currentPage, String sortField, String sortDir,
+			String keyword);
+	
 //	----------------------------- INSERT -----------------------------
 
 	public AccountEntity save(AccountEntity account);

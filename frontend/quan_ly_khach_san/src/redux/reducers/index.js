@@ -8,6 +8,7 @@ import accountReducer from "./account-reducer";
 import reservationReducer from "./reservation-reducer";
 import transactionReducer from "./transaction-reducer"
 import roomtypePhotoReducer from "./roomtypePhoto-reducer"
+import roleReducer from "./role-reducer"
 
 const rootReducer = combineReducers({
     authReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     accountReducer,
     reservationReducer,
     transactionReducer,
-    roomtypePhotoReducer
+    roomtypePhotoReducer,
+    roleReducer
 })
 
 export default rootReducer

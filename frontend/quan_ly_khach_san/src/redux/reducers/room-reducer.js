@@ -5,7 +5,8 @@ const initialState = {
   roomsState: [],
   rooms: [],
   paged: {},
-  pagedState: {}
+  pagedState: {},
+  services: []
 };
 
 const roomReducer = (state = initialState, { type, payload }) => {

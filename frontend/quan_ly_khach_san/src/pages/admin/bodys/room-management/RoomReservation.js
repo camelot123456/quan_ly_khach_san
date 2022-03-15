@@ -187,6 +187,7 @@ function RoomReservation() {
                   <HStack w="100%" p={3} bg="blue.100" borderRadius="6px" mt={4} >
                     <Text fontSize={12}>Chọn ngày thuê: </Text>
                     <DatePicker
+                      minDate={new Date()}
                       selectsRange={true}
                       startDate={startDate}
                       endDate={endDate}

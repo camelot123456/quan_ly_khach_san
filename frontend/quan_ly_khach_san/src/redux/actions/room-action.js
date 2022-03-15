@@ -49,28 +49,23 @@ export const doShowRoomsAdmin = (pagedRequest) => async (dispatch) => {
     }
 }
 
-export const doShowRoomDetailAdmin = (apiRequest) => async (dispatch) => {
-    try {
-        const roomResponse = await roomService.doShowRoomDetailAdmin(apiRequest)
-
-        dispatch({
-            type: roomTypes.SHOW_ROOM_DETAILS_ACTION,
-            payload: {
-                room: roomResponse.data.room,
-                services: roomResponse.data.services
-            }
-        })
-    } catch (error) {
-        dispatch({
-            type: roomTypes.ERROR_SHOW_ROOM_DETAILS_ACTION,
-            payload: {
-                response: {
-                    success: false,
-                    message: error.message,
+export const doShowRoomDetailAdmin = (apiRequest) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomService.doShowRoomDetailAdmin(apiRequest)
+        .then((response) => {
+            dispatch({
+                type: roomTypes.SHOW_ROOM_DETAILS_ACTION,
+                payload: {
+                    room: response.data.room,
+                    services: response.data.services
                 }
-            }
+            })
+            resolve()
         })
-    }
+        .catch((err) => {
+            reject()
+        })
+    })
 }
 
 export const doSaveRoom = (dataRequest) => dispatch => {

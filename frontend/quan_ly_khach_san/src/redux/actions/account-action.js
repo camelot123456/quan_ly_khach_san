@@ -38,6 +38,33 @@ export const showPagedByType = (pagedRequest) => (dispatch ) => {
     })
 }
 
+export const doUpdateCustomer = (dataRequest) => (dispatch ) => {
+    return new Promise((resolve, reject) => {
+        accountService.doUpdateCustomer(dataRequest)
+        .then(res => {
+            dispatch({
+                type: accountType.DO_UPDATE_CUSTOMER
+            })
+            resolve()
+        })
+        .catch(err => {
+            reject()
+        })
+    })
+}
+
+export const doDeleteCustomer = (dataRequest) => (dispatch ) => {
+    return new Promise((resolve, reject) => {
+        accountService.doDeleteCustomer(dataRequest)
+        .then(res => {
+            resolve()
+        })
+        .catch(err => {
+            reject()
+        })
+    })
+}
+
 export const doDeleteAccountById = (pagedRequest) => (dispatch) => {
     // return new Promise((resolve, reject) => {
     //     accountService.showPagedByType(pagedRequest)

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.myproject.entity.AccountEntity;
 import com.myproject.entity.enums.EAuthProvider;
 import com.myproject.repository.IAccountRepo;
+import com.myproject.repository.IAccountRoleRepo;
 import com.myproject.service.IAccountServ;
 
 @Service
@@ -22,7 +23,9 @@ public class AccountServ implements IAccountServ{
 
 	@Autowired
 	private IAccountRepo accountRepo;
-
+	
+	@Autowired
+	private IAccountRoleRepo accountRoleRepo;
 //----------------------------- SELECT -----------------------------	
 	
 	@Override
@@ -171,7 +174,7 @@ public class AccountServ implements IAccountServ{
 			return pagedCustomerNoAccount(sizePage, currentPage, sortField, sortDir, keyword);
 		} else if (type.equals("customer_account")) {
 			return pagedCustomerAccount(sizePage, currentPage, sortField, sortDir, keyword);
-		} else if (type.equals("customer_account")) {
+		} else if (type.equals("internal_account")) {
 			return pagedInternal(sizePage, currentPage, sortField, sortDir, keyword);
 		}
 		return null;
@@ -196,10 +199,19 @@ public class AccountServ implements IAccountServ{
 	public AccountEntity update(AccountEntity account) {
 		// TODO Auto-generated method stub
 		if (accountRepo.existsById(account.getId())) {
-			account.setEnabled(true);
-			account.setVerified(true);
-			return accountRepo.save(account);
+			AccountEntity accountOld = accountRepo.findById(account.getId()).get();
+			accountOld.setName(account.getName());
+			accountOld.setAddress(account.getAddress());
+			accountOld.setEmail(account.getEmail());
+			accountOld.setPhoneNum(account.getPhoneNum());
+			return accountRepo.save(accountOld);
 		}
+		return null;
+	}
+
+	@Override
+	public AccountEntity updateWithRole(AccountEntity account, String[] idsRole) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -208,6 +220,8 @@ public class AccountServ implements IAccountServ{
 	@Override
 	public void deleteById(String id) {
 		// TODO Auto-generated method stub
+		AccountEntity account = accountRepo.findById(id).get();
+		account.getAccountRoleArr().forEach(ar -> accountRoleRepo.deleteById(ar.getId()));
 		accountRepo.deleteById(id);
 	}
 

@@ -22,7 +22,7 @@ public interface ITransactionRepo extends JpaRepository<TransactionEntity, Strin
 			+ "or a.id like %?1% "
 			+ "or a.name like %?1% "
 			+ "or t.id_reservation like %?1% "
-			+ "order by t.modified_at asc",
+			+ "order by t.modified_at desc",
 			nativeQuery = true)
 	public List<Object[]> pagedByKeyword(String keyword);
 	

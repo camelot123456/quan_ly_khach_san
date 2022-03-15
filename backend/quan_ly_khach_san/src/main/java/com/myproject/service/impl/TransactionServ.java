@@ -112,7 +112,22 @@ public class TransactionServ implements ITransactionServ {
 		transaction.setAccount(account);
 		transaction.setReservation(reservation);
 		transaction.setAmount(reservation.getGrandTotal());
+		transaction.setDeleted(false);
+		
+		transaction.setNameCustomer(account.getName());
+		transaction.setEmail(account.getEmail());
+		transaction.setAddress(account.getAddress());
+		transaction.setPhoneNum(account.getPhoneNum());
+		transaction.setCustomerNum(reservation.getCustomerNum());
+		transaction.setDiscount(reservation.getDiscount());
+		transaction.setStartDate(reservation.getStartDate());
+		transaction.setEndDate(reservation.getEndDate());
+		transaction.setTotal(reservation.getTotal());
+		transaction.setTaxInvoice(reservation.getTaxInvoice());
+		transaction.setTaxService(reservation.getTaxService());
+		transaction.setContent("");
 		transactionRepo.save(transaction);
+		
 	}
 
 	@Override

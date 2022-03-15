@@ -8,11 +8,13 @@ const initialState = {
 const authReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case authTypes.LOGIN_ACTION:
+      var authResponse = {...state.authResponse}
+      authResponse = payload.authResponse
       return {
         ...state,
-        authResponse: payload.authResponse,
-        apiResponse: payload.apiResponse,
+        authResponse: authResponse
       };
+
     case authTypes.ERROR_ACTION:
       return {
         ...state,
@@ -20,10 +22,11 @@ const authReducer = (state = initialState, { type, payload }) => {
         apiResponse: payload.authResponse,
       };
     case authTypes.LOGOUT_ACTION:
+      var authResponse = {...state.authResponse}
+      authResponse = {}
       return {
         ...state,
-        authResponse: payload.authResponse,
-        apiResponse: payload.apiResponse,
+        authResponse: authResponse
       };
     default:
       return state;

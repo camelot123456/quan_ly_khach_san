@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Box,
   FormControl,
@@ -14,6 +14,8 @@ import {
   Button,
   Divider,
   HStack,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 import { doLogin } from "../../../redux/actions/auth-action";
@@ -21,17 +23,26 @@ import { ACCESS_TOKEN } from "../../../constants";
 
 function Login() {
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    await dispatch(doLogin({ email, password }))
-    navigate("/home")
-    
+    dispatch(doLogin({ email, password }))
+    .then(res => {
+      navigate("/home")
+    })
+    .catch(err => {
+      navigate("/auth/login?error=true")
+      searchParams.set("error", true)
+    })
+    .finally(() => {
+      
+    })
   };
 
   return (
@@ -68,6 +79,11 @@ function Login() {
         </FormControl>
 
         <Checkbox>Remember Me</Checkbox>
+
+        {searchParams.get("error") && <Alert status='error'>
+          <AlertIcon />
+          Email hoặc mật khẩu không đúng
+        </Alert>}
 
         <Button colorScheme="blue" onClick={(e) => handleLogin(e)}>
           Login

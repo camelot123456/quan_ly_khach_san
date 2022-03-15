@@ -153,7 +153,7 @@ public class RoomServ implements IRoomServ {
 			room.setModifiedAtRoom((Date) roomObject[2]);
 			room.setCustomerNumRoom((Integer) roomObject[3]);
 			room.setDescriptionRoom((String) roomObject[4]);
-			room.setFloor((String) roomObject[5]);
+			room.setFloor((Integer) roomObject[5]);
 			room.setIncurredPrice((Double) roomObject[6]);
 			room.setRoomNum((String) roomObject[7]);
 			room.setRoomState((String) roomObject[8]);
@@ -193,7 +193,7 @@ public class RoomServ implements IRoomServ {
 			room.setModifiedAtRoom((Date) roomObject[2]);
 			room.setCustomerNumRoom((Integer) roomObject[3]);
 			room.setDescriptionRoom((String) roomObject[4]);
-			room.setFloor((String) roomObject[5]);
+			room.setFloor((Integer) roomObject[5]);
 			room.setIncurredPrice((Double) roomObject[6]);
 			room.setRoomNum((String) roomObject[7]);
 			room.setRoomState((String) roomObject[8]);

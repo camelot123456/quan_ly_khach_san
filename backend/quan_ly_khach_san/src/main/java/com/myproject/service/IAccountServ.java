@@ -37,6 +37,8 @@ public interface IAccountServ {
 //	----------------------------- UPDATE -----------------------------
 
 	public AccountEntity update(AccountEntity account);
+	
+	public AccountEntity updateWithRole(AccountEntity account, String[] idsRole);
 
 //	----------------------------- DELETE -----------------------------
 

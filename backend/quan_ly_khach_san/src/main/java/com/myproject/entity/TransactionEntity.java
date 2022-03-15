@@ -58,6 +58,9 @@ public class TransactionEntity {
 	@LastModifiedBy
 	@Column(name = "[modifiedBy]", columnDefinition = "nvarchar(50)")
 	protected String modifiedBy;
+	
+	@Column(name = "[deleted]", columnDefinition = "bit default 0")
+	private Boolean deleted;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "[status]", columnDefinition = "varchar(9)")
@@ -66,6 +69,43 @@ public class TransactionEntity {
 	@Column(name = "[amount]", columnDefinition = "float default 0")
 	private Double amount;
 	
+	@Column(name = "[name_customer]", columnDefinition = "nvarchar(50)")
+	private String nameCustomer;
+	
+	@Column(name = "[email]", columnDefinition = "varchar(320)")
+	private String email;
+	
+	@Column(name = "[address]", columnDefinition = "nvarchar(255)")
+	private String address;
+	
+	@Column(name = "[phone_num]", columnDefinition = "char(15)")
+	private String phoneNum;
+	
+	@Column(name = "[customer_num]", columnDefinition = "int")
+	private Integer customerNum;
+	
+	@Column(name = "[discount]", columnDefinition = "float")
+	private Double discount;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "[start_date]", columnDefinition = "datetime")
+	private Date startDate;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "[end_date]", columnDefinition = "datetime")
+	private Date endDate;
+	
+	@Column(name = "[total]", columnDefinition = "float")
+	private Double total;
+	
+	@Column(name = "[tax_invoice]", columnDefinition = "float")
+	private Double taxInvoice;
+	
+	@Column(name = "[tax_service]", columnDefinition = "float")
+	private Double taxService;
+	
+	@Column(name = "[content]", columnDefinition = "nvarchar(max)")
+	private String content;
 	
 //	1 transaction - 1 account
 	@JsonBackReference("transaction-account")

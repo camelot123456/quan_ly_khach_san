@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myproject.constant.SystemConstant;
 import com.myproject.entity.AccountEntity;
 import com.myproject.repository.IAccountRepo;
 import com.myproject.security.UserPrincipal;
@@ -28,9 +29,16 @@ public class CustomUserDetailService implements UserDetailsService{
 		// TODO Auto-generated method stub
 		AccountEntity account = accountRepo.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("Email not found !!"));
-		if (!account.getVerified() || !account.getEnabled()) {
+		if (!account.getVerified()) { 
+			SystemConstant.ERR_LOGIN = "1";
 			return null;
 		}
+		
+		if (!account.getEnabled()) {
+			SystemConstant.ERR_LOGIN = "2";
+			return null;
+		}
+		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		
 		account.getAccountRoleArr().forEach(accountRole -> {

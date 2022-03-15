@@ -50,7 +50,7 @@ public interface IAccountRepo extends JpaRepository<AccountEntity, String>{
 			+ "from accounts a inner join account_role ar "
 			+ "on a.id = ar.id_account inner join roles r "
 			+ "on ar.id_role = r.id "
-			+ "where a.auth_provider = 'NO_ACCOUNT'"
+			+ "where a.auth_provider = 'NO_ACCOUNT' "
 			+ "and a.id like %?1% "
 			+ "or a.[address] like %?1% "
 			+ "or a.auth_provider like %?1% "

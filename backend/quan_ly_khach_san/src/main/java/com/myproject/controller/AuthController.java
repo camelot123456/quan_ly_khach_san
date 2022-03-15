@@ -1,6 +1,8 @@
 package com.myproject.controller;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.config.AppProperties;
+import com.myproject.constant.SystemConstant;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.AuthResponse;
 import com.myproject.payload.LoginRequest;
@@ -47,8 +50,11 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> doLogin(@RequestBody LoginRequest loginRequest) {
+		Map<String, Object> response = new HashMap<String, Object>();
 		String accessToken = authServ.doLogin(loginRequest, tokenPovider, authenticationManager);
-		return ResponseEntity.ok().body(new AuthResponse(accessToken, "Bearer "));
+		response.put("errLogin", SystemConstant.ERR_LOGIN);
+		response.put("accessToken", new AuthResponse(accessToken, "Bearer "));
+		return ResponseEntity.ok().body(response);
 	}
 	
 	@PostMapping("/register")

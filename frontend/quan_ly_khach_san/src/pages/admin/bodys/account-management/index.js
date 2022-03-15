@@ -11,6 +11,7 @@ import {
 import { Link, useSearchParams } from "react-router-dom";
 import CustomerNoAccountList from "./CustomerNoAccountList";
 import { ErrorBoundary } from "../../../ErrorBoundary ";
+import InternalList from "./InternalList";
 
 function AccountTab() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,10 +39,14 @@ function AccountTab() {
         <TabPanels>
           <TabPanel>
             <ErrorBoundary>
+              <InternalList />
+            </ErrorBoundary>
+          </TabPanel>
+          <TabPanel>
+            <ErrorBoundary>
               <CustomerNoAccountList />
             </ErrorBoundary>
           </TabPanel>
-          <TabPanel></TabPanel>
           <TabPanel></TabPanel>
         </TabPanels>
       </Tabs>

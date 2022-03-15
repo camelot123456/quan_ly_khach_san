@@ -16,7 +16,7 @@ public class RoomDetailForAdmin {
 	private Date modifiedAtRoom;
 	private Integer customerNumRoom;
 	private String descriptionRoom;
-	private String floor;
+	private Integer floor;
 	private Double incurredPrice;
 	private String roomNum;
 	private String roomState;

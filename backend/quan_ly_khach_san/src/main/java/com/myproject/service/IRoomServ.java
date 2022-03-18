@@ -26,6 +26,10 @@ public interface IRoomServ {
 	
 	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNull(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
 	
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNullAndWaiting(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
+	
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNullAndCheckout(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
+	
 	public Optional<RoomDetailForAdmin> findRoomDetailForAdmin(String idRoom, String idTransaction);
 	
 	public Optional<RoomEntity> findById(String id);

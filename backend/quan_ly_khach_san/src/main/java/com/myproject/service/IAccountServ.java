@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 import com.myproject.entity.AccountEntity;
+import com.myproject.payload.account.AccountRoleUpdatePayload;
 
 public interface IAccountServ {
 
@@ -33,10 +34,12 @@ public interface IAccountServ {
 //	----------------------------- INSERT -----------------------------
 
 	public AccountEntity save(AccountEntity account);
+	
+	public AccountEntity create(AccountEntity account);
 
 //	----------------------------- UPDATE -----------------------------
 
-	public AccountEntity update(AccountEntity account);
+	public AccountEntity update(AccountRoleUpdatePayload account);
 	
 	public AccountEntity updateWithRole(AccountEntity account, String[] idsRole);
 

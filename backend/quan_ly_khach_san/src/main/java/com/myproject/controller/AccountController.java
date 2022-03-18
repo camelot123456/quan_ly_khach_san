@@ -21,6 +21,7 @@ import com.myproject.entity.AccountEntity;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
+import com.myproject.payload.account.AccountRoleUpdatePayload;
 import com.myproject.service.IAccountServ;
 
 @RestController
@@ -77,7 +78,7 @@ public class AccountController {
 	}
 
 	@PutMapping("/accounts")
-	public ResponseEntity<?> doUpdateAccount(@RequestBody AccountEntity account) {
+	public ResponseEntity<?> doUpdateAccount(@RequestBody AccountRoleUpdatePayload account) {
 		accountServ.update(account);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}

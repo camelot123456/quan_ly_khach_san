@@ -290,6 +290,34 @@ public class ReservationServ implements IReservationServ {
 			reservationRepo.deleteById(request.getIdReservation());
 		}
 	}
+	
+	@Override
+	public void checkoutRoomInTransaction(ReservationDeleteRoom request) {
+		ReservationEntity reservation = reservationRepo.findById(request.getIdReservation()).get();
+
+		if (reservation.getReservationRoomArr().size() > 1) {
+			reservationRoomRepo.delete(reservation.getReservationRoomArr().stream()
+					.filter(rer -> rer.getRoom().getId().equals(request.getIdRoom()))
+					.findFirst().get());
+		} else if (reservation.getReservationRoomArr().size() == 1){
+			
+			Optional<TransactionEntity> transaction = transactionServ.findByIdReservation(reservation.getId());
+			if (transaction.isPresent()) {
+				transaction.get().setReservation(null);
+				transactionRepo.save(transaction.get());
+			}
+			
+			for (ReservationRoomEntity rer : reservation.getReservationRoomArr()) {
+				reservationRoomRepo.deleteById(rer.getId());
+			}
+
+			for (ReservationServiceEntity res : reservation.getReservationServiceArr()) {
+				reservationServiceRepo.deleteById(res.getId());
+			}
+
+			reservationRepo.deleteById(request.getIdReservation());
+		}
+	}
 
 	@Override
 	public void deleteById(String id) {

@@ -49,36 +49,38 @@ function Header() {
           </Button>
         </Box>
         <Spacer />
-        <HStack>
-          <Box ml="3" align="end">
-            <Text fontWeight="bold">{jwtDecode(accessToken).claims.name}</Text>
-            {jwtDecode(accessToken).claims.roles.map((role, index) => (
-              <Badge ml="1" colorScheme="green" key={index}>
-                <Text fontSize="8px">
-                  {role.toString().substring("ROLE_".length)}
-                </Text>
-              </Badge>
-            ))}
-          </Box>
-          <Menu isLazy >
-            <MenuButton>
+
+
+        <Menu isLazy >
+          <MenuButton>
+            <HStack>
+              <Box ml="3" align="end">
+                <Text fontWeight="bold">{jwtDecode(accessToken).claims.name}</Text>
+                {jwtDecode(accessToken).claims.roles.map((role, index) => (
+                  <Badge ml="1" colorScheme="green" key={index}>
+                    <Text fontSize="8px">
+                      {role.toString().substring("ROLE_".length)}
+                    </Text>
+                  </Badge>
+                ))}
+              </Box>
               <Avatar
                 src={jwtDecode(accessToken).claims.avatarUrl}
                 alt={jwtDecode(accessToken).claims.name}
                 size="md"
               />
-            </MenuButton>
-            <MenuList style={{ margin: 0 }}>
-              {/* MenuItems are not rendered unless Menu is open */}
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Setting</MenuItem>
-              <MenuDivider />
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </HStack>
-      </Flex>
-    </Box>
+            </HStack>
+          </MenuButton>
+          <MenuList style={{ margin: 0 }}>
+            {/* MenuItems are not rendered unless Menu is open */}
+            <MenuItem>Profile</MenuItem>
+            <MenuItem>Setting</MenuItem>
+            <MenuDivider />
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
+    </Flex>
+    </Box >
   );
 }
 

@@ -28,8 +28,6 @@ function Header() {
   const [auth, setAuth] = useState(false)
   const ref = useRef('');
 
-  const accessToken = useSelector((state => state.authReducer.authResponse))
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,7 +44,7 @@ function Header() {
   };
 
   return (
-    <Box bg="#EDF2F7" w="100%" p={4}>
+    <Box bg="#EDF2F7" w="100%" p={2}>
       <Flex>
         <HStack spacing="24px">
           <Heading size="sm">
@@ -75,7 +73,7 @@ function Header() {
                   </Text>
                   {ref.current.claims.roles.map((role, index) => (
                     <Badge ml="1" colorScheme="green" key={index}>
-                      <Text fontSize="xs">
+                      <Text fontSize="8px">
                         {role.toString().substring("ROLE_".length)}
                       </Text>
                     </Badge>

@@ -16,4 +16,6 @@ public interface IReservationServiceServ {
 	
 	public void deleteMany(String[] ids);
 	
+	public List<ReservationServiceEntity> findAllByIdAccount(String idAccount);
+	
 }

@@ -17,8 +17,18 @@ public class RoleController {
 	private IRoleServ roleServ;
 	
 	@GetMapping("/roles")
+	public ResponseEntity<?> showRoleList() {
+		return ResponseEntity.ok().body(roleServ.findAll());
+	}
+	
+	@GetMapping("/roles/roleByCode")
 	public ResponseEntity<?> showRoleListByCode(@Param("code") String code) {
 		return ResponseEntity.ok().body(roleServ.findAllByCode(code));
+	}
+	
+	@GetMapping("/roles/roleByIdAccount")
+	public ResponseEntity<?> showRoleListByIdAccount(@Param("idAccount") String idAccount) {
+		return ResponseEntity.ok().body(roleServ.findAllByIdAccount(idAccount));
 	}
 	
 }

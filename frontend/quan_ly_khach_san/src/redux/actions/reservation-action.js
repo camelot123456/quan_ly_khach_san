@@ -37,6 +37,18 @@ export const doCancelById = (dataRequest) => async (dispatch) => {
     })
 }
 
+export const doCheckoutRoomReservation = (dataRequest) => async (dispatch) => {
+    return new Promise((resolve, reject) => {
+        reservationService.doCheckoutRoomReservation(dataRequest)
+        .then(res => {
+            resolve()
+        })
+        .catch(err => {
+            reject()
+        })
+    })
+}
+
 export const doFindForTransaction = (idReservation) => (dispatch) => {
     return new Promise((resolve, reject) => {
         reservationService.doFindForTransaction(idReservation)

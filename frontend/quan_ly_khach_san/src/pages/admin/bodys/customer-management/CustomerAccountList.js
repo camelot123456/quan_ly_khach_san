@@ -78,6 +78,8 @@ function CustomerAccountList() {
 
   return (
     <>
+      <Heading py={4}>Khách hàng có tài khoản</Heading>
+      <Divider />
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
           title="Loại phòng"
@@ -86,7 +88,7 @@ function CustomerAccountList() {
           closeOnOverlayClick={false}
       />
       {roomtypes ? (
-        <Table variant="striped" colorScheme="blue">
+        <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>

@@ -6,7 +6,7 @@ spring:
          static-locations: classpath:/static/
    datasource:
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      url: jdbc:sqlserver://DESKTOP-CJDQ9TC\\BAOCS:1433;databaseName=QUANLYKHACHSAN_190222
+      url: jdbc:sqlserver://localhost:1433;databaseName=QUANLYKHACHSAN_190222
       username: sa
       password: 1
    jpa:

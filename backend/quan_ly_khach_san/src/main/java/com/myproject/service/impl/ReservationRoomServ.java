@@ -1,5 +1,7 @@
 package com.myproject.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,12 @@ public class ReservationRoomServ implements IReservationRoomServ{
 			ReservationRoomEntity reservationRoom = new ReservationRoomEntity(RandomString.make(6), reservation, room);
 			reservationRoomRepo.save(reservationRoom);
 		}
+	}
+
+	@Override
+	public List<ReservationRoomEntity> findAllByIdAccount(String idAccount) {
+		// TODO Auto-generated method stub
+		return reservationRoomRepo.findAllByIdAccount(idAccount);
 	}
 	
 	

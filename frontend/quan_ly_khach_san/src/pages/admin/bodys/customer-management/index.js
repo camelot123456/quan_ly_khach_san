@@ -11,7 +11,6 @@ import {
 import { Link, useSearchParams } from "react-router-dom";
 import CustomerNoAccountList from "./CustomerNoAccountList";
 import { ErrorBoundary } from "../../../ErrorBoundary ";
-import InternalList from "./InternalList";
 
 function AccountTab() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,22 +25,14 @@ function AccountTab() {
         index={+searchParams.get("tab1") || 0}
       >
         <TabList>
-          <Link to="/admin/accounts?tab1=0">
-            <Tab>Thành viên nội bộ</Tab>
-          </Link>
-          <Link to="/admin/accounts?tab1=1">
+          <Link to="/admin/customers?tab1=0">
             <Tab>Khách có tài khoản</Tab>
           </Link>
-          <Link to="/admin/accounts?tab1=2">
+          <Link to="/admin/customers?tab1=1">
             <Tab>Khách không tài khoản</Tab>
           </Link>
         </TabList>
         <TabPanels>
-          <TabPanel>
-            <ErrorBoundary>
-              <InternalList />
-            </ErrorBoundary>
-          </TabPanel>
           <TabPanel>
             <ErrorBoundary>
               <CustomerNoAccountList />

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.myproject.entity.AccountEntity;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
+import com.myproject.payload.account.AccountRoleUpdatePayload;
 import com.myproject.service.IAccountServ;
 
 /* khách hàng (auth_provider = NO_ACCOUNT, LOCAL{role = MEMBER}, GOOGLE, FACEBOOK)
@@ -67,13 +69,18 @@ public class AccountController {
 				appProperties.getSystemConstant().getPagedDefault().getKeyword());
 	}
 	
+	@PostMapping("/accounts/createInternalAccount")
+	public ResponseEntity<?> doCreateInternalAccount(@RequestBody AccountEntity account) {
+		return ResponseEntity.ok().body(accountServ.create(account));
+	}
+	
 	@PutMapping("/accounts/updateCustomer")
-	public ResponseEntity<?> doUpdateCustomer(@RequestBody AccountEntity customer) {
-		return ResponseEntity.ok().body(accountServ.update(customer));
+	public ResponseEntity<?> doUpdateAccount(@RequestBody AccountRoleUpdatePayload account) {
+		return ResponseEntity.ok().body(accountServ.update(account));
 	}
 	
 	@DeleteMapping("/accounts/deleteCustomer")
-	public ResponseEntity<?> doDeleteCustomer(@RequestBody EntityResponse entityResponse) {
+	public ResponseEntity<?> doDeleteAccount(@RequestBody EntityResponse entityResponse) {
 		accountServ.deleteById(entityResponse.getId());
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
 	}

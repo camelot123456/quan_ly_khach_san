@@ -49,6 +49,12 @@ public class ReservationServiceServ implements IReservationServiceServ{
 			reservationServiceRepo.save(reservationService);
 		}
 	}
+	
+	@Override
+	public List<ReservationServiceEntity> findAllByIdAccount(String idAccount) {
+		// TODO Auto-generated method stub
+		return reservationServiceRepo.findAllByIdAccount(idAccount);
+	}
 
 	@Override
 	public void deleteById(String id) {
@@ -63,5 +69,7 @@ public class ReservationServiceServ implements IReservationServiceServ{
 			reservationServiceRepo.deleteById(id);
 		}
 	}
+
+	
 
 }

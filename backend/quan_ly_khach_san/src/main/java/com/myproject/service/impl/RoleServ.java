@@ -55,6 +55,11 @@ public class RoleServ implements IRoleServ{
 		return roleRepo.findByCode(code);
 	}
 
+	@Override
+	public List<RoleEntity> findAllByIdAccount(String idAccount) {
+		return roleRepo.findAllByIdAccount(idAccount);
+	}
+	
 //----------------------------- INSERT -----------------------------
 	
 	@Override

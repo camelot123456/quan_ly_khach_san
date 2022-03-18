@@ -1,0 +1,5 @@
+1, hiển thị các phòng đang ở (đã thanh toán) -> ok
+2, hiển thị các phòng đã đặt phòng(chưa thanh toán) -> ok
+3, hiển thị các phòng đang chờ (đã thanh toán nhưng chưa tới ngày thuê)
+4, hiển thị các phòng đang sữa chữa (roomstate = repair)
+5, hiển thị toàn phòng hiển thị phòng nào đang sửa chữa, phòng nào đang ở, phòng nào đang trống

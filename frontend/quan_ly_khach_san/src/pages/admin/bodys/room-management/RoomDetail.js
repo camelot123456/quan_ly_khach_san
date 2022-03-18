@@ -161,6 +161,9 @@ function RoomDetail() {
             Dach sách dịch vụ phòng
           </Heading>
           <Box px={3}>
+            <Stack spacing={4} direction="row" align="center">
+              <ModalServiceCustom />
+            </Stack>
             {services == null ? (
               <Alert status="warning" mt={4}>
                 <AlertIcon />
@@ -168,9 +171,6 @@ function RoomDetail() {
               </Alert>
             ) : (
               <>
-                <Stack spacing={4} direction="row" align="center">
-                  <ModalServiceCustom />
-                </Stack>
                 <Table size="sm" mt={3} bg="white">
                   <Thead>
                     <Tr>

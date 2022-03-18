@@ -24,6 +24,8 @@ public interface IReservationServ {
 	
 	public ReservationEntity update(ReservationEntity reservation, String idAccount);
 	
+	public void checkoutRoomInTransaction(ReservationDeleteRoom request);
+	
 	public Optional<ReservationForTransaction> findReservationForTransaction(String idReservation);
 	
 	public void deleteById(String id);

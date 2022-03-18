@@ -54,4 +54,16 @@ public class ReservationController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
 	}
 	
+	@DeleteMapping("/reservations/checkout")
+	public ResponseEntity<?> doCheckoutRoomReservation(@RequestBody ReservationDeleteRoom reservationDeleteRoom) {
+		reservationServ.deleteById(reservationDeleteRoom.getIdReservation());
+		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
+	}
+	
+	@DeleteMapping("/reservations/checkoutRoomUsing")
+	public ResponseEntity<?> doCheckoutRoomInTransaction(@RequestBody ReservationDeleteRoom reservationDeleteRoom) {
+		reservationServ.checkoutRoomInTransaction(reservationDeleteRoom);
+		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
+	}
+	
 }

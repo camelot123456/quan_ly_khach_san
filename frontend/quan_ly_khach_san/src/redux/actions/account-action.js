@@ -38,6 +38,18 @@ export const showPagedByType = (pagedRequest) => (dispatch ) => {
     })
 }
 
+export const doCreateAccountInternal = (dataRequest) => (dispatch ) => {
+    return new Promise((resolve, reject) => {
+        accountService.doCreateAccountInternal(dataRequest)
+        .then(res => {
+            resolve()
+        })
+        .catch(err => {
+            reject()
+        })
+    })
+}
+
 export const doUpdateCustomer = (dataRequest) => (dispatch ) => {
     return new Promise((resolve, reject) => {
         accountService.doUpdateCustomer(dataRequest)

@@ -41,7 +41,7 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "on r.id = rer.id_room left join reservations re "
 			+ "on rer.id_reservation = re.id left join transactions t  "
 			+ "on re.id = t. id_reservation "
-			+ "where r.customer_num >= ?2 and rt.id = ?1",
+			+ "where r.customer_num >= ?2 and rt.id = ?1 and r.room_state not in ('REPAIR')",
 			nativeQuery = true)
 	public List<Object[]> findAllRoomsInReservationByCustomerNumAndIdRoomtype(String idRoomtype, Integer customerNum);
 	
@@ -89,7 +89,7 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "on re.id = t.id_reservation inner join accounts a "
 			+ "on re.id_account = a.id "
 			+ "where t.id is not null and ( "
-			+ "re.[start_date] <= getdate() and re.end_date >= getdate())"
+			+ "re.[start_date] <= getdate() and re.end_date >= getdate()) "
 			+ "and (r.room_num like %?1% "
 			+ "or r.room_state like %?1% "
 			+ "or concat(r.[floor], '') like %?1% "
@@ -102,6 +102,54 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "order by re.modified_at, r.id, r.room_num asc",
 			nativeQuery = true)
 	public List<Object[]> findAllRoomsTransactionIsNotNull(String keyword);
+	
+	@Query(value = "select r.id as id_room, r.room_num, r.room_state, r.[floor], "
+			+ "a.name as name_account, a.phone_num, rt.id as id_roomtype, "
+			+ "re.id as id_reservation, re.[start_date], re.end_date, t.id as id_transaction "
+			+ "from roomtypes rt inner join rooms r "
+			+ "on rt.id = r.id_roomtype left join reservation_room rer "
+			+ "on r.id = rer.id_room left join reservations re "
+			+ "on rer.id_reservation = re.id left join transactions t "
+			+ "on re.id = t.id_reservation inner join accounts a "
+			+ "on re.id_account = a.id "
+			+ "where t.id is not null and ( "
+			+ "re.[start_date] > getdate()) "
+			+ "and (r.room_num like %?1% "
+			+ "or r.room_state like %?1% "
+			+ "or concat(r.[floor], '') like %?1% "
+			+ "or a.name like %?1% "
+			+ "or a.phone_num like %?1% "
+			+ "or rt.id like %?1% "
+			+ "or re.id like %?1% "
+			+ "or concat(re.[start_date], '') like %?1% "
+			+ "or concat(re.end_date, '') like %?1%) "
+			+ "order by re.modified_at, r.id, r.room_num asc",
+			nativeQuery = true)
+	public List<Object[]> findAllRoomsTransactionIsNotNullAndWaiting(String keyword);
+	
+	@Query(value = "select r.id as id_room, r.room_num, r.room_state, r.[floor], "
+			+ "a.name as name_account, a.phone_num, rt.id as id_roomtype, "
+			+ "re.id as id_reservation, re.[start_date], re.end_date, t.id as id_transaction "
+			+ "from roomtypes rt inner join rooms r "
+			+ "on rt.id = r.id_roomtype left join reservation_room rer "
+			+ "on r.id = rer.id_room left join reservations re "
+			+ "on rer.id_reservation = re.id left join transactions t "
+			+ "on re.id = t.id_reservation inner join accounts a "
+			+ "on re.id_account = a.id "
+			+ "where t.id is not null and ( "
+			+ "re.end_date < getdate()) "
+			+ "and (r.room_num like '%%' "
+			+ "or r.room_state like '%%' "
+			+ "or concat(r.[floor], '') like '%%' "
+			+ "or a.name like '%%' "
+			+ "or a.phone_num like '%%' "
+			+ "or rt.id like '%%' "
+			+ "or re.id like '%%' "
+			+ "or concat(re.[start_date], '') like '%%' "
+			+ "or concat(re.end_date, '') like '%%') "
+			+ "order by re.modified_at, r.id, r.room_num asc",
+			nativeQuery = true)
+	public List<Object[]> findAllRoomsTransactionIsNotNullAndCheckout(String keyword);
 	
 //----------------------------- INSERT -----------------------------
 

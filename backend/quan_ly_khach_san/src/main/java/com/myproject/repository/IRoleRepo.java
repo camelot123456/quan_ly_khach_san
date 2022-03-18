@@ -30,6 +30,14 @@ public interface IRoleRepo extends JpaRepository<RoleEntity, String>{
 			+ "order by r.modified_at desc",
 			nativeQuery = true)
 	public List<RoleEntity> findAllByCode(String code);
+
+	@Query(value = "select r.* "
+			+ "from roles r inner join account_role ar "
+			+ "on r.id = ar.id_role inner join accounts a "
+			+ "on a.id = ar.id_account "
+			+ "where a.id = ?1",
+			nativeQuery = true)
+	public List<RoleEntity> findAllByIdAccount(String idAccount);
 	
 //	----------------------------- INSERT -----------------------------
 	

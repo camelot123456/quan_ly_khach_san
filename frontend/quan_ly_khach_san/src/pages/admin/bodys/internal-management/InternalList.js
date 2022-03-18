@@ -31,6 +31,9 @@ import {
   Textarea,
   Wrap,
   WrapItem,
+  Heading,
+  Divider,
+  Switch
 } from "@chakra-ui/react";
 
 import ModalScrollCustom from "../../fragments/ModalScrollCustom"
@@ -39,7 +42,8 @@ import * as Yup from 'yup'
 import AlertDialogCustom from "../../fragments/AlertDialogCustom";
 import { PATH_IMG_ACCOUNT, URL_BASE } from "../../../../constants";
 import {formatDate} from '../../../../commons/dateformat-common'
-import { showPagedByType } from "../../../../redux/actions/account-action";
+import { doCreateAccountInternal, doDeleteCustomer, doUpdateCustomer, showPagedByType } from "../../../../redux/actions/account-action";
+import {showRoleByIdAccount, showRoles} from '../../../../redux/actions/role-action'
 
 function InternalList() {
   const toast = useToast()
@@ -57,49 +61,51 @@ function InternalList() {
     }))
   }, []);
 
-  const handleDeleteAccountById = (idAccount) => {
-    // dispatch(doDeleteAccountById(idAccount))
-    // .then((res) => {
-    //   toast({
-    //     title: 'Thông báo',
-    //     description: "Xóa khách hàng thành công",
-    //     status: 'success',
-    //     duration: 9000,
-    //     isClosable: true,
-    //   })
-    // })
-    // .catch((err) => {
-    //   toast({
-    //     title: 'Thông báo',
-    //     description: "Xóa khách hàng thất bại",
-    //     status: 'error',
-    //     duration: 9000,
-    //     isClosable: true,
-    //   })
-    // })
-    // .finally(() => {
-    //   dispatch(showPagedByType({
-    //     type: 'customer_no_account',
-    //     currentPage: 0,
-    //     sizePage: 20,
-    //     sortField: "id",
-    //     sortDir: "asc",
-    //     keyword: "",
-    //   }));
-    // })
+  const handleDeleteCustomer = (idAccount) => {
+    dispatch(doDeleteCustomer({id: idAccount}))
+    .then((res) => {
+      toast({
+        title: 'Thông báo',
+        description: "Xóa khách hàng thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch((err) => {
+      toast({
+        title: 'Thông báo',
+        description: "Xóa khách hàng thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .finally(() => {
+      dispatch(showPagedByType({
+        type: 'internal_account',
+        currentPage: 0,
+        sizePage: 20,
+        sortField: "id",
+        sortDir: "asc",
+        keyword: "",
+      }));
+    })
   }
 
   return (
     <>
+      <Heading py={4}>Quản lý nội bộ</Heading>
+      <Divider mb={4}/>
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
-          title="Khách hàng không tài khoản"
+          title="Thành viên nội bộ"
           className="btn-add"
           content={<ContentFormAccount edit={false} />}
           closeOnOverlayClick={false}
           />
       {accounts ? (
-        <Table variant="striped" colorScheme="blue">
+        <Table variant="striped" colorScheme="blue" size='sm' mt={4}>
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>
@@ -133,7 +139,7 @@ function InternalList() {
                 <HStack>
                   <ModalScrollCustom 
                     icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
-                    title="Khách hàng không tài khoản"
+                    title="Nhân viên"
                     className="btn-detail-list"
                     content={<ContentFormAccount edit={true} idAccount={account.id} account={account}/>}
                     closeOnOverlayClick={false}
@@ -141,11 +147,11 @@ function InternalList() {
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
                     className="btn-delete-list"
-                    title="Xóa khách hàng không tài khoản"
-                    content="Bạn có muốn xóa khách hàng này không ?"
+                    title="Xóa nhân viên"
+                    content="Bạn có muốn xóa nhân viên này không ?"
                     nameBtnNegative="Xóa"
                     nameBtnPositive="Hủy"
-                    onBtnNegative={() => handleDeleteAccountById(account.id)}
+                    onBtnNegative={() => handleDeleteCustomer(account.id)}
                   />
                 </HStack>
               </Td>
@@ -165,14 +171,15 @@ function InternalList() {
 
 function ContentFormAccount ({edit, idAccount, account}) {
 
-  console.log(account);
-
   const dispatch = useDispatch();
   const toast = useToast()
   const [avatar1, setAvatar1] = useState()
   const [avatar2, setAvatar2] = useState()
   const [tab, setTab] = useState(1)
+  const [checkboxIdRole, setCheckboxIdRole] = useState([])
   const roles = useSelector((state) => state.roleReducer.roles)
+
+  console.log(edit)
 
   if (account===undefined) {
     account = {
@@ -181,7 +188,7 @@ function ContentFormAccount ({edit, idAccount, account}) {
       email: '',
       avatar: '',
       phoneNum: '',
-
+      password: ''
     }
   }
 
@@ -191,6 +198,8 @@ function ContentFormAccount ({edit, idAccount, account}) {
     email: account.email || '',
     avatar: account.avatar || '',
     phoneNum: account.phoneNum || '',
+    password: '',
+    passwordConfirmation: ''
   }
 
   const validationSchema = Yup.object().shape({
@@ -199,87 +208,119 @@ function ContentFormAccount ({edit, idAccount, account}) {
     email: Yup.string().required("Trường này không được để trống."),
     avatar: Yup.string(),
     phoneNum: Yup.string().required("Trường này không được để trống."),
+    // password: Yup.string().required("Trường này không được để trống."),
+    // passwordConfirmation: Yup.string().oneOf([Yup.ref('password')], "Mật khẩu không trùng khớp"),
   })
+
+  const handeChangeCheckbox = (idRole) => {
+    setCheckboxIdRole(prev => {
+      if (checkboxIdRole.includes(idRole)) {
+        return checkboxIdRole.filter(cb => cb !== idRole)
+      } else {
+        return [...prev, idRole]
+      }
+    })
+  }
 
   const handleRenderImageFile = (e) => {
     var file = e.target.files[0]
     setAvatar1(window.URL.createObjectURL(new Blob([file], {type: 'application/zip'})))
   }
 
+  useEffect(() => {
+    dispatch(showRoles())
+    if (edit) {
+      account.roles.forEach(role => handeChangeCheckbox(role.id))
+    }
+  }, [idAccount])
+
   return (
     <Formik validationSchema={validationSchema} initialValues={initialValues}
       onSubmit={(values) => {
-
+        
         if (edit) {
-          var formData = new FormData(document.getElementById('form-role'))
-          // var data = {
-          //   id: roomtype.id,
-          //   name: values.name,
-          //   price: values.price,
-          //   description: values.description,
-          //   idRoomtypePhoto: roomtypePhotoActive.id
-          // }
-          // console.log(data)
-          // formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
-          // dispatch(doUpdateRoomtype(formData))
-          // .then(response => {
-          //   toast({
-          //     title: 'Thông báo',
-          //     description: "Cập nhập loại phòng thành công",
-          //     status: 'success',
-          //     duration: 9000,
-          //     isClosable: true,
-          //   })
-          // })
-          // .catch((err) => {
-          //   toast({
-          //     title: 'Thông báo',
-          //     description: "Cập nhập loại phòng thất bại",
-          //     status: 'error',
-          //     duration: 9000,
-          //     isClosable: true,
-          //   })
-          // })
-          // .finally(() => {
-          //   dispatch(doShowRoomtypeList())
-          // })
+          var data = {
+            id: account.id,
+            name: values.name,
+            address: values.address,
+            email: values.email,
+            phoneNum: values.phoneNum,
+            roles: checkboxIdRole,
+            authProvider: account.authProvider
+          }
+          console.log(data)
+          dispatch(doUpdateCustomer(data))
+          .then(response => {
+            toast({
+              title: 'Thông báo',
+              description: "Cập nhập nhân viên thành công",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .catch((err) => {
+            toast({
+              title: 'Thông báo',
+              description: "Cập nhập nhân viên thất bại",
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .finally(() => {
+            dispatch(showPagedByType({
+              type: 'internal_account',
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }))
+          })
+        } else {
+          var data = {
+            id: account.id,
+            name: values.name,
+            address: values.address,
+            email: values.email,
+            phoneNum: values.phoneNum,
+            authProvider: account.authProvider,
+            password: values.passwordConfirmation
+          }
+          console.log(data)
+          dispatch(doCreateAccountInternal(data))
+          .then(response => {
+            toast({
+              title: 'Thông báo',
+              description: "Thêm nhân viên thành công",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .catch((err) => {
+            toast({
+              title: 'Thông báo',
+              description: "Thêm nhân viên thất bại",
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
+          })
+          .finally(() => {
+            dispatch(showPagedByType({
+              type: 'internal_account',
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }))
+          })
         }
-        else {
-          var formData = new FormData(document.getElementById('form-roomtype'))
-          // var data = {
-          //   name: values.name,
-          //   price: values.price,
-          //   description: values.description,
-          //   isImgFile: tab == 1 ? true : false,
-          //   avatarUrl: formData.get('avatarUrl')
-          // }
-          // console.log(data)
-          // formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
-          // formData.append("avatar-file", document.forms['form-roomtype'].avatarFile.files[0])
-          // dispatch(doCreateRoomtype(formData))
-          // .then(response => {
-          //   toast({
-          //     title: 'Thông báo',
-          //     description: "Thêm mới khách hàng thành công",
-          //     status: 'success',
-          //     duration: 9000,
-          //     isClosable: true,
-          //   })
-          // })
-          // .catch((err) => {
-          //   toast({
-          //     title: 'Thông báo',
-          //     description: "Thêm mới khách hàng thất bại",
-          //     status: 'error',
-          //     duration: 9000,
-          //     isClosable: true,
-          //   })
-          // })
-          // .finally(() => {
-          //   dispatch(doShowRoomtypeList())
-          // })
-        }
-      }}
+      }
+    }
     >
       {(formikProps) => {
         const {errors, values, touched, handleSubmit, handleBlur, handleChange} = formikProps;
@@ -290,7 +331,11 @@ function ContentFormAccount ({edit, idAccount, account}) {
             {edit && (
               <>
                 <HStack justify="center">
-                  {/* <Image borderRadius={6} mt={4} src={!roomtypePhotoActive.imgFile ? roomtypePhotoActive.url : `${URL_BASE}/${PATH_IMG_ACCOUNT}/${roomtypePhotoActive.url}`} alt={roomtypePhotoActive.id}/> */}
+                {account.avatar && account.avatar.startsWith("https://") || account.avatar &&  account.avatar.startsWith("http://") ? (
+                  <Image borderRadius={6} mt={4} src={account.avatar} alt={account.name} />
+                ) : (
+                  <Image borderRadius={6} mt={4} src={`${URL_BASE}/${PATH_IMG_ACCOUNT}/${account.avatar}`} alt={account.name} />
+                )}
                 </HStack>
                 
                 <Text fontWeight="medium">Id: {account.id || ''}</Text>
@@ -323,31 +368,51 @@ function ContentFormAccount ({edit, idAccount, account}) {
               <FormErrorMessage>{errors.phoneNum}</FormErrorMessage>
             </FormControl>
 
-            {!edit && (
+            {!edit && 
               <>
-                <Text fontWeight="medium" mt={4}>Ảnh đại diện</Text>
-                <Tabs>
-                  <TabList>
-                    <Tab onClick={() => setTab(1)}>File</Tab>
-                    <Tab onClick={() => setTab(2)}>URL</Tab>
-                  </TabList>
-    
-                  <TabPanels bg="#EDFDFD" borderRadius={8}>
-                    <TabPanel>
-                      <input label="Ảnh đại diện" name="avatarFile" type="file" 
-                        accept="image/png, image/jpeg, image/gif, image/ico, image/jpg" 
-                        onChange={(e) => handleRenderImageFile(e)}/>
-                      {avatar1 && <Image mt={4} src={avatar1} />}
-                    </TabPanel>
-                    <TabPanel>
-                      <Input label="Ảnh đại diện" name="avatarUrl" type="text" 
-                        onChange={(e) => setAvatar2(e.target.value)}/>
-                      {avatar2 && <Image mt={4} src={avatar2} />}
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
+                <FormControl isInvalid={errors.password && touched.password}>
+                  <FormLabel htmlFor="password">Mật khẩu</FormLabel>
+                  <Input size="sm" bg="white" id="password" type="password" onChange={handleChange} value={values.password}/>
+                  <FormErrorMessage>{errors.password}</FormErrorMessage>
+                </FormControl>
+                
+                <FormControl isInvalid={errors.passwordConfirmation && touched.passwordConfirmation}>
+                  <FormLabel htmlFor="passwordConfirmation">Nhập lại mật khẩu</FormLabel>
+                  <Input size="sm" bg="white" id="passwordConfirmation" type="password" onChange={handleChange} value={values.passwordConfirmation}/>
+                  <FormErrorMessage>{errors.passwordConfirmation}</FormErrorMessage>
+                </FormControl>
               </>
+            }
+
+            {edit && roles && (
+              <Table size='sm' mt={4}>
+                <Thead>
+                  <Tr>
+                    <Th>Id</Th>
+                    <Th>Logo</Th>
+                    <Th>Tên</Th>
+                    <Th>Mã</Th>
+                    <Th isNumeric>Cấp quyền</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                {roles.map((role, index) => (
+                    <Tr key={index}>
+                      <Td>{role.id}</Td>
+                      <Td><Image src={role.avatar} borderRadius={4}/></Td>
+                      <Td>{role.name}</Td>
+                      <Td>{role.code}</Td>
+                      <Td isNumeric>
+                        {account.roles.some(r => r.id === role.id) ? (
+                        <input type="checkbox" id={role.id} onClick={() => handeChangeCheckbox(role.id)} defaultChecked className="checkbox-role-account"/>):(
+                        <input onClick={() => handeChangeCheckbox(role.id)} type="checkbox" id={role.id} className="checkbox-role-account"/>)}
+                      </Td>
+                    </Tr>
+                ))}
+                </Tbody>
+              </Table>
             )}
+
             <HStack justify="right">
               {edit ? 
               (<Button colorScheme='blue' mt={4} onClick={handleSubmit}>Cập nhập</Button>) : 

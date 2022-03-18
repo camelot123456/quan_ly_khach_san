@@ -12,7 +12,8 @@ import RoomDetail from "./pages/admin/bodys/room-management/RoomDetail";
 import RoomReservation from "./pages/admin/bodys/room-management/RoomReservation";
 import TransactionList from "./pages/admin/bodys/transaction-management/TransactionList";
 import MainLayout from "./pages";
-import AccountTab from "./pages/admin/bodys/account-management";
+import AccountTab from "./pages/admin/bodys/customer-management";
+import InternalList from "./pages/admin/bodys/internal-management/InternalList";
 
 function App() {
   return (
@@ -41,7 +42,8 @@ function App() {
                   <Route path="rooms/:idRoom" element={<RoomDetail />}></Route>
                   <Route path="rooms/reservation" element={<RoomReservation />}></Route>
                   <Route path="transactions" element={<TransactionList />}></Route>
-                  <Route path="accounts" element={<AccountTab />} />
+                  <Route path="customers" element={<AccountTab />} />
+                  <Route path="internals" element={<InternalList />} />
                 </Route>
               </Route>
             </Routes>

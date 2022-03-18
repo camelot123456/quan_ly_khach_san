@@ -66,8 +66,20 @@ public class TransactionServ implements ITransactionServ {
 //				transaction.setStatus((ETransactionStatus) record[6]);
 				transaction.setIdAccount((String) record[7]);
 				transaction.setIdReservation((String) record[8]);
-				transaction.setAvatarAccount((String) record[9]);
-				transaction.setNameAccount((String) record[10]);
+				transaction.setAddress((String) record[9]);
+				transaction.setContent((String) record[10]);
+				transaction.setCustomerNum((Integer) record[11]);
+				transaction.setDiscount((Double) record[12]);
+				transaction.setEmail((String) record[13]);
+				transaction.setEndDate((Date) record[14]);
+				transaction.setNameCustomer((String) record[15]);
+				transaction.setPhoneNum((String) record[16]);
+				transaction.setStartDate((Date) record[17]);
+				transaction.setTaxInvoice((Double) record[18]);
+				transaction.setTaxService((Double) record[19]);
+				transaction.setTotal((Double) record[20]);
+				transaction.setDeleted((Boolean) record[21]);
+				
 				transactionsNew.add(transaction);
 			}
 		}

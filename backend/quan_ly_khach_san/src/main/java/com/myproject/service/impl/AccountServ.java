@@ -10,13 +10,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.myproject.config.AppProperties;
 import com.myproject.entity.AccountEntity;
+import com.myproject.entity.AccountRoleEntity;
+import com.myproject.entity.ReservationEntity;
+import com.myproject.entity.ReservationRoomEntity;
+import com.myproject.entity.ReservationServiceEntity;
+import com.myproject.entity.TransactionEntity;
 import com.myproject.entity.enums.EAuthProvider;
+import com.myproject.payload.account.AccountRoleUpdatePayload;
 import com.myproject.repository.IAccountRepo;
 import com.myproject.repository.IAccountRoleRepo;
+import com.myproject.repository.IReservationRepo;
+import com.myproject.repository.IReservationRoomRepo;
+import com.myproject.repository.IReservationServiceRepo;
+import com.myproject.repository.IRoleRepo;
+import com.myproject.repository.ITransactionRepo;
 import com.myproject.service.IAccountServ;
+
+import net.bytebuddy.utility.RandomString;
 
 @Service
 public class AccountServ implements IAccountServ{
@@ -26,6 +42,27 @@ public class AccountServ implements IAccountServ{
 	
 	@Autowired
 	private IAccountRoleRepo accountRoleRepo;
+	
+	@Autowired
+	private IRoleRepo roleRepo;
+	
+	@Autowired
+	private AppProperties appProperties;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private IReservationRepo  reservationRepo;
+	
+	@Autowired
+	private ITransactionRepo transactionRepo;
+	
+	@Autowired
+	private IReservationRoomRepo reservationRoomRepo;
+	
+	@Autowired
+	private IReservationServiceRepo reservationServiceRepo;
 //----------------------------- SELECT -----------------------------	
 	
 	@Override
@@ -92,6 +129,8 @@ public class AccountServ implements IAccountServ{
 				a.setName((String) record[10]);
 				a.setPhoneNum((String) record[13]);
 				a.setVerified((Boolean) record[14]);
+				a.setRoles(roleRepo.findAllByIdAccount(a.getId()));
+//				roleRepo.findAllByIdAccount(a.getId()).stream().forEach(s -> System.out.println(s.getName()));
 				accountArrNew.add(a);
 			}
 		}
@@ -125,6 +164,7 @@ public class AccountServ implements IAccountServ{
 				a.setName((String) record[10]);
 				a.setPhoneNum((String) record[13]);
 				a.setVerified((Boolean) record[14]);
+				a.setRoles(roleRepo.findAllByIdAccount(a.getId()));
 				accountArrNew.add(a);
 			}
 		}
@@ -158,6 +198,7 @@ public class AccountServ implements IAccountServ{
 				a.setName((String) record[10]);
 				a.setPhoneNum((String) record[13]);
 				a.setVerified((Boolean) record[14]);
+				a.setRoles(roleRepo.findAllByIdAccount(a.getId()));
 				accountArrNew.add(a);
 			}
 		}
@@ -192,11 +233,50 @@ public class AccountServ implements IAccountServ{
 		}
 		return null;
 	}
+	
+
+
+	@Override
+	public AccountEntity create(AccountEntity account) {
+		// TODO Auto-generated method stub
+		String id = "";
+		do {
+			id = RandomString.make(10);
+		} while (accountRepo.existsById(id));
+		AccountEntity acc = new AccountEntity();
+		
+		acc.setId(id);
+		acc.setName(account.getName());
+		acc.setAddress(account.getAddress());
+		acc.setAuthProvider(EAuthProvider.LOCAL);
+		acc.setAvatar(appProperties.getSystemConstant().getAvatarUrlDefault());
+		acc.setEmail(account.getEmail());
+		acc.setEnabled(true);
+		acc.setPassword(passwordEncoder.encode(account.getPassword()));
+		acc.setPhoneNum(account.getPhoneNum());
+		acc.setVerified(true);
+		
+		AccountEntity accountNew = accountRepo.save(acc);
+		
+		
+		AccountRoleEntity accountRole = new AccountRoleEntity();
+		String idAr = "";
+		do {
+			idAr = RandomString.make(10);
+		} while (accountRepo.existsById(idAr));
+		
+		accountRole.setId(idAr);
+		accountRole.setAccount(accountNew);
+		accountRole.setRole(roleRepo.findByCode("MEMBER").get());
+		accountRoleRepo.save(accountRole);
+		return accountNew;
+	}
 
 //----------------------------- UPDATE -----------------------------
 	
+	@Transactional
 	@Override
-	public AccountEntity update(AccountEntity account) {
+	public AccountEntity update(AccountRoleUpdatePayload account) {
 		// TODO Auto-generated method stub
 		if (accountRepo.existsById(account.getId())) {
 			AccountEntity accountOld = accountRepo.findById(account.getId()).get();
@@ -204,7 +284,21 @@ public class AccountServ implements IAccountServ{
 			accountOld.setAddress(account.getAddress());
 			accountOld.setEmail(account.getEmail());
 			accountOld.setPhoneNum(account.getPhoneNum());
-			return accountRepo.save(accountOld);
+			
+			AccountEntity accountNew = accountRepo.save(accountOld);
+			
+			for (AccountRoleEntity ar : accountNew.getAccountRoleArr()) {
+				accountRoleRepo.deleteById(ar.getId());
+			}
+			for (String	idRole : account.getRoles()) {
+				String id = "";
+				do {
+					id = RandomString.make(10);
+				} while (accountRoleRepo.existsById(id));
+				accountRoleRepo.save(new AccountRoleEntity(id, accountNew, roleRepo.findById(idRole).get()));
+			}
+			
+			return accountNew;
 		}
 		return null;
 	}
@@ -217,11 +311,40 @@ public class AccountServ implements IAccountServ{
 
 //----------------------------- DELETE -----------------------------
 	
+	
+//	1. xóa các role của account
+//	2. tìm tất cả transaction và set idAccount = null, reservation = null
+//	3. tìm tất cả các reservation và xóa reservation_service, reservation_room
+//	4. tìm reservation và xóa đi
 	@Override
 	public void deleteById(String id) {
 		// TODO Auto-generated method stub
 		AccountEntity account = accountRepo.findById(id).get();
 		account.getAccountRoleArr().forEach(ar -> accountRoleRepo.deleteById(ar.getId()));
+		
+		for (TransactionEntity t : transactionRepo.findAllByIdAccount(id)) {
+			t.setAccount(null);
+			t.setReservation(null);
+			transactionRepo.save(t);
+		}
+		
+		if (reservationRoomRepo.findAllByIdAccount(id).size() > 0) {		
+			for (ReservationRoomEntity rer : reservationRoomRepo.findAllByIdAccount(id)) {
+				reservationRoomRepo.deleteById(rer.getId());
+			}
+		}
+		
+		if (reservationServiceRepo.findAllByIdAccount(id).size() > 0) {
+			for (ReservationServiceEntity res : reservationServiceRepo.findAllByIdAccount(id)) {
+				reservationServiceRepo.deleteById(res.getId());
+			}
+		}
+		
+		if (reservationRepo.findByIdAccount(id).size() > 0) {
+			for (ReservationEntity re : reservationRepo.findByIdAccount(id)) {
+				reservationRepo.deleteById(re.getId());
+			}
+		}
 		accountRepo.deleteById(id);
 	}
 

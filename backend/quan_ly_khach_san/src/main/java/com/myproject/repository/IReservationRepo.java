@@ -17,6 +17,7 @@ public interface IReservationRepo extends JpaRepository<ReservationEntity, Strin
 	
 	@Query(value = "select * "
 			+ "from reservations re inner join accounts a "
+			+ "on re.id_account = a.id "
 			+ "where a.id=?1",
 			nativeQuery = true)
 	public List<ReservationEntity> findByIdAccount(String idAccount);

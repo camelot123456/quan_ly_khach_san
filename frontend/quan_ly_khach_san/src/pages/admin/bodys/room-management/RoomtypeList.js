@@ -86,7 +86,7 @@ function RoomtypeList() {
           closeOnOverlayClick={false}
       />
       {roomtypes ? (
-        <Table variant="striped" colorScheme="blue">
+        <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>

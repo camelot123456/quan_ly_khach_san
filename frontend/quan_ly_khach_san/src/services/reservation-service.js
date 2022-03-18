@@ -13,4 +13,8 @@ const doFindForTransaction = (idReservation) => {
     return httpCommon().get(`${URL_BASE}/api/admin/reservations/findForTransaction?idReservation=${idReservation}`)
 }
 
-export default { doCreateReservation, doCancelById, doFindForTransaction }
+const doCheckoutRoomReservation = (dataRequest) => {
+    return httpCommon().delete(`${URL_BASE}/api/admin/reservations/checkout`, {data: dataRequest})
+}
+
+export default { doCreateReservation, doCancelById, doFindForTransaction , doCheckoutRoomReservation}

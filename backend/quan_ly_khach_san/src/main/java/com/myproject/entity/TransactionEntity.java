@@ -125,13 +125,7 @@ public class TransactionEntity {
 	private String idAccount;
 	
 	@Transient
-	private String nameAccount;
-	
-	@Transient
 	private String idReservation;
-	
-	@Transient
-	private String avatarAccount;
 	
 }
 

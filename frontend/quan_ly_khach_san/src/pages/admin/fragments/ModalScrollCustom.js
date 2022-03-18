@@ -43,13 +43,13 @@ function ModalScrollCustom(props) {
         isOpen={isOpen}
         scrollBehavior="inside" // outside
         closeOnOverlayClick={closeOnOverlayClick}
-        >
+      >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent minWidth="500px">
           
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody >
+          <ModalBody>
             {content}
           </ModalBody>
           <ModalFooter>

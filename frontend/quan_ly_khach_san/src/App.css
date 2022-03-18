@@ -178,3 +178,8 @@
 .btn-detail-checkout:hover {
   background-color: #E53E3E;
 }
+
+.checkbox-role-account {
+  transform: scale(2);
+  cursor: pointer;
+}

@@ -1,12 +1,16 @@
 import {httpCommon} from '../commons/http-common'
 import {URL_BASE} from '../constants'
 
-const doShowRoles = () => {
+const showRoles = () => {
     return httpCommon().get(`${URL_BASE}/api/roles`)
 }
 
 const showRoleByCode = (code) => {
-    return httpCommon().get(`${URL_BASE}/api/admin/roles?code=${code}`)
+    return httpCommon().get(`${URL_BASE}/api/admin/roles/roleByCode?code=${code}`)
 }
 
-export default {doShowRoles, showRoleByCode}
+const showRoleByIdAccount = (idAccount) => {
+    return httpCommon().get(`${URL_BASE}/api/admin/roles/roleByIdAccount?idAccount=${idAccount}`)
+}
+
+export default {showRoles, showRoleByCode, showRoleByIdAccount}

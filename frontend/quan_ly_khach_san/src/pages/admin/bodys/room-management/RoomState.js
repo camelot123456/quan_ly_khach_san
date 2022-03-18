@@ -30,7 +30,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import {formatDate} from '../../../../commons/dateformat-common'
 import { doShowRoomsAdmin } from "../../../../redux/actions/room-action";
-import { doCancelById, doFindForTransaction } from "../../../../redux/actions/reservation-action";
+import { doCancelById, doCheckoutRoomReservation, doFindForTransaction } from "../../../../redux/actions/reservation-action";
 import { doCreateTransactionPaymnet } from "../../../../redux/actions/transaction-action"
 import ModalScrollCustom from "../../fragments/ModalScrollCustom";
 import AlertDialogCustom from "../../fragments/AlertDialogCustom";
@@ -44,12 +44,14 @@ function RoomState() {
     if (searchParams.get("tab2") == "0") {
       return "using"
     } else if (searchParams.get("tab2") == "1") {
-      return "deposit"
+      return "waiting"
     } else if (searchParams.get("tab2") == "2") {
-      return "checkout"
+      return "deposit"
     } else if (searchParams.get("tab2") == "3") {
-      return "empty"
+      return "checkout"
     } else if (searchParams.get("tab2") == "4") {
+      return "empty"
+    } else if (searchParams.get("tab2") == "5") {
       return "repair"
     }
   });
@@ -66,6 +68,8 @@ function RoomState() {
         return "#48BB78";
       case "DEPOSIT":
         return "#9F7AEA";
+      case "WAITING":
+        return "#D69E2E";
       case "REPAIR":
         return "#F56565";
       default:
@@ -109,6 +113,38 @@ function RoomState() {
     })
   }
 
+  const handleCheckoutRoomReservation = (dataRequest) => {
+    dispatch(doCheckoutRoomReservation(dataRequest))
+    .then((res) => {
+      toast({
+        description: "Trả phòng thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch((err) => {
+      toast({
+        description: "Trả phòng thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .finally(() => {
+      dispatch(
+        doShowRoomsAdmin({
+          roomState: "checkout",
+          currentPage: 0,
+          sizePage: 20,
+          sortField: "id",
+          sortDir: "asc",
+          keyword: "",
+        })
+      );
+    })
+  }
+
   const handlePaymentReservationById = (dataRequest) => {
     dispatch(doCreateTransactionPaymnet(dataRequest))
   }
@@ -133,37 +169,44 @@ function RoomState() {
         <TabList color="white">
 
           <Link to="/admin/rooms?tab1=0&tab2=0">
-            <Tab borderRadius={8} h={70} bg="#48BB78" mr={10} w={220} 
+            <Tab borderRadius={8} h={70} bg="#48BB78" mr={5} w={190} 
               onClick={() => setRoomState("using")} >
-              Đang ở:{" "}
+              Đang ở: {rooms.length || 0} 
             </Tab>
           </Link>
 
           <Link to="/admin/rooms?tab1=0&tab2=1">
-            <Tab borderRadius={8} h={70} bg="#9F7AEA" mr={10} w={220}
-              onClick={() => setRoomState("deposit")} >
-              Đặt cọc:{" "}
+            <Tab borderRadius={8} h={70} bg="#D69E2E" mr={5} w={190}
+              onClick={() => setRoomState("waiting")} >
+              Phòng chờ: {rooms.length || 0}
             </Tab>
           </Link>
 
           <Link to="/admin/rooms?tab1=0&tab2=2">
-            <Tab borderRadius={8} h={70} bg="#4299E1" mr={10} w={220} 
-              onClick={() => setRoomState("checkout")} >
-              Trả phòng:{" "}
+            <Tab borderRadius={8} h={70} bg="#9F7AEA" mr={5} w={190} 
+              onClick={() => setRoomState("deposit")} >
+              Đặt cọc: {rooms.length || 0}
             </Tab>
           </Link>
 
           <Link to="/admin/rooms?tab1=0&tab2=3">
-            <Tab borderRadius={8} h={70} bg="#A0AEC0" mr={10} w={220}
+            <Tab borderRadius={8} h={70} bg="#4299E1" mr={5} w={190} 
+              onClick={() => setRoomState("checkout")} >
+              Trả phòng: {rooms.length || 0}
+            </Tab>
+          </Link>
+
+          <Link to="/admin/rooms?tab1=0&tab2=3">
+            <Tab borderRadius={8} h={70} bg="#A0AEC0" mr={5} w={190}
               onClick={() => setRoomState("empty")} >
-              Trống:{" "}
+              Trống: {rooms.length || 0}
             </Tab>
           </Link>
 
           <Link to="/admin/rooms?tab1=0&tab2=4">
-            <Tab borderRadius={8} h={70} bg="#F56565" mr={10} w={220}
+            <Tab borderRadius={8} h={70} bg="#F56565" mr={5} w={190}
               onClick={() => setRoomState("repair")} >
-              Sửa chữa:{" "}
+              Sửa chữa: {rooms.length || 0}
             </Tab>
           </Link>
         </TabList>
@@ -182,8 +225,19 @@ function RoomState() {
               onFormatDate={formatDate}
               onParseColor={() => parseColor("USING")}
               type="USING"
+              onCancelRoom={handleCancelReservationById}
             />
           </TabPanel>
+
+          <TabPanel>
+            <RoomAll
+              rooms={rooms || []}
+              onFormatDate={formatDate}
+              onParseColor={() => parseColor("WAITING")}
+              type="WAITING"
+            />
+          </TabPanel>
+
           <TabPanel>
             <RoomAll
               rooms={rooms || []}
@@ -200,6 +254,7 @@ function RoomState() {
               rooms={rooms || []}
               onFormatDate={formatDate}
               onParseColor={() => parseColor("CHECKOUT")}
+              onCheckoutRoomReservation={handleCheckoutRoomReservation}
               type="CHECKOUT"
             />
           </TabPanel>
@@ -226,7 +281,7 @@ function RoomState() {
 }
 
 function RoomAll(props) {
-  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, onFindReservationForTransaction } = props;
+  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, onFindReservationForTransaction, onCheckoutRoomReservation } = props;
 
   const reservationTransaction = useSelector((state) => state.reservationReducer.reservationTransaction);
 
@@ -251,6 +306,12 @@ function RoomAll(props) {
   const handleFindReservationForTransaction = (idReservation) => {
     if (onFindReservationForTransaction) {
       onFindReservationForTransaction(idReservation);
+    }
+  }
+
+  const handleCheckoutRoomReservation = (idReservation) => {
+    if (onCheckoutRoomReservation) {
+      onCheckoutRoomReservation(idReservation);
     }
   }
 
@@ -288,9 +349,9 @@ function RoomAll(props) {
                   <Text color="white" textAlign="center">
                     {room.roomNum}
                   </Text>
-                  <Text color="white" textAlign="center">
+                  {/* <Text color="white" textAlign="center">
                     {room.roomState}
-                  </Text>
+                  </Text> */}
                   <Text color="white" textAlign="center">
                     <i className="fa fa-user" aria-hidden="true"></i>{" "}
                     {room.nameAccount || "Chưa có"}
@@ -331,13 +392,19 @@ function RoomAll(props) {
 
                   {type == "USING" ?
                     (<>
-                      <Link style={{ minWidth: "26px", textAlign: "center" }} to="/" >
-                        <Box color="white" borderRadius={4} border="solid 1px" bg="red.800"
-                          _hover={{ borderColor: "white", bg: "red.500" }}
-                        >
-                          <i className="fa fa-ban" aria-hidden="true"></i>
-                        </Box>
-                      </Link>
+                      <AlertDialogCustom 
+                        nameBtnCall={<i className="fa fa-ban" aria-hidden="true"></i>}
+                        className="btn-cancel-deposit"
+                        title="Trả phòng"
+                        content={<>
+                          <p>Ngày trả phòng: {handleFormatDate(room.endDate, "dd/mm/yyyy")}</p>
+                          <p>Bạn có chắc khách hàng muốn trả phòng này không ?</p>
+                        </>}
+                        nameBtnNegative="Xác nhận"
+                        nameBtnPositive="Hủy"
+                        onBtnNegative={() => handleCancelRoom({idReservation: room.idReservation, idRoom: room.idRoom})}
+                      />
+
                       <Link style={{ minWidth: "26px", textAlign: "center" }} to="/" >
                         <Box color="white" borderRadius={4} border="solid 1px" bg="blue.800"
                           _hover={{ borderColor: "white", bg: "blue.500" }}
@@ -345,6 +412,20 @@ function RoomAll(props) {
                           <i className="fa fa-comments" aria-hidden="true"></i>
                         </Box>
                       </Link>
+                    </>) : (<></>)
+                  }
+
+                  {type == "CHECKOUT" ?
+                    (<>
+                      <AlertDialogCustom 
+                        nameBtnCall={<i className="fa fa-ban" aria-hidden="true"></i>}
+                        className="btn-cancel-deposit"
+                        title="Trả phòng"
+                        content="Bạn có chắc khách hàng đã phòng này không ?"
+                        nameBtnNegative="Xác nhận"
+                        nameBtnPositive="Hủy"
+                        onBtnNegative={() => handleCheckoutRoomReservation({idReservation: room.idReservation})}
+                      />
                     </>) : (<></>)
                   }
 

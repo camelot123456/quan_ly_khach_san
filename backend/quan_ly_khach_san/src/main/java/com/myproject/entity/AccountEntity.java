@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -113,4 +114,7 @@ public class AccountEntity {
 //	----------------------------------Transient------------------------------------
 	
 
+	@Transient
+	public List<RoleEntity> roles;
+	
 }

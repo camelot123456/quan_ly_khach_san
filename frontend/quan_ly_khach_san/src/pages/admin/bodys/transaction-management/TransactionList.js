@@ -18,6 +18,8 @@ import {
   Box,
   SkeletonCircle,
   SkeletonText,
+  Heading, 
+  Divider
 } from "@chakra-ui/react";
 
 import {formatDate} from '../../../../commons/dateformat-common'
@@ -40,8 +42,10 @@ function TransactionList() {
 
   return (
     <>
+      <Heading py={4}>Lịch sử giao dịch</Heading>
+      <Divider />
       {transactions ? (
-        <Table variant="striped" colorScheme="blue">
+        <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>
@@ -58,7 +62,7 @@ function TransactionList() {
             <Tr key={index}>
               <Td>{index + 1}</Td>
               <Td>{transaction.id}</Td>
-              <Td>{transaction.nameAccount || ""}</Td>
+              <Td>{transaction.nameCustomer || ""}</Td>
               <Td>{formatDate(transaction.createdAt, "dd/mm/yyyy")}</Td>
               <Td>{transaction.amount}</Td>
               <Td>
@@ -68,11 +72,11 @@ function TransactionList() {
                       <i className="fa fa-pencil" aria-hidden="true"></i>
                     </Center>
                   </Link>
-                  <Link to="/">
+                  {/* <Link to="/">
                     <Center  p={2} bg="red" borderRadius={4} color="white">
                       <i className="fa fa-trash-o" aria-hidden="true"></i>
                     </Center>
-                  </Link>
+                  </Link> */}
                 </HStack>
               </Td>
             </Tr>

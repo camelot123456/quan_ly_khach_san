@@ -33,9 +33,15 @@ function Sidebar() {
         </Box>
       </Link>
 
-      <Link to="/admin/accounts">
+      <Link to="/admin/customers">
         <Box className="btn-admmin-sidebar-link">
-          <Text>Quản lý tài khoản</Text>
+          <Text>Quản lý khách hàng</Text>
+        </Box>
+      </Link>
+
+      <Link to="/admin/internals">
+        <Box className="btn-admmin-sidebar-link">
+          <Text>Quản lý nội bộ</Text>
         </Box>
       </Link>
 

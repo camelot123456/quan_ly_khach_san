@@ -188,6 +188,10 @@ public class ReservationServ implements IReservationServ {
 			reservation.setAccount(customerNew);
 		} else {
 			AccountEntity customerOld = accountRepo.findById(reservationCustom.getCustomer().getId()).get();
+			customerOld.setName(reservationCustom.getCustomer().getName());
+			customerOld.setAddress(reservationCustom.getCustomer().getAddress());
+			customerOld.setEmail(reservationCustom.getCustomer().getEmail());
+			customerOld.setPhoneNum(reservationCustom.getCustomer().getPhoneNum());
 			reservation.setAccount(customerOld);
 		}
 
@@ -279,6 +283,13 @@ public class ReservationServ implements IReservationServ {
 					.filter(rer -> rer.getRoom().getId().equals(request.getIdRoom()))
 					.findFirst().get());
 		} else if (reservation.getReservationRoomArr().size() == 1){
+			
+			Optional<TransactionEntity> transaction = transactionServ.findByIdReservation(reservation.getId());
+			if (transaction.isPresent()) {
+				transaction.get().setReservation(null);
+				transactionRepo.save(transaction.get());
+			}
+			
 			for (ReservationRoomEntity rer : reservation.getReservationRoomArr()) {
 				reservationRoomRepo.deleteById(rer.getId());
 			}

@@ -113,6 +113,38 @@ function RoomState() {
     })
   }
 
+  const handleCheckoutEarlyReservationById = (dataRequest) => {
+    dispatch(doCancelById(dataRequest))
+    .then((res) => {
+      toast({
+        description: "Trả phòng thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch((err) => {
+      toast({
+        description: "Trả phòng thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .finally(() => {
+      dispatch(
+        doShowRoomsAdmin({
+          roomState: "using",
+          currentPage: 0,
+          sizePage: 20,
+          sortField: "id",
+          sortDir: "asc",
+          keyword: "",
+        })
+      );
+    })
+  }
+
   const handleCheckoutRoomReservation = (dataRequest) => {
     dispatch(doCheckoutRoomReservation(dataRequest))
     .then((res) => {
@@ -225,7 +257,7 @@ function RoomState() {
               onFormatDate={formatDate}
               onParseColor={() => parseColor("USING")}
               type="USING"
-              onCancelRoom={handleCancelReservationById}
+              onCancelRoom={handleCheckoutEarlyReservationById}
             />
           </TabPanel>
 

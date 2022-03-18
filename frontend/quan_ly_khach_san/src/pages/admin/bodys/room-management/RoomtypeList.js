@@ -104,7 +104,6 @@ function RoomtypeList() {
               <Td>{index + 1}</Td>
               <Td>{roomtype.id}</Td>
               <Td>
-                {console.log(roomtype.avatarUrl.startsWith("https://"))}
                 { roomtype.avatarUrl.startsWith("https://") || roomtype.avatarUrl.startsWith("http://") ? (
                   <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={roomtype.avatarUrl} alt={roomtype.name} />
                   ) : (

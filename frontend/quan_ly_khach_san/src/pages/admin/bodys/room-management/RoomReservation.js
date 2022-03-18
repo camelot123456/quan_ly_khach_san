@@ -135,7 +135,7 @@ function RoomReservation() {
               duration: 9000,
               isClosable: true,
             })
-            navigate("/admin/rooms?tab1=0&tab2=1")
+            navigate("/admin/rooms?tab1=0&tab2=2")
           })
           .catch((err) => {
             toast({

@@ -142,8 +142,11 @@ function RoomDetail() {
           <Heading p={4} size="lg">
             Thông tin phòng
           </Heading>
+          {console.log(room)}
             
           <UnorderedList ps={4}>
+            <ListItem>Mã dịch vụ: {room.idTransaction}</ListItem>
+            <ListItem>Mã phiếu thuê: {room.idReservation}</ListItem>
             <ListItem>Mã phòng: {room.idRoom}</ListItem>
             <ListItem>Thời gian tạo: {room.createAtRoom}</ListItem>
             <ListItem>Thời gian cập nhập: {room.modifiedAtRoom}</ListItem>

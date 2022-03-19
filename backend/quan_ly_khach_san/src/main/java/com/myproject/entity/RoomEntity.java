@@ -53,7 +53,7 @@ public class RoomEntity {
 	protected Date modifiedAt;
 	
 
-	@Column(name = "[room_num]", columnDefinition = "char(5)")
+	@Column(name = "[room_num]", columnDefinition = "char(15)")
 	private String roomNum;
 	
 	@Column(name = "[customer_num]", columnDefinition = "int default 0")

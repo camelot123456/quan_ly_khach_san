@@ -1,5 +1,15 @@
 1, hiển thị các phòng đang ở (đã thanh toán) -> ok
 2, hiển thị các phòng đã đặt phòng(chưa thanh toán) -> ok
-3, hiển thị các phòng đang chờ (đã thanh toán nhưng chưa tới ngày thuê)
-4, hiển thị các phòng đang sữa chữa (roomstate = repair)
+3, hiển thị các phòng đang chờ (đã thanh toán nhưng chưa tới ngày thuê) -> ok
+4, hiển thị các phòng đang sữa chữa (roomstate = repair) -> ok
 5, hiển thị toàn phòng hiển thị phòng nào đang sửa chữa, phòng nào đang ở, phòng nào đang trống
+
+thống kê số lượng khách hàng theo năm, quý, tháng, tuần, ngày
+thống kê số lượng nhân viên theo cấp bậc
+thống kê doanh thu theo ngày, tuần, tháng, quý, năm
+
+
+select DATEPART(yyyy, t.created_at), DATEPART(wk, t.created_at), sum(t.amount)
+from transactions t
+group by DATEPART(yyyy, t.created_at), DATEPART(wk, t.created_at)
+order by DATEPART(yyyy, t.created_at), DATEPART(wk, t.created_at)

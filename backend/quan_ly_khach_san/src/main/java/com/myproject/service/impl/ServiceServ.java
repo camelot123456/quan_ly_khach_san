@@ -28,9 +28,7 @@ public class ServiceServ implements IServiceServ{
 		Sort sort = Sort.by(sortField);
 		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
 		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
-		if (keyword == "" || keyword == null) {
-			return serviceRepo.findAll(pageRequest);
-		}
+		keyword = keyword == null ? "" : keyword;
 		return serviceRepo.pagedByKeyword(keyword, pageRequest);
 	}
 

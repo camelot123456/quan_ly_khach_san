@@ -1,6 +1,5 @@
 package com.myproject.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -12,8 +11,6 @@ public interface IAccountServ {
 
 //	----------------------------- SELECT -----------------------------
 
-	public List<AccountEntity> findAll();
-	
 	public Optional<AccountEntity> findByOtpCode(String otpCode);
 
 	public Optional<AccountEntity> findById(String id);
@@ -27,6 +24,9 @@ public interface IAccountServ {
 	public Page<AccountEntity> pagedCustomerAccount(int sizePage, int currentPage, String sortField, String sortDir, String keyword);
 	
 	public Page<AccountEntity> pagedInternal(int sizePage, int currentPage, String sortField, String sortDir, String keyword);
+	
+	public Page<AccountEntity> findAll(int sizePage, int currentPage, String sortField, String sortDir,
+			String keyword);
 	
 	public Page<AccountEntity> pagedByType(String type, int sizePage, int currentPage, String sortField, String sortDir,
 			String keyword);

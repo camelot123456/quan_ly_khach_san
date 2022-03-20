@@ -66,9 +66,38 @@ public class AccountServ implements IAccountServ{
 //----------------------------- SELECT -----------------------------	
 	
 	@Override
-	public List<AccountEntity> findAll() {
+	public Page<AccountEntity> findAll(int sizePage, int currentPage, String sortField, String sortDir,
+			String keyword) {
 		// TODO Auto-generated method stub
-		return accountRepo.findAll();
+		keyword = keyword == null ? "" : keyword;
+		List<Object[]> accounts = accountRepo.findAll(keyword);
+		List<AccountEntity> accountArrNew = null;
+		if (accounts.size() > 0) {
+			accountArrNew = new ArrayList<AccountEntity>();
+			for (Object[] record : accounts) {
+				AccountEntity a = new AccountEntity();
+				a.setId((String) record[0]);
+				a.setAddress((String) record[1]);
+				a.setAuthProvider(EAuthProvider.valueOf((String) record[2]));
+				a.setAvatar((String) record[3]);
+				a.setCreatedAt((Date) record[4]);
+				a.setCreatedBy((String) record[5]);
+				a.setEmail((String) record[6]);
+				a.setEnabled((Boolean) record[7]);
+				a.setModifiedAt((Date) record[8]);
+				a.setModifiedBy((String) record[9]);
+				a.setName((String) record[10]);
+				a.setPhoneNum((String) record[13]);
+				a.setVerified((Boolean) record[14]);
+				a.setRoles(roleRepo.findAllByIdAccount(a.getId()));
+//				roleRepo.findAllByIdAccount(a.getId()).stream().forEach(s -> System.out.println(s.getName()));
+				accountArrNew.add(a);
+			}
+		}
+		Sort sort = Sort.by(sortField);
+		sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
+		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
+		return new PageImpl<AccountEntity>(accountArrNew, pageRequest, accountArrNew.size());
 	}
 
 	@Override
@@ -218,7 +247,7 @@ public class AccountServ implements IAccountServ{
 		} else if (type.equals("internal_account")) {
 			return pagedInternal(sizePage, currentPage, sortField, sortDir, keyword);
 		}
-		return null;
+		return findAll(sizePage, currentPage, sortField, sortDir, keyword);
 	}	
 
 //----------------------------- INSERT -----------------------------

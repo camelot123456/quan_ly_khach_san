@@ -23,13 +23,39 @@ export const showPagedByType = (pagedRequest) => (dispatch ) => {
     return new Promise((resolve, reject) => {
         accountService.showPagedByType(pagedRequest)
         .then(res => {
-            dispatch({
-                type: accountType.SHOW_PAGE_BY_TYPE,
-                payload: {
-                    accounts: res.data.accounts,
-                    paged: res.data.paged
-                }
-            })
+            if (pagedRequest.type == 'customer_no_account') {
+                dispatch({
+                    type: accountType.SHOW_CUSTOMER_NO_ACCOUNT,
+                    payload: {
+                        accountCustomerNoAccountArr: res.data.accounts,
+                        pagedCustomerNoAccount: res.data.paged
+                    }
+                })
+            } else if (pagedRequest.type == 'customer_account') {
+                dispatch({
+                    type: accountType.SHOW_CUSTOMER_ACCOUNT,
+                    payload: {
+                        accountCustomerAccountArr: res.data.accounts,
+                        pagedCustomerAccount: res.data.paged
+                    }
+                })
+            } else if (pagedRequest.type == 'internal_account') {
+                dispatch({
+                    type: accountType.SHOW_INTERNAL_ACCOUNT,
+                    payload: {
+                        accountInternalArr: res.data.accounts,
+                        pagedInternal: res.data.paged
+                    }
+                })
+            } else {
+                dispatch({
+                    type: accountType.SHOW_ACCOUNT_ALL,
+                    payload: {
+                        accountAllArr: res.data.accounts,
+                        pagedAll: res.data.paged
+                    }
+                })
+            }
             resolve()
         })
         .catch(err => {

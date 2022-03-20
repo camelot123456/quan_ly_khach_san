@@ -33,7 +33,8 @@ import {
   WrapItem,
   Heading,
   Divider,
-  Switch
+  Switch,
+  Badge
 } from "@chakra-ui/react";
 
 import ModalScrollCustom from "../../fragments/ModalScrollCustom"
@@ -48,7 +49,7 @@ import {showRoleByIdAccount, showRoles} from '../../../../redux/actions/role-act
 function InternalList() {
   const toast = useToast()
   const dispatch = useDispatch();
-  const accounts = useSelector((state) => state.accountReducer.accounts);
+  const accounts = useSelector((state) => state.accountReducer.accountInternalArr);
 
   useEffect(() => {
     dispatch(showPagedByType({
@@ -95,8 +96,6 @@ function InternalList() {
 
   return (
     <>
-      <Heading py={4}>Quản lý nội bộ</Heading>
-      <Divider mb={4}/>
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
           title="Thành viên nội bộ"
@@ -337,7 +336,7 @@ function ContentFormAccount ({edit, idAccount, account}) {
                   <Image borderRadius={6} mt={4} src={`${URL_BASE}/${PATH_IMG_ACCOUNT}/${account.avatar}`} alt={account.name} />
                 )}
                 </HStack>
-                
+                <Badge colorScheme='green'>{account.authProvider || ''}</Badge>
                 <Text fontWeight="medium">Id: {account.id || ''}</Text>
                 <Text fontWeight="medium">Tạo lúc: {formatDate(account.createdAt, 'hh:MM:ss - dd/mm/yyyy') || ''}</Text>
                 <Text fontWeight="medium">Cập nhập lúc: {formatDate(account.modifiedAt, 'hh:MM:ss - dd/mm/yyyy') || ''}</Text>

@@ -1,9 +1,24 @@
 import accountType from "../types/account-type";
 
 const initialState = {
-    account: {},
-    accounts: [],
-    paged: {}
+    accountCustomerNoAccount: {},
+    accountCustomerNoAccountArr: [],
+    pagedCustomerNoAccount: {},
+
+    accountCustomerAccount: {},
+    accountCustomerAccountArr: [],
+    pagedCustomerAccount: {},
+
+    accountInternal: {},
+    accountInternalArr: [],
+    pagedInternal: {},
+
+    accountAll: {},
+    accountAllArr: [],
+    pagedAll: {},
+
+    account: {}
+
 }
 
 const accountReducer = (state = initialState, { type, payload }) => {
@@ -18,15 +33,48 @@ const accountReducer = (state = initialState, { type, payload }) => {
                 account: payload.account
             }
 
-        case accountType.SHOW_PAGE_BY_TYPE:
-            var accounts = {...state.accounts}
-            var paged = {...state.paged}
-            accounts = payload.accounts
-            paged = payload.paged
+        case accountType.SHOW_CUSTOMER_NO_ACCOUNT:
+            var accountCustomerNoAccountArr = {...state.accountCustomerNoAccountArr}
+            var pagedCustomerNoAccount = {...state.pagedCustomerNoAccount}
+            accountCustomerNoAccountArr = payload.accountCustomerNoAccountArr
+            pagedCustomerNoAccount = payload.pagedCustomerNoAccount
             return {
                 ...state,
-                paged: paged,
-                accounts: accounts
+                accountCustomerNoAccountArr: accountCustomerNoAccountArr,
+                pagedCustomerNoAccount: pagedCustomerNoAccount
+            }
+
+        case accountType.SHOW_CUSTOMER_ACCOUNT:
+            var accountCustomerAccountArr = {...state.accountCustomerAccountArr}
+            var pagedCustomerAccount = {...state.pagedCustomerAccount}
+            accountCustomerAccountArr = payload.accountCustomerAccountArr
+            pagedCustomerAccount = payload.pagedCustomerAccount
+            return {
+                ...state,
+                accountCustomerAccountArr: accountCustomerAccountArr,
+                pagedCustomerAccount: pagedCustomerAccount
+            }
+        
+        case accountType.SHOW_INTERNAL_ACCOUNT:
+            var accountInternalArr = {...state.accountInternalArr}
+            var pagedInternal = {...state.pagedInternal}
+            accountInternalArr = payload.accountInternalArr
+            pagedInternal = payload.pagedInternal
+            return {
+                ...state,
+                accountInternalArr: accountInternalArr,
+                pagedInternal: pagedInternal
+            }
+
+        case accountType.SHOW_ACCOUNT_ALL:
+            var accountAllArr = {...state.accountAllArr}
+            var pagedAll = {...state.pagedAll}
+            accountAllArr = payload.accountAllArr
+            pagedAll = payload.pagedAll
+            return {
+                ...state,
+                accountAllArr: accountAllArr,
+                pagedAll: pagedAll
             }
 
         default:

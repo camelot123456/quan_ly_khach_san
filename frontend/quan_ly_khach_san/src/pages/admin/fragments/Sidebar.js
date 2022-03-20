@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Spacer, Text, Heading, Divider } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Text, Heading, Divider, HStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { APP_NAME } from "../../../constants";
@@ -17,37 +17,47 @@ function Sidebar() {
       </Box>
       <Divider color="white" />
 
-      <Box className="btn-admmin-sidebar-link">
-        <Text>Dashboard</Text>
-      </Box>
+      <Link to="/admin/dashboard">
+        <HStack className="btn-admmin-sidebar-link">
+          <i className="fa fa-tachometer" aria-hidden="true"></i>
+          <Text>Dashboard</Text>
+        </HStack>
+      </Link>
 
       <Link to="/admin/rooms">
-        <Box className="btn-admmin-sidebar-link">
+        <HStack className="btn-admmin-sidebar-link">
+          <i className="fa fa-bed" aria-hidden="true"></i>
           <Text>Quản lý đặt phòng</Text>
-        </Box>
+        </HStack>
       </Link>
 
       <Link to="/admin/transactions">
-        <Box className="btn-admmin-sidebar-link">
+        <HStack className="btn-admmin-sidebar-link">
+        <i className="fa fa-credit-card-alt" aria-hidden="true"></i>
           <Text>Quản lý hóa đơn</Text>
-        </Box>
+        </HStack>
       </Link>
 
       <Link to="/admin/customers">
-        <Box className="btn-admmin-sidebar-link">
+        <HStack className="btn-admmin-sidebar-link">
+        <i className="fa fa-users" aria-hidden="true"></i>
           <Text>Quản lý khách hàng</Text>
-        </Box>
+        </HStack>
       </Link>
 
       <Link to="/admin/internals">
-        <Box className="btn-admmin-sidebar-link">
+        <HStack className="btn-admmin-sidebar-link">
+        <i className="fa fa-user-md" aria-hidden="true"></i>
           <Text>Quản lý nội bộ</Text>
-        </Box>
+        </HStack>
       </Link>
 
-      <Box className="btn-admmin-sidebar-link">
-        <Text>Quản lý dịch vụ</Text>
-      </Box>
+      <Link to="/admin/services">
+        <HStack className="btn-admmin-sidebar-link">
+          <i className="fa fa-diamond" aria-hidden="true"></i>
+          <Text>Quản lý dịch vụ</Text>
+        </HStack>
+      </Link>
     </Flex>
   );
 }

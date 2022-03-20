@@ -31,32 +31,39 @@ import {
   Textarea,
   Wrap,
   WrapItem,
+  Badge,
 } from "@chakra-ui/react";
 
-import { doShowRoomtypeList, doCreateRoomtype, doDeleteRoomtypeById, doUpdateRoomtype } from "../../../../redux/actions/roomtype-action";
 import ModalScrollCustom from "../../fragments/ModalScrollCustom"
 import { Form, Formik } from "formik";
 import * as Yup from 'yup'
 import AlertDialogCustom from "../../fragments/AlertDialogCustom";
-import { PATH_IMG_ROOMTYPE, URL_BASE } from "../../../../constants";
+import { PATH_IMG_ACCOUNT, URL_BASE } from "../../../../constants";
 import {formatDate} from '../../../../commons/dateformat-common'
-import {setRoomtypePhotoActive, showRoomtypePhotoByIdRoomtype} from '../../../../redux/actions/roomtypePhoto-action'
+import { doDeleteCustomer, doUpdateCustomer, showPagedByType } from "../../../../redux/actions/account-action";
 
 function CustomerAccountList() {
   const toast = useToast()
   const dispatch = useDispatch();
-  const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
+  const accounts = useSelector((state) => state.accountReducer.accountCustomerAccountArr);
 
   useEffect(() => {
-    dispatch(doShowRoomtypeList());
+    dispatch(showPagedByType({
+      type: 'customer_account',
+      currentPage: 0,
+      sizePage: 20,
+      sortField: "id",
+      sortDir: "asc",
+      keyword: "",
+    }))
   }, []);
 
-  const handleDeleteRoomtypeById = (idRoomtype) => {
-    dispatch(doDeleteRoomtypeById(idRoomtype))
+  const handleDeleteCustomer = (idAccount) => {
+    dispatch(doDeleteCustomer({id: idAccount}))
     .then((res) => {
       toast({
         title: 'Thông báo',
-        description: "Xóa loại phòng thành công",
+        description: "Xóa khách hàng thành công",
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -65,72 +72,74 @@ function CustomerAccountList() {
     .catch((err) => {
       toast({
         title: 'Thông báo',
-        description: "Xóa loại phòng thất bại",
+        description: "Xóa khách hàng thất bại",
         status: 'error',
         duration: 9000,
         isClosable: true,
       })
     })
     .finally(() => {
-      dispatch(doShowRoomtypeList())
+      dispatch(showPagedByType({
+        type: 'customer_account',
+        currentPage: 0,
+        sizePage: 20,
+        sortField: "id",
+        sortDir: "asc",
+        keyword: "",
+      }));
     })
   }
 
   return (
     <>
-      <Heading py={4}>Khách hàng có tài khoản</Heading>
-      <Divider />
-      <ModalScrollCustom 
-          icon={<i className="fa fa-plus" aria-hidden="true"></i>}
-          title="Loại phòng"
-          className="btn-add-roomtype"
-          content={<ContentFormRoomtype edit={false} />}
-          closeOnOverlayClick={false}
-      />
-      {roomtypes ? (
+      {accounts ? (
         <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>
             <Th>Stt</Th>
             <Th>Id</Th>
-            <Th>Ảnh chính</Th>
-            <Th>Tên phòng</Th>
-            <Th>Giá (VND)</Th>
+            <Th>Avatar</Th>
+            <Th>Tên</Th>
+            <Th>Địa chỉ</Th>
+            <Th>Email</Th>
+            <Th>Số điện thoại</Th>
             <Th>Công cụ</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {roomtypes.map((roomtype, index) => (
+          {accounts.map((account, index) => (
             <Tr key={index}>
               <Td>{index + 1}</Td>
-              <Td>{roomtype.id}</Td>
+              <Td>{account.id}</Td>
               <Td>
-                { roomtype.avatarUrl.startsWith("https://") || roomtype.avatarUrl.startsWith("http://") ? (
-                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={roomtype.avatarUrl} alt={roomtype.name} />
-                  ) : (
-                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={`${URL_BASE}/img/roomtype/${roomtype.avatarUrl}`} alt={roomtype.name} />
+                {account.avatar && account.avatar.startsWith("https://") || account.avatar &&  account.avatar.startsWith("http://") ? (
+                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={account.avatar} alt={account.name} />
+                ) : (
+                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={`${URL_BASE}/img/account/${account.avatar}`} alt={account.name} />
                 )}
-              </Td>
-              <Td>{roomtype.name}</Td>
-              <Td>{roomtype.price}</Td>
+            </Td>
+              <Td>{account.name}</Td>
+              <Td>{account.address}</Td>
+              <Td>{account.email}</Td>
+              <Td>{account.phoneNum}</Td>
               <Td>
                 <HStack>
                   <ModalScrollCustom 
                     icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
-                    title="Loại phòng"
-                    className="btn-detail-roomtype-list"
-                    content={<ContentFormRoomtype edit={true} idRoomtype={roomtype.id} roomtype={roomtype}/>}
+                    title="Khách hàng không tài khoản"
+                    className="btn-detail-list"
+                    content={<ContentFormAccount idAccount={account.id} account={account}/>}
                     closeOnOverlayClick={false}
                   />
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
-                    className="btn-delete-roomtype-list"
-                    title="Xóa loại phòng"
-                    content="Bạn có muốn xóa loại phòng này không ?"
+                    className="btn-delete-list"
+                    title="Xóa khách hàng không tài khoản"
+                    content="Bạn có muốn xóa khách hàng này không ?"
                     nameBtnNegative="Xóa"
                     nameBtnPositive="Hủy"
-                    onBtnNegative={() => handleDeleteRoomtypeById(roomtype.id)}
+                    onBtnNegative={() => handleDeleteCustomer(account.id)}
                   />
                 </HStack>
               </Td>
@@ -148,80 +157,54 @@ function CustomerAccountList() {
   );
 }
 
-function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
-
-  console.log(roomtype);
+function ContentFormAccount ({account}) {
 
   const dispatch = useDispatch();
   const toast = useToast()
-  const [avatar1, setAvatar1] = useState()
-  const [avatar2, setAvatar2] = useState()
-  const [tab, setTab] = useState(1)
-  const roomtypeResponse = useSelector((state) => state.roomtypeReducer.apiResponse);
-  const roomtypePhotos = useSelector((state) => state.roomtypePhotoReducer.roomtypePhotos)
-  const roomtypePhotoActive = useSelector((state) => state.roomtypePhotoReducer.roomtypePhotoActive)
+  const roles = useSelector((state) => state.roleReducer.roles)
 
-
-  useEffect(async () => {
-    await dispatch(showRoomtypePhotoByIdRoomtype(idRoomtype))
-    dispatch(setRoomtypePhotoActive(roomtype.idRoomtypePhoto, roomtype.avatarUrl, roomtype.isImgFile))
-  }, [])
-
-  if (roomtype===undefined) {
-    roomtype = {
+  if (account===undefined) {
+    account = {
       name: '',
-      price: 0,
-      description: '',
-      avatarUrl: ''
+      address: '',
+      email: '',
+      phoneNum: '',
+
     }
   }
 
   const initialValues = {
-    name: roomtype.name,
-    price: roomtype.price,
-    description: roomtype.description,
-    avatarUrl: roomtype.avatarUrl,
-    avatarFile: ""
+    name: account.name || '',
+    address: account.address || '',
+    email: account.email || '',
+    phoneNum: account.phoneNum || '',
   }
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Trường này không được để trống."),
-    price: Yup.number("Chỉ được nhập số").min(0).required("Trường này không được để trống."),
-    description: Yup.string().max(500),
-    avatarUrl: Yup.string(),
-    avatarFile: Yup.string()
+    address: Yup.string(),
+    email: Yup.string().email(),
+    phoneNum: Yup.string().required("Trường này không được để trống."),
   })
-
-  const handleRenderImageFile = (e) => {
-    var file = e.target.files[0]
-    setAvatar1(window.URL.createObjectURL(new Blob([file], {type: 'application/zip'})))
-  }
-
-  const handleSetRoomtypePhotoActive = async (idImage, urlImage, imgFile) => {
-    console.log({idImage, urlImage, imgFile})
-    dispatch(setRoomtypePhotoActive(idImage, urlImage, imgFile))
-  }
 
   return (
     <Formik validationSchema={validationSchema} initialValues={initialValues}
       onSubmit={(values) => {
 
-        if (edit) {
-          var formData = new FormData(document.getElementById('form-roomtype'))
           var data = {
-            id: roomtype.id,
+            id: account.id,
             name: values.name,
-            price: values.price,
-            description: values.description,
-            idRoomtypePhoto: roomtypePhotoActive.id
+            address: values.address,
+            email: values.email,
+            phoneNum: values.phoneNum,
+            authProvider: account.authProvider
           }
           console.log(data)
-          formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
-          dispatch(doUpdateRoomtype(formData))
+          dispatch(doUpdateCustomer(data))
           .then(response => {
             toast({
               title: 'Thông báo',
-              description: "Cập nhập loại phòng thành công",
+              description: "Cập nhập khách hàng thành công",
               status: 'success',
               duration: 9000,
               isClosable: true,
@@ -237,123 +220,63 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
             })
           })
           .finally(() => {
-            dispatch(doShowRoomtypeList())
+            dispatch(showPagedByType({
+              type: 'customer_account',
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }))
           })
-        }
-        else {
-          var formData = new FormData(document.getElementById('form-roomtype'))
-          var data = {
-            name: values.name,
-            price: values.price,
-            description: values.description,
-            isImgFile: tab == 1 ? true : false,
-            avatarUrl: formData.get('avatarUrl')
-          }
-          console.log(data)
-          formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
-          formData.append("avatar-file", document.forms['form-roomtype'].avatarFile.files[0])
-          dispatch(doCreateRoomtype(formData))
-          .then(response => {
-            toast({
-              title: 'Thông báo',
-              description: "Thêm mới loại phòng thành công",
-              status: 'success',
-              duration: 9000,
-              isClosable: true,
-            })
-          })
-          .catch((err) => {
-            toast({
-              title: 'Thông báo',
-              description: "Thêm mới loại phòng thất bại",
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            })
-          })
-          .finally(() => {
-            dispatch(doShowRoomtypeList())
-          })
-        }
       }}
     >
       {(formikProps) => {
         const {errors, values, touched, handleSubmit, handleBlur, handleChange} = formikProps;
 
         return ( 
-          <Form id="form-roomtype" name="form-roomtype" encType="multipart/form-data">
-
-            {edit && (
-              <>
-                <HStack justify="center">
-                  <Image borderRadius={6} mt={4} src={!roomtypePhotoActive.imgFile ? roomtypePhotoActive.url : `${URL_BASE}/${PATH_IMG_ROOMTYPE}/${roomtypePhotoActive.url}`} alt={roomtypePhotoActive.id}/>
-                </HStack>
-                <Wrap>
-                  {roomtypePhotos && (
-                    roomtypePhotos.map((rtp, index) => (
-                      <WrapItem key={index}>
-                        <Center w='70px' h='50px'>
-                            <Image src={!rtp.isImgFile ? rtp.url : `${URL_BASE}/${PATH_IMG_ROOMTYPE}/${rtp.url}`} alt={rtp.id} 
-                              className={roomtypePhotoActive.id === rtp.id ? 'image-roomtypephoto-list active' : 'image-roomtypephoto-list'} 
-                              onClick={() => handleSetRoomtypePhotoActive(rtp.id, rtp.url, rtp.isImgFile)}/>
-                        </Center>
-                      </WrapItem>
-                    ))
-                  )}
-                </Wrap>
-                <Text fontWeight="medium">Id: {roomtype.id || ''}</Text>
-                <Text fontWeight="medium">Tạo lúc: {formatDate(roomtype.createdAt, 'hh:MM:ss - dd/mm/yyyy') || ''}</Text>
-                <Text fontWeight="medium">Cập nhập lúc: {formatDate(roomtype.modifiedAt, 'hh:MM:ss - dd/mm/yyyy') || ''}</Text>
-              </>
-            )}
+          <Form>
+            <>
+              <HStack justify="center">
+                {account.avatar && account.avatar.startsWith("https://") || account.avatar &&  account.avatar.startsWith("http://") ? (
+                  <Image borderRadius={6} mt={4} src={account.avatar} alt={account.name} />
+                ) : (
+                  <Image borderRadius={6} mt={4} src={`${URL_BASE}/${PATH_IMG_ACCOUNT}/${account.avatar}`} alt={account.name} />
+                )}
+              </HStack>
+              
+              <Badge colorScheme='green'>{account.authProvider || ''}</Badge>
+              <Text fontWeight="medium">Id: {account.id || ''}</Text>
+              <Text fontWeight="medium">Tạo lúc: {formatDate(account.createdAt, 'hh:MM:ss - dd/mm/yyyy') || ''}</Text>
+              <Text fontWeight="medium">Cập nhập lúc: {formatDate(account.modifiedAt, 'hh:MM:ss - dd/mm/yyyy') || ''}</Text>
+            </>
 
             <FormControl isInvalid={errors.name && touched.name}>
-              <FormLabel htmlFor="name">Tên loại phòng</FormLabel>
+              <FormLabel htmlFor="name">Tên khách hàng</FormLabel>
               <Input size="sm" bg="white" id="name" onChange={handleChange} value={values.name}/>
               <FormErrorMessage>{errors.name}</FormErrorMessage>
             </FormControl>
 
-            <FormControl isInvalid={errors.price && touched.price}>
-              <FormLabel htmlFor="price">Giá</FormLabel>
-              <Input size="sm" bg="white" id="price" type="number" onChange={handleChange} value={values.price}/>
-              <FormErrorMessage>{errors.price}</FormErrorMessage>
+            <FormControl isInvalid={errors.address && touched.address}>
+              <FormLabel htmlFor="address">Địa chỉ</FormLabel>
+              <Input size="sm" bg="white" id="address" onChange={handleChange} value={values.address}/>
+              <FormErrorMessage>{errors.address}</FormErrorMessage>
             </FormControl>
 
-            <FormControl isInvalid={errors.description && touched.description}>
-              <FormLabel htmlFor="price">Mô tả</FormLabel>
-              <Textarea size="sm" bg="white" id="description" onChange={handleChange} value={values.description}/>
-              <FormErrorMessage>{errors.description}</FormErrorMessage>
+            <FormControl isInvalid={errors.email && touched.email}>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <Input size="sm" bg="white" id="email" type="email" onChange={handleChange} value={values.email}/>
+              <FormErrorMessage>{errors.email}</FormErrorMessage>
             </FormControl>
 
-            {!edit && (
-              <>
-                <Text fontWeight="medium" mt={4}>Ảnh đại diện</Text>
-                <Tabs>
-                  <TabList>
-                    <Tab onClick={() => setTab(1)}>File</Tab>
-                    <Tab onClick={() => setTab(2)}>URL</Tab>
-                  </TabList>
-    
-                  <TabPanels bg="#EDFDFD" borderRadius={8}>
-                    <TabPanel>
-                      <input label="Ảnh đại diện" name="avatarFile" type="file" 
-                        accept="image/png, image/jpeg, image/gif, image/ico, image/jpg" 
-                        onChange={(e) => handleRenderImageFile(e)}/>
-                      {avatar1 && <Image mt={4} src={avatar1} />}
-                    </TabPanel>
-                    <TabPanel>
-                      <Input label="Ảnh đại diện" name="avatarUrl" type="text" 
-                        onChange={(e) => setAvatar2(e.target.value)}/>
-                      {avatar2 && <Image mt={4} src={avatar2} />}
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </>
-            )}
+            <FormControl isInvalid={errors.phoneNum && touched.phoneNum}>
+              <FormLabel htmlFor="phoneNum">Số điện thoại</FormLabel>
+              <Input size="sm" bg="white" id="phoneNum" onChange={handleChange} value={values.phoneNum}/>
+              <FormErrorMessage>{errors.phoneNum}</FormErrorMessage>
+            </FormControl>
+
             <HStack justify="right">
-              {edit ? 
-              (<Button colorScheme='blue' mt={4} onClick={handleSubmit}>Cập nhập</Button>) : 
-              (<Button colorScheme='blue' mt={4} onClick={handleSubmit} >Thêm</Button>)}
+              <Button colorScheme='blue' mt={4} onClick={handleSubmit}>Cập nhập</Button>
             </HStack>
           </Form>
         )

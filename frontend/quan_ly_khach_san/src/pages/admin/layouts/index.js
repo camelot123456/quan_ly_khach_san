@@ -15,11 +15,6 @@ function AdminLayout() {
   if (parseJwt(accessToken)) {
     ref.current = parseJwt(accessToken)
   }
-
-  // if (ref.current.exp >= 1647104354) {
-  //   localStorage.removeItem(ACCESS_TOKEN);
-  //   return (<Navigate to="/auth/login" />)
-  // }
   
   return (
     <>

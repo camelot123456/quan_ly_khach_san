@@ -25,13 +25,6 @@ from transactions t
 group by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at)
 order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at)
 
--- thống kê doanh thu theo quý của năm có doanh thu cao nhất
-select DATEPART(yyyy, t.created_at) as years , DATEPART(qq, t.created_at) as quarters, sum(t.amount) as total
-from transactions t 
-where DATEPART(yyyy, t.created_at) = (select top 1 DATEPART(yyyy, t.created_at) from transactions t group by DATEPART(yyyy, t.created_at) order by sum(t.amount) desc)
-group by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at)
-order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at)
-
 -- thống kê doanh thu theo quý của năm hiện tại
 select DATEPART(yyyy, t.created_at) as years , DATEPART(qq, t.created_at) as quarters, sum(t.amount) as total
 from transactions t 
@@ -54,9 +47,17 @@ order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at)
 
 
 
+
 -- thống kê doanh thu theo tháng
 select DATEPART(yyyy, t.created_at) as years, DATEPART(qq, t.created_at) as quarters , DATEPART(mm, t.created_at) as months, sum(t.amount) as total
 from transactions t
+group by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at)
+order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at)
+
+-- thống kê doanh thu theo thang của năm có doanh thu cao nhất
+select DATEPART(yyyy, t.created_at) as years, DATEPART(qq, t.created_at) as quarters , DATEPART(mm, t.created_at) as months, sum(t.amount) as total
+from transactions t
+where DATEPART(yyyy, t.created_at) = (select top 1 DATEPART(yyyy, t.created_at) from transactions t group by DATEPART(yyyy, t.created_at) order by sum(t.amount) desc)
 group by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at)
 order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at)
 
@@ -78,6 +79,13 @@ order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, 
 -- thống kê doanh thu theo tuần
 select DATEPART(yyyy, t.created_at) as years, DATEPART(qq, t.created_at) as quarters , DATEPART(mm, t.created_at) as months , DATEPART(ww, t.created_at) as weeks, sum(t.amount) as total
 from transactions t
+group by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at), DATEPART(ww, t.created_at)
+order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at), DATEPART(ww, t.created_at)
+
+-- thống kê doanh thu theo tuan của năm có doanh thu cao nhất
+select DATEPART(yyyy, t.created_at) as years, DATEPART(qq, t.created_at) as quarters , DATEPART(mm, t.created_at) as months , DATEPART(ww, t.created_at) as weeks, sum(t.amount) as total
+from transactions t
+where DATEPART(yyyy, t.created_at) = (select top 1 DATEPART(yyyy, t.created_at) from transactions t group by DATEPART(yyyy, t.created_at) order by sum(t.amount) desc)
 group by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at), DATEPART(ww, t.created_at)
 order by DATEPART(yyyy, t.created_at), DATEPART(qq, t.created_at), DATEPART(mm, t.created_at), DATEPART(ww, t.created_at)
 

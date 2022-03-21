@@ -9,18 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RevenueStatisticPayload {
 
-	private int yearMax;
-	private int quarterMax;
-	private int monthMax;
-	private int weekMax;
-	private int dateMax;
-	private Double totalMax;
-	
-	private int yearCurrent;
-	private int quarterCurrent;
-	private int monthCurrent;
-	private int weekCurrent;
-	private int dateCurrent;
-	private Double totalCurrent;
+	private int year;
+	private int quarter;
+	private int month;
+	private int week;
+	private int date;
+	private Double total;
 	
 }

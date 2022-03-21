@@ -59,23 +59,15 @@ public class StatisticServ implements IStatisticServ{
 	}
 
 	@Override
-	public List<RevenueStatisticPayload> revenueStatisticMaxByQuarter() {
+	public RevenueStatisticPayload revenueStatisticMaxByQuarter() {
 		// TODO Auto-generated method stub
-		List<Object[]> statistics = transactionRepo.revenueStatisticMaxByQuarter();
-		List<RevenueStatisticPayload> payloads = null;
-		if (statistics.size() > 0) {
-			payloads = new ArrayList<RevenueStatisticPayload>();
-			for (Object[] records : statistics) {
-				RevenueStatisticPayload payload = new RevenueStatisticPayload();
-				
-				payload.setYear((int) records[0]);
-				payload.setQuarter((int) records[1]);
-				payload.setTotal((Double) records[2]);
-				
-				payloads.add(payload);
-			}
-		}
-		return payloads;
+		Object[] records = transactionRepo.revenueStatisticMaxByQuarter().get(0);
+		RevenueStatisticPayload payload = new RevenueStatisticPayload();
+		
+		payload.setYear((int) records[0]);
+		payload.setQuarter((int) records[1]);
+		payload.setTotal((Double) records[2]);
+		return payload;
 	}
 
 	@Override
@@ -153,16 +145,24 @@ public class StatisticServ implements IStatisticServ{
 	}
 
 	@Override
-	public RevenueStatisticPayload revenueStatisticByThisMonth() {
+	public List<RevenueStatisticPayload> revenueStatisticByThisMonth() {
 		// TODO Auto-generated method stub
-		Object[] records = transactionRepo.revenueStatisticByThisMonth().get(0);
-		RevenueStatisticPayload payload = new RevenueStatisticPayload();
-		
-		payload.setYear((int) records[0]);
-		payload.setQuarter((int) records[1]);
-		payload.setMonth((int) records[2]);
-		payload.setTotal((Double) records[3]);
-		return payload;
+		List<Object[]> statistics = transactionRepo.revenueStatisticByThisMonth();
+		List<RevenueStatisticPayload> payloads = null;
+		if (statistics.size() > 0) {
+			payloads = new ArrayList<RevenueStatisticPayload>();
+			for (Object[] records : statistics) {
+				RevenueStatisticPayload payload = new RevenueStatisticPayload();
+				
+				payload.setYear((int) records[0]);
+				payload.setQuarter((int) records[1]);
+				payload.setMonth((int) records[2]);
+				payload.setTotal((Double) records[3]);
+				
+				payloads.add(payload);
+			}
+		}
+		return payloads;
 	}
 
 	@Override
@@ -202,17 +202,25 @@ public class StatisticServ implements IStatisticServ{
 	}
 
 	@Override
-	public RevenueStatisticPayload revenueStatisticByThisWeek() {
+	public List<RevenueStatisticPayload> revenueStatisticByThisWeek() {
 		// TODO Auto-generated method stub
-		Object[] records = transactionRepo.revenueStatisticByThisWeek().get(0);
-		RevenueStatisticPayload payload = new RevenueStatisticPayload();
-		
-		payload.setYear((int) records[0]);
-		payload.setQuarter((int) records[1]);
-		payload.setMonth((int) records[2]);
-		payload.setWeek((int) records[3]);
-		payload.setTotal((Double) records[4]);
-		return payload;
+		List<Object[]> statistics = transactionRepo.revenueStatisticByThisWeek();
+		List<RevenueStatisticPayload> payloads = null;
+		if (statistics.size() > 0) {
+			payloads = new ArrayList<RevenueStatisticPayload>();
+			for (Object[] records : statistics) {
+				RevenueStatisticPayload payload = new RevenueStatisticPayload();
+				
+				payload.setYear((int) records[0]);
+				payload.setQuarter((int) records[1]);
+				payload.setMonth((int) records[2]);
+				payload.setWeek((int) records[3]);
+				payload.setTotal((Double) records[4]);
+				
+				payloads.add(payload);
+			}
+		}
+		return payloads;
 	}
 
 	@Override
@@ -258,6 +266,69 @@ public class StatisticServ implements IStatisticServ{
 		payload.setTotalCustomerMember((int) records[4]);
 		payload.setTotalCustomer(payload.getTotalCustomerMember() + payload.getTotalCustomerGuest());
 		return payload;
+	}
+
+	@Override
+	public List<RevenueStatisticPayload> revenueStatisticMaxByAllQuarter() {
+		// TODO Auto-generated method stub
+		List<Object[]> statistics = transactionRepo.revenueStatisticMaxByAllQuarter();
+		List<RevenueStatisticPayload> payloads = null;
+		if (statistics.size() > 0) {
+			payloads = new ArrayList<RevenueStatisticPayload>();
+			for (Object[] records : statistics) {
+				RevenueStatisticPayload payload = new RevenueStatisticPayload();
+				
+				payload.setYear((int) records[0]);
+				payload.setQuarter((int) records[1]);
+				payload.setTotal((Double) records[2]);
+				
+				payloads.add(payload);
+			}
+		}
+		return payloads;
+	}
+
+	@Override
+	public List<RevenueStatisticPayload> revenueStatisticMaxByAllMonth() {
+		// TODO Auto-generated method stub
+		List<Object[]> statistics = transactionRepo.revenueStatisticMaxByAllMonth();
+		List<RevenueStatisticPayload> payloads = null;
+		if (statistics.size() > 0) {
+			payloads = new ArrayList<RevenueStatisticPayload>();
+			for (Object[] records : statistics) {
+				RevenueStatisticPayload payload = new RevenueStatisticPayload();
+				
+				payload.setYear((int) records[0]);
+				payload.setQuarter((int) records[1]);
+				payload.setMonth((int) records[2]);
+				payload.setTotal((Double) records[3]);
+				
+				payloads.add(payload);
+			}
+		}
+		return payloads;
+	}
+
+	@Override
+	public List<RevenueStatisticPayload> revenueStatisticMaxByAllWeek() {
+		// TODO Auto-generated method stub
+		List<Object[]> statistics = transactionRepo.revenueStatisticMaxByAllWeek();
+		List<RevenueStatisticPayload> payloads = null;
+		if (statistics.size() > 0) {
+			payloads = new ArrayList<RevenueStatisticPayload>();
+			for (Object[] records : statistics) {
+				RevenueStatisticPayload payload = new RevenueStatisticPayload();
+				
+				payload.setYear((int) records[0]);
+				payload.setQuarter((int) records[1]);
+				payload.setMonth((int) records[2]);
+				payload.setWeek((int) records[3]);
+				payload.setTotal((Double) records[4]);
+				
+				payloads.add(payload);
+			}
+		}
+		return payloads;
 	}
 
 }

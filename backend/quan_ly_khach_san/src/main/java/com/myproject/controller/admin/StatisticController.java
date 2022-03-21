@@ -26,17 +26,24 @@ public class StatisticController {
 		res.put("revenueStatisticByAllYear", statisticServ.revenueStatisticByAllYear());
 		res.put("revenueStatisticByThisYear", statisticServ.revenueStatisticByThisYear());
 		
+		
 		res.put("revenueStatisticMaxByQuarter", statisticServ.revenueStatisticMaxByQuarter());
 		res.put("revenueStatisticByAllQuarter", statisticServ.revenueStatisticByAllQuarter());
 		res.put("revenueStatisticByThisQuarter", statisticServ.revenueStatisticByThisQuarter());
+		res.put("revenueStatisticMaxByAllQuarter", statisticServ.revenueStatisticMaxByAllQuarter());
+		
 		
 		res.put("revenueStatisticMaxByMonth", statisticServ.revenueStatisticMaxByMonth());
 		res.put("revenueStatisticByAllMonth", statisticServ.revenueStatisticByAllMonth());
 		res.put("revenueStatisticByThisMonth", statisticServ.revenueStatisticByThisMonth());
+		res.put("revenueStatisticMaxByAllMonth", statisticServ.revenueStatisticMaxByAllMonth());
+		
 		
 		res.put("revenueStatisticMaxByWeek", statisticServ.revenueStatisticMaxByWeek());
 		res.put("revenueStatisticByAllWeek", statisticServ.revenueStatisticByAllWeek());
-		res.put("revenueStatisticByThisWeek", statisticServ.revenueStatisticMaxByYear());
+		res.put("revenueStatisticByThisWeek", statisticServ.revenueStatisticByThisWeek());
+		res.put("revenueStatisticMaxByAllWeek", statisticServ.revenueStatisticMaxByAllWeek());
+		
 		
 		res.put("revenueStatisticMaxByDay", statisticServ.revenueStatisticMaxByDay());
 		res.put("revenueStatisticByThisDay", statisticServ.revenueStatisticByThisDay());

@@ -15,14 +15,17 @@ export const showStatistic = () => dispatch => {
                     revenueStatisticMaxByQuarter: res.data.revenueStatisticMaxByQuarter,
                     revenueStatisticByAllQuarter: res.data.revenueStatisticByAllQuarter,
                     revenueStatisticByThisQuarter: res.data.revenueStatisticByThisQuarter,
+                    revenueStatisticMaxByAllQuarter: res.data.revenueStatisticMaxByAllQuarter,
 
                     revenueStatisticMaxByMonth: res.data.revenueStatisticMaxByMonth,
                     revenueStatisticByAllMonth: res.data.revenueStatisticByAllMonth,
                     revenueStatisticByThisMonth: res.data.revenueStatisticByThisMonth,
+                    revenueStatisticMaxByAllMonth: res.data.revenueStatisticMaxByAllMonth,
 
                     revenueStatisticMaxByWeek: res.data.revenueStatisticMaxByWeek,
                     revenueStatisticByAllWeek: res.data.revenueStatisticByAllWeek,
                     revenueStatisticByThisWeek: res.data.revenueStatisticByThisWeek,
+                    revenueStatisticMaxByAllWeek: res.data.revenueStatisticMaxByAllWeek,
 
                     revenueStatisticMaxByDay: res.data.revenueStatisticMaxByDay,
                     revenueStatisticByThisDay: res.data.revenueStatisticByThisDay,

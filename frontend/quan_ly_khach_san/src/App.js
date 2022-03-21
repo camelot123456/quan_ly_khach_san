@@ -14,6 +14,7 @@ import TransactionList from "./pages/admin/bodys/transaction-management/Transact
 import MainLayout from "./pages";
 import AccountTab from "./pages/admin/bodys/customer-management";
 import InternalTab from "./pages/admin/bodys/internal-management";
+import PublicLayout from "./pages/admin/bodys";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
                 <Route path="home" element={<WebLayout />}></Route>
 
                 <Route path="admin" element={<AdminLayout />}>
+                  <Route path="" element={<PublicLayout />}></Route>
                   <Route path="dashboard" element={<Dashboard />}></Route>
                   <Route path="rooms" element={<RoomTab />}></Route>
                   <Route path="rooms/:idRoom" element={<RoomDetail />}></Route>

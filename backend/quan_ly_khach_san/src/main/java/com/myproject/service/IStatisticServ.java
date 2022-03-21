@@ -14,7 +14,9 @@ public interface IStatisticServ {
 	public RevenueStatisticPayload revenueStatisticByThisYear();
 
 
-	public List<RevenueStatisticPayload> revenueStatisticMaxByQuarter();
+	public RevenueStatisticPayload revenueStatisticMaxByQuarter();
+	
+	public List<RevenueStatisticPayload> revenueStatisticMaxByAllQuarter();
 	
 	public List<RevenueStatisticPayload> revenueStatisticByAllQuarter();
 	
@@ -23,16 +25,20 @@ public interface IStatisticServ {
 
 	public RevenueStatisticPayload revenueStatisticMaxByMonth();
 	
+	public List<RevenueStatisticPayload> revenueStatisticMaxByAllMonth();
+	
 	public List<RevenueStatisticPayload> revenueStatisticByAllMonth();
 	
-	public RevenueStatisticPayload revenueStatisticByThisMonth();
+	public List<RevenueStatisticPayload> revenueStatisticByThisMonth();
 
 
 	public RevenueStatisticPayload revenueStatisticMaxByWeek();
 	
+	public List<RevenueStatisticPayload> revenueStatisticMaxByAllWeek();
+	
 	public List<RevenueStatisticPayload> revenueStatisticByAllWeek();
 	
-	public RevenueStatisticPayload revenueStatisticByThisWeek();
+	public List<RevenueStatisticPayload> revenueStatisticByThisWeek();
 
 
 	public RevenueStatisticPayload revenueStatisticMaxByDay();

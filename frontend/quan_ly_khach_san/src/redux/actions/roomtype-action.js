@@ -91,3 +91,24 @@ export const doDeleteRoomtypeById = (idRoomtype) => async (dispatch) => {
         })
     })
 }
+
+
+export const showRoomtypePublic = (pagedRequest) => (dispatch) => {
+    
+    return new Promise((resolve, reject) => {
+        roomtypeService.showRoomtypePublic(pagedRequest)
+        .then((res) => {
+            dispatch({
+                type: roomtypeTypes.SHOW_ROOMTYPE_PUBLIC,
+                payload: {
+                    roomtypes: res.data.roomTypes,
+                    paged: res.data.paged,
+                }
+            })
+            resolve()
+        })
+        .catch((err) => {
+            reject()
+        })
+    })
+}

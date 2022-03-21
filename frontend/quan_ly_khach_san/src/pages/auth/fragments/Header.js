@@ -16,12 +16,12 @@ function Header() {
         </Box>
         <Spacer />
         <Box>
-          <Button colorScheme="teal" mr="4">
-            Sign Up
-          </Button>
-          <Link to="/auth/login">
-            <Button colorScheme="teal">Log in</Button>
-          </Link>
+            <Link to="/auth/register">
+              <Button colorScheme="teal" mr="4">Sign Up</Button>
+            </Link>
+            <Link to="/auth/login">
+              <Button colorScheme="teal">Log in</Button>
+            </Link>
         </Box>
       </Flex>
     </Box>

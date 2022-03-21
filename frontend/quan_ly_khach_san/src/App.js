@@ -15,6 +15,12 @@ import MainLayout from "./pages";
 import AccountTab from "./pages/admin/bodys/customer-management";
 import InternalTab from "./pages/admin/bodys/internal-management";
 import PublicLayout from "./pages/admin/bodys";
+import Register from "./pages/auth/bodys/Register";
+import Forbiden from "./pages/error/Forbiden";
+import Home from "./pages/web/bodys/Home";
+import Rooms from "./pages/web/bodys/Rooms";
+import Services from "./pages/web/bodys/Services";
+import RoomDetailPublic from "./pages/web/bodys/RoomDetailPublic";
 
 function App() {
   return (
@@ -32,10 +38,17 @@ function App() {
 
                 <Route  path="auth" element={<AuthLayout />}>
                   <Route index path="login" element={<Login />}></Route>
+                  <Route index path="register" element={<Register />}></Route>
                 </Route>
 
-                <Route path="" element={<WebLayout />}></Route>
-                <Route path="home" element={<WebLayout />}></Route>
+                <Route path="" element={<WebLayout />}>
+                  <Route path="home" element={<Home />}></Route>
+                  <Route path="rooms" element={<Rooms />}></Route>
+                  <Route path="rooms/:idRoomtype" element={<RoomDetailPublic />}></Route>
+                  <Route path="services" element={<Services />}></Route>
+                </Route>
+
+                <Route path="error/403" element={<Forbiden />}></Route>
 
                 <Route path="admin" element={<AdminLayout />}>
                   <Route path="" element={<PublicLayout />}></Route>

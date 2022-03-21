@@ -184,7 +184,7 @@ function ContentFormRoom ({edit, idRoom, room}) {
   }
 
   const validationSchema = Yup.object().shape({
-    idRoomtype: Yup.string().required().required("Trường này không được để trống."),
+    idRoomtype: Yup.string().required("Trường này không được để trống."),
     roomNum: Yup.string().required("Trường này không được để trống."),
     floor: Yup.number("Chỉ được nhập số").min(1).max(20).required("Trường này không được để trống."),
     customerNum: Yup.number("Chỉ được nhập số").min(1, "Tối thiểu là 1").max(10, "Tối đa là 10").required("Trường này không được để trống."),

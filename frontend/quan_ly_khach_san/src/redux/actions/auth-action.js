@@ -22,6 +22,18 @@ export const doLogin = (authRequest) => (dispatch) => {
   })
 };
 
+export const doRegister = (authRequest) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    authService.doRegister(authRequest)
+    .then(res => {
+      resolve()
+    })
+    .catch(err => {
+      reject()
+    })
+  })
+};
+
 export const doLogout = () => {
   localStorage.removeItem(ACCESS_TOKEN);
   return {

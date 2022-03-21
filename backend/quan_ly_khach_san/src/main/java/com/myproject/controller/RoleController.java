@@ -40,7 +40,7 @@ public class RoleController {
 	}
 	
 	@GetMapping("/roles")
-	@PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
 	public ResponseEntity<?> doPagedRoleDefault() {
 		return doPagedRole(
 				appProperties.getSystemConstant().getPagedDefault().getCurrentPage(), 
@@ -51,7 +51,7 @@ public class RoleController {
 	}
 	
 	@GetMapping("/roles/page/{currentPage}")
-	@PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+	@PreAuthorize("hasAnyRole('ROLE_DIRECTOR')")
 	public ResponseEntity<?> doPagedRole(
 			@PathVariable("currentPage") int currentPage,
 			@Param("sizePage") int sizePage,

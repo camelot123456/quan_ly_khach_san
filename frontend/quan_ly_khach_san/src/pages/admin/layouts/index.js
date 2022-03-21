@@ -8,7 +8,6 @@ import Header from "../fragments/Header";
 import Sidebar from "../fragments/Sidebar";
 
 function AdminLayout() {
-
   const ref = useRef('')
 
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
@@ -18,7 +17,7 @@ function AdminLayout() {
   
   return (
     <>
-      {ref.current.claims && ref.current.sub && ref.current.exp && ref.current.iat ? (
+      {ref.current && ref.current.claims.roles.includes('ROLE_ACCOUNTANT', 'ROLE_BUSINESS', 'ROLE_RECEPTIONISTS', 'ROLE_DIRECTOR') ? (
         <Flex height="100vh">
           <Sidebar />
           <Flex flexDirection="column" justifyContent="top" width="85%">
@@ -29,7 +28,9 @@ function AdminLayout() {
           </Flex>
         </Flex>
       ) : (
-        <Navigate to="/auth/login" />
+        <>
+          {ref.current ? <Navigate to="/error/403" /> : <Navigate to="/auth/login" />}
+        </>
       )}
     </>
   );

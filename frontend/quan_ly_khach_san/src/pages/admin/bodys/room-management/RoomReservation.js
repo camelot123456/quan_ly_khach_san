@@ -40,7 +40,7 @@ import {
 import { doCheckRoomEmpty } from "../../../../redux/actions/room-action";
 import { doShowRoomtypeByAvatarStateList } from "../../../../redux/actions/roomtype-action";
 import { doFindAll } from "../../../../redux/actions/service-action";
-import FormField from "../../fragments/FormField";
+import FormField from "../../../FormField";
 import { doFindByIdEmailPhoneNum } from "../../../../redux/actions/account-action";
 import {
   doCreateReservation,

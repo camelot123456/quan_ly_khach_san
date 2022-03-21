@@ -34,11 +34,19 @@ const doDeleteRoomtypeById = (idRoomtype) => {
   );
 };
 
+
+const showRoomtypePublic = (pagedRequest) => {
+  return httpCommon().get(
+    `${URL_BASE}/api/roomtypes/page/${pagedRequest.currentPage}?sizePage=${pagedRequest.sizePage}&sortField=${pagedRequest.sortField}&sortDir=${pagedRequest.sortDir}&keyword=${pagedRequest.keyword}`
+  )
+}
+
 export default {
   doShowRoomtypeList,
   doFindRoomtypeById,
   doShowRoomtypeByAvatarStateList,
   doCreateRoomtype,
   doDeleteRoomtypeById,
-  doUpdateRoomtype
+  doUpdateRoomtype,
+  showRoomtypePublic
 };

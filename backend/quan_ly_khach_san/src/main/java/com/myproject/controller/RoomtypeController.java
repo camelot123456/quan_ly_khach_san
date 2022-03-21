@@ -22,6 +22,7 @@ import com.myproject.entity.RoomTypeEntity;
 import com.myproject.payload.ApiResponse;
 import com.myproject.payload.EntityResponse;
 import com.myproject.payload.PagedResponse;
+import com.myproject.payload.roomtype.RoomtypeCustom;
 import com.myproject.service.IRoomtypeServ;
 
 @RestController
@@ -41,7 +42,7 @@ public class RoomtypeController {
 			@Param("sortField") String sortField,
 			@Param("sortDir") String sortDir,
 			@Param("keyword") String keyword) {
-		Page<RoomTypeEntity> paged = roomtypeServ.paged(currentPage, sizePage, sortField, sortDir, keyword);
+		Page<RoomtypeCustom> paged = roomtypeServ.pagedRoomtype(currentPage, sizePage, sortField, sortDir, keyword);
 		PagedResponse pagedResponse = new PagedResponse(currentPage, sizePage, sortField, sortDir, keyword, paged.getTotalPages(), paged.getTotalElements());
 		
 		Map<String, Object> dataRespone = new HashMap<String, Object>();

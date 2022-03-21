@@ -8,34 +8,44 @@ const initialState = {
 
 const roomtypeReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-
     case roomtypeTypes.SHOW_ROOMTYPE_LIST_ACTION:
-      var roomtypes = {...state.roomtypes}
-      var paged = {...state.paged}
-      roomtypes = payload.roomtypes
-      paged = payload.paged
+      var roomtypes = { ...state.roomtypes };
+      var paged = { ...state.paged };
+      roomtypes = payload.roomtypes;
+      paged = payload.paged;
       return {
         ...state,
-        roomtypes: roomtypes ,
+        roomtypes: roomtypes,
         paged: paged,
       };
 
     case roomtypeTypes.FIND_ROOMTYPE_BY_ID_ACTION:
-      var roomtype = {...state.roomtypes}
-      roomtype = payload.roomtype
+      var roomtype = { ...state.roomtypes };
+      roomtype = payload.roomtype;
       return {
         ...state,
         roomtype: payload.roomtype,
       };
 
     case roomtypeTypes.SHOW_ROOMTYPE_BY_AVATAR_STATE_LIST_ACTION:
-      var roomtypes = {...state.roomtypes}
-      roomtypes = payload.roomtypes
+      var roomtypes = { ...state.roomtypes };
+      roomtypes = payload.roomtypes;
       return {
         ...state,
-        roomtypes: roomtypes
+        roomtypes: roomtypes,
       };
-      
+
+    case roomtypeTypes.SHOW_ROOMTYPE_PUBLIC:
+      var roomtypes = { ...state.roomtypes };
+      var paged = { ...state.paged };
+      roomtypes = payload.roomtypes;
+      paged = payload.paged;
+      return {
+        ...state,
+        roomtypes: roomtypes,
+        paged: paged,
+      };
+
     default:
       return state;
   }

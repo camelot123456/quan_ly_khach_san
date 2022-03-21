@@ -1,6 +1,7 @@
 package com.myproject.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,16 +242,22 @@ public class StatisticServ implements IStatisticServ{
 	@Override
 	public RevenueStatisticPayload revenueStatisticByThisDay() {
 		// TODO Auto-generated method stub
-		Object[] records = transactionRepo.revenueStatisticByThisDay().get(0);
-		RevenueStatisticPayload payload = new RevenueStatisticPayload();
-		
-		payload.setYear((int) records[0]);
-		payload.setQuarter((int) records[1]);
-		payload.setMonth((int) records[2]);
-		payload.setWeek((int) records[3]);
-		payload.setDate((int) records[4]);
-		payload.setTotal((Double) records[5]);
-		return payload;
+		try {
+			Object[] records = transactionRepo.revenueStatisticByThisDay().get(0);
+			RevenueStatisticPayload payload = new RevenueStatisticPayload();
+			
+			payload.setYear((int) records[0]);
+			payload.setQuarter((int) records[1]);
+			payload.setMonth((int) records[2]);
+			payload.setWeek((int) records[3]);
+			payload.setDate((int) records[4]);
+			payload.setTotal((Double) records[5]);
+			return payload;
+		} catch (IndexOutOfBoundsException e) {
+			// TODO: handle exception
+			Date date = new Date();
+			return new RevenueStatisticPayload(date.getYear(), 0, date.getMonth(), 0, date.getDay(), 0.0);
+		}
 	}
 
 	@Override

@@ -53,10 +53,10 @@ function Header() {
             </Link>
           </Heading>
           <Heading size="sm">
-            <Link to="/web/rooms">Phòng</Link>
+            <Link to="/rooms">Phòng</Link>
           </Heading>
           <Heading size="sm">
-            <Link to="/web/services">Dịch vụ</Link>
+            <Link to="/services">Dịch vụ</Link>
           </Heading>
           <Heading size="sm">
             <Link to="/admin">Admin</Link>
@@ -96,9 +96,9 @@ function Header() {
           </Menu>
         ) : (
           <Box>
-            <Button colorScheme="teal" mr="4">
-              Sign Up
-            </Button>
+            <Link to="/auth/register">
+              <Button colorScheme="teal" mr="4">Sign Up</Button>
+            </Link>
             <Link to="/auth/login">
               <Button colorScheme="teal">Log in</Button>
             </Link>

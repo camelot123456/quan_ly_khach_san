@@ -8,7 +8,7 @@ export const showRoles = () => dispatch => {
             dispatch({
                 type: roleTypes.SHOW_ROLE_LIST_ACTION,
                 payload: {
-                    roles: res.data.roles
+                    roles: res.data
                 }
             })
             resolve()

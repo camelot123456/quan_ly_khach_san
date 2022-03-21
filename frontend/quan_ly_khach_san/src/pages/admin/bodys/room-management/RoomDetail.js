@@ -32,7 +32,6 @@ import AlertDialogCustom from "../../fragments/AlertDialogCustom";
 import ModalServiceCustom from "../../fragments/ModalServiceCustom";
 
 import { doShowRoomDetailAdmin } from "../../../../redux/actions/room-action";
-import FormField from "../../fragments/FormField";
 
 function RoomDetail() {
   const [searchParams, setSearchParams] = useSearchParams();

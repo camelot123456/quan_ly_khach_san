@@ -178,8 +178,6 @@ function ContentFormAccount ({edit, idAccount, account}) {
   const [checkboxIdRole, setCheckboxIdRole] = useState([])
   const roles = useSelector((state) => state.roleReducer.roles)
 
-  console.log(edit)
-
   if (account===undefined) {
     account = {
       name: '',

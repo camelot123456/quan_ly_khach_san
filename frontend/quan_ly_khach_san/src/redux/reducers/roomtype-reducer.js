@@ -20,11 +20,11 @@ const roomtypeReducer = (state = initialState, { type, payload }) => {
       };
 
     case roomtypeTypes.FIND_ROOMTYPE_BY_ID_ACTION:
-      var roomtype = { ...state.roomtypes };
+      var roomtype = { ...state.roomtype };
       roomtype = payload.roomtype;
       return {
         ...state,
-        roomtype: payload.roomtype,
+        roomtype: roomtype,
       };
 
     case roomtypeTypes.SHOW_ROOMTYPE_BY_AVATAR_STATE_LIST_ACTION:

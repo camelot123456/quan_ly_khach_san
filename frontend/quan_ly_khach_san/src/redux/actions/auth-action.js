@@ -6,7 +6,6 @@ export const doLogin = (authRequest) => (dispatch) => {
   return new Promise((resolve, reject) => {
     authService.doLogin(authRequest)
     .then(res => {
-      console.log(res.data)
       localStorage.setItem(ACCESS_TOKEN, res.data.accessToken.accessToken)
       dispatch({
         type: authTypes.LOGIN_ACTION,

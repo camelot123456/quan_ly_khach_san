@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +36,7 @@ public class CustomJwtAuthorizationFilter extends OncePerRequestFilter{
 		// TODO Auto-generated method stub
 		if (request.getRequestURI().startsWith("/auth/") || request.getRequestURI().startsWith("/img/")) {
 			filterChain.doFilter(request, response);
+			return;
 		} else {
 			try {
 				if (request.getHeader("Authorization").startsWith("Bearer ") || request.getHeader("Authorization") != null) {
@@ -57,11 +59,16 @@ public class CustomJwtAuthorizationFilter extends OncePerRequestFilter{
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 					
 					filterChain.doFilter(request, response);
+					return;
 				} else {
 					filterChain.doFilter(request, response);
+					return;
 				}
 			} catch (NullPointerException e) {
 				// TODO: handle exception
+				response.setStatus(HttpStatus.FORBIDDEN.value());
+				filterChain.doFilter(request, response);
+				return;
 			}
 		}
 	}

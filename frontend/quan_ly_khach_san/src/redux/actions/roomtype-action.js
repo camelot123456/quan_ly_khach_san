@@ -27,7 +27,7 @@ export const doFindRoomtypeById = (idRoomtype) => (dispatch) => {
             dispatch({
                 type: roomtypeTypes.FIND_ROOMTYPE_BY_ID_ACTION,
                 payload: {
-                    roomtype: res.data.roomtype
+                    roomtype: res.data
                 }
             })
             resolve()

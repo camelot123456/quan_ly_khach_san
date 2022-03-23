@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import jwtDecode from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Spacer,
   Box,
-  Heading,
   Button,
   Menu,
   MenuButton,
@@ -14,14 +13,13 @@ import {
   MenuDivider,
   HStack,
   Text,
-  Image,
   Avatar,
   Badge,
 } from "@chakra-ui/react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { doLogout } from "../../../redux/actions/auth-action";
-import { ACCESS_TOKEN, APP_NAME } from "../../../constants";
+import { ACCESS_TOKEN } from "../../../constants";
 
 function Header() {
   const navigate = useNavigate();
@@ -39,6 +37,8 @@ function Header() {
     navigate("/auth/login")
     setAccessToken(null)
   };
+
+  console.log(jwtDecode(accessToken).claims)
 
   return (
     <Box bg="#EDF2F7" w="100%" p={2} boxShadow='lg'>

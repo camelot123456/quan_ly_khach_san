@@ -104,24 +104,18 @@ export const doDeleteRoom = (dataRequest) => dispatch => {
     })
 }
 
-export const doCheckRoomEmpty = (apiRequest) => async (dispatch) => {
-    try {
-        const roomsResponse = await roomService.doCheckRoomEmpty(apiRequest)
-        dispatch({
-            type: roomTypes.CHECK_ROOM_EMPTY_ACTION,
-            payload: {
-                rooms: roomsResponse.data.rooms
-            }
-        })
-    } catch (error) {
-        dispatch({
-            type: roomTypes.ERROR_CHECK_ROOM_EMPTY_ACTION,
-            payload: {
-                response: {
-                    success: false,
-                    message: error.message,
+export const doCheckRoomEmpty = (apiRequest) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        roomService.doCheckRoomEmpty(apiRequest)
+        .then(res => {
+            dispatch({
+                type: roomTypes.CHECK_ROOM_EMPTY_ACTION,
+                payload: {
+                    rooms: res.data.rooms
                 }
-            }
+            })
+            resolve()
         })
-    }
+        .catch(err => reject(err))
+    })
 }

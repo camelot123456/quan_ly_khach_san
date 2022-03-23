@@ -80,3 +80,9 @@ export const doSetServices = (service) => {
         payload: service
     }
 }
+
+export const resetReservationRoom = () => {
+    return {
+        type: reservationTypes.RESET_RESERVATION_ROOM
+    }
+}

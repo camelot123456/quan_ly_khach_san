@@ -21,6 +21,7 @@ import Home from "./pages/web/bodys/Home";
 import Rooms from "./pages/web/bodys/Rooms";
 import Services from "./pages/web/bodys/Services";
 import RoomDetailPublic from "./pages/web/bodys/RoomDetailPublic";
+import OrderAndHistory from "./pages/web/bodys/OrderAndHistory";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 <Route path="" element={<WebLayout />}>
                   <Route path="home" element={<Home />}></Route>
                   <Route path="rooms" element={<Rooms />}></Route>
+                  <Route path="cart" element={<OrderAndHistory />}></Route>
                   <Route path="rooms/:idRoomtype" element={<RoomDetailPublic />}></Route>
                   <Route path="services" element={<Services />}></Route>
                 </Route>

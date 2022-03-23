@@ -5,7 +5,7 @@ const initialState = {
   reservationTransaction: {
     reservation: {},
     rooms: [],
-    services: []
+    services: [],
   },
   reservations: [],
   rooms: [],
@@ -14,42 +14,41 @@ const initialState = {
 
 const reservationReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-
     case reservationTypes.CREATE_RESERVATION_ACTION:
-      var rooms = {...state.rooms}
-      var services = {...state.services}
-      rooms = []
-      services = []
+      var rooms = { ...state.rooms };
+      var services = { ...state.services };
+      rooms = [];
+      services = [];
       return {
         ...state,
         rooms: rooms,
-        services: services
+        services: services,
       };
 
     case reservationTypes.ERROR_CREATE_RESERVATION_ACTION:
-      var rooms = {...state.rooms}
-      var services = {...state.services}
-      rooms = []
-      services = []
+      var rooms = { ...state.rooms };
+      var services = { ...state.services };
+      rooms = [];
+      services = [];
       return {
         ...state,
         rooms: rooms,
-        services: services
+        services: services,
       };
 
     case reservationTypes.CANCEL_BY_ID_ACTION:
       return {
-        ...state
+        ...state,
       };
-    
+
     case reservationTypes.ERROR_CANCEL_BY_ID_ACTION:
       return {
-        ...state
+        ...state,
       };
 
     case reservationTypes.FIND_FOR_TRANSACTION_ACTION:
-      var reservationTransaction = {...state.reservationTransaction}
-      reservationTransaction = payload.reservationTransaction
+      var reservationTransaction = { ...state.reservationTransaction };
+      reservationTransaction = payload.reservationTransaction;
       return {
         ...state,
         reservationTransaction: reservationTransaction,
@@ -57,46 +56,59 @@ const reservationReducer = (state = initialState, { type, payload }) => {
 
     case reservationTypes.ERROR_FIND_FOR_TRANSACTION_ACTION:
       return {
-        ...state
+        ...state,
       };
 
     case reservationTypes.SET_ROOMS_ID_ACTION:
-      const stateRoomNew = { ...state };
-      if (stateRoomNew.rooms.every((room) => room != payload)) {
-        stateRoomNew.rooms.push(payload);
-      } else if (stateRoomNew.rooms.some((room) => room == payload)) {
-        stateRoomNew.rooms.splice(stateRoomNew.rooms.indexOf(payload), 1);
+      var rooms = [...state.rooms];
+      if (rooms.every((room) => room != payload)) {
+        rooms.push(payload);
+      } else if (rooms.some((room) => room == payload)) {
+        rooms.splice(rooms.indexOf(payload), 1);
       }
-      return stateRoomNew;
+      return {
+        ...state,
+        rooms: rooms,
+      };
 
     case reservationTypes.SET_SERVICES_ACTION:
-      const stateServiceNew = { ...state };
-      if (
-        stateServiceNew.services.every((service) => service.id != payload.id)
-      ) {
-        stateServiceNew.services.push(payload);
-      } else if (
-        stateServiceNew.services.some((service) => service.id == payload.id)
-      ) {
-        stateServiceNew.services.forEach((service, index) => {
+      var services = [...state.services];
+      if (services.some((service) => service.id == payload.id)) {
+        services.forEach((service, index) => {
           if (service.id == payload.id) {
-            if (payload.quantity == 0) {
-              stateServiceNew.services.splice(index, 1);
+            if (payload.quantity == "0") {
+              services.splice(index, 1);
             } else {
-              stateServiceNew.services.splice(index, 1, payload);
+              services.splice(index, 1, payload);
             }
           }
         });
+      } else {
+        services.push(payload);
       }
-      return stateServiceNew;
-    
-      case reservationTypes.ERROR_ACTION:
-        var apiResponseNew = {...state.apiResponse}
-        apiResponseNew = payload.apiResponse
-        return {
-          ...state,
-          apiResponse: apiResponseNew,
-        }
+      return {
+        ...state,
+        services: services,
+      };
+
+    case reservationTypes.ERROR_ACTION:
+      var apiResponseNew = { ...state.apiResponse };
+      apiResponseNew = payload.apiResponse;
+      return {
+        ...state,
+        apiResponse: apiResponseNew,
+      };
+
+    case reservationTypes.RESET_RESERVATION_ROOM:
+      var rooms = { ...state.rooms };
+      var services = { ...state.services };
+      services = [];
+      rooms = [];
+      return {
+        ...state,
+        rooms: rooms,
+        services: services,
+      };
     default:
       return state;
   }

@@ -58,27 +58,27 @@ public class TransactionServ implements ITransactionServ {
 			for (Object[] record : transactions) {
 				TransactionEntity transaction = new TransactionEntity();
 				transaction.setId((String) record[0]);
-				transaction.setAmount((Double) record[1]);
-				transaction.setCreatedAt((Date) record[2]);
-				transaction.setCreatedBy((String) record[3]);
-				transaction.setModifiedAt((Date) record[4]);
-				transaction.setModifiedBy((String) record[5]);
+				transaction.setAddress((String) record[1]);
+				transaction.setAmount((Double) record[2]);
+				transaction.setContent((String) record[3]);
+				transaction.setCreatedAt((Date) record[4]);
+				transaction.setCreatedBy((String) record[5]);
+				transaction.setCustomerNum((Integer) record[6]);
+				transaction.setDeleted((Boolean) record[7]);
+				transaction.setDiscount((Double) record[8]);
+				transaction.setEmail((String) record[9]);
+				transaction.setEndDate((Date) record[10]);
+				transaction.setModifiedAt((Date) record[11]);
+				transaction.setModifiedBy((String) record[12]);
+				transaction.setNameCustomer((String) record[13]);
+				transaction.setPhoneNum((String) record[14]);
+				transaction.setStartDate((Date) record[15]);
+				transaction.setTaxInvoice((Double) record[17]);
+				transaction.setTaxService((Double) record[18]);
+				transaction.setTotal((Double) record[19]);
+				transaction.setIdAccount((String) record[20]);
+				transaction.setIdReservation((String) record[21]);
 //				transaction.setStatus((ETransactionStatus) record[6]);
-				transaction.setIdAccount((String) record[7]);
-				transaction.setIdReservation((String) record[8]);
-				transaction.setAddress((String) record[9]);
-				transaction.setContent((String) record[10]);
-				transaction.setCustomerNum((Integer) record[11]);
-				transaction.setDiscount((Double) record[12]);
-				transaction.setEmail((String) record[13]);
-				transaction.setEndDate((Date) record[14]);
-				transaction.setNameCustomer((String) record[15]);
-				transaction.setPhoneNum((String) record[16]);
-				transaction.setStartDate((Date) record[17]);
-				transaction.setTaxInvoice((Double) record[18]);
-				transaction.setTaxService((Double) record[19]);
-				transaction.setTotal((Double) record[20]);
-				transaction.setDeleted((Boolean) record[21]);
 				
 				transactionsNew.add(transaction);
 			}

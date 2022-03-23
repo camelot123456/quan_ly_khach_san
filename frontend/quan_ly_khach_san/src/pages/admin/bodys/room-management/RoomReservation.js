@@ -46,6 +46,7 @@ import {
   doCreateReservation,
   doSetRoomsId,
   doSetServices,
+  resetReservationRoom,
 } from "../../../../redux/actions/reservation-action";
 import RoomTypeElement from "../../fragments/RoomtypeElement";
 import { useNavigate } from "react-router-dom";
@@ -91,8 +92,9 @@ function RoomReservation() {
     phoneNum: Yup.string().required("Trường này không được để trống."),
   });
 
-  const handleCheckRoomEmpty = async (apiRequest) => {
-    await dispatch(doCheckRoomEmpty(apiRequest));
+  const handleCheckRoomEmpty = (apiRequest) => {
+    dispatch(resetReservationRoom())
+    dispatch(doCheckRoomEmpty(apiRequest));
   };
 
   const handleFindRoomtypeById = (idRoomtype) => {

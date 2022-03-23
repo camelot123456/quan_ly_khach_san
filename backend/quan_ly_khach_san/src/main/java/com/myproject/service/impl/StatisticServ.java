@@ -239,6 +239,7 @@ public class StatisticServ implements IStatisticServ{
 		return payload;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public RevenueStatisticPayload revenueStatisticByThisDay() {
 		// TODO Auto-generated method stub

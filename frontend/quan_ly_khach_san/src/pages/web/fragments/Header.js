@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import jwtDecode from "jwt-decode";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, Outlet } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Flex,
   Spacer,
   Box,
   Heading,
   Button,
-  Image,
   Text,
   Menu,
   MenuButton,
@@ -22,25 +20,24 @@ import {
 
 import { ACCESS_TOKEN, APP_NAME } from "../../../constants";
 import { doLogout } from "../../../redux/actions/auth-action";
-import { parseJwt } from "../../../commons/jwt-common";
+import jwtDecode from "jwt-decode";
 
 function Header() {
-  const [auth, setAuth] = useState(false)
-  const ref = useRef('');
 
+  const navigate = useNavigate();
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem(ACCESS_TOKEN)
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem(ACCESS_TOKEN)
-    if (parseJwt(accessToken)) {
-      ref.current = parseJwt(accessToken)
-      setAuth(true)
-    }
-  }, [auth]);
+    setAccessToken(accessToken);
+  }, []);
 
   const handleLogout = () => {
-    setAuth(false)
     dispatch(doLogout())
+    navigate("/auth/login")
+    setAccessToken(null)
   };
 
   return (
@@ -53,25 +50,19 @@ function Header() {
             </Link>
           </Heading>
           <Heading size="sm">
-            <Link to="/rooms">Phòng</Link>
-          </Heading>
-          <Heading size="sm">
             <Link to="/services">Dịch vụ</Link>
-          </Heading>
-          <Heading size="sm">
-            <Link to="/admin">Admin</Link>
           </Heading>
         </HStack>
         <Spacer />
-        {auth ? (
+        {accessToken ? (
           <Menu isLazy>
             <MenuButton>
               <HStack>
                 <Box ml="3" align="end">
                   <Text fontWeight="bold">
-                    {ref.current.claims.name}
+                    {jwtDecode(accessToken).claims.name}
                   </Text>
-                  {ref.current.claims.roles.map((role, index) => (
+                  {jwtDecode(accessToken).claims.roles.map((role, index) => (
                     <Badge ml="1" colorScheme="green" key={index}>
                       <Text fontSize="8px">
                         {role.toString().substring("ROLE_".length)}
@@ -80,8 +71,8 @@ function Header() {
                   ))}
                 </Box>
                 <Avatar
-                  src={ref.current.claims.avatarUrl}
-                  alt={ref.current.claims.name}
+                  src={jwtDecode(accessToken).claims.avatarUrl}
+                  alt={jwtDecode(accessToken).claims.name}
                   size="md"
                 />
               </HStack>

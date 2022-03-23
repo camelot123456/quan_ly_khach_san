@@ -45,7 +45,7 @@ function ModalScrollCustom(props) {
         closeOnOverlayClick={closeOnOverlayClick}
       >
         <ModalOverlay />
-        <ModalContent minWidth="500px">
+        <ModalContent minWidth="600px">
           
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />

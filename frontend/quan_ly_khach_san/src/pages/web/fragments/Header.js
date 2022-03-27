@@ -79,7 +79,7 @@ function Header() {
             </MenuButton>
             <MenuList>
               {/* MenuItems are not rendered unless Menu is open */}
-              <MenuItem>Profile</MenuItem>
+              <MenuItem><Link to={`/user/${jwtDecode(accessToken).claims.id}`}>Thông tin cá nhân</Link></MenuItem>
               <MenuItem>Setting</MenuItem>
               <MenuDivider />
               <MenuItem onClick={handleLogout}>Logout</MenuItem>

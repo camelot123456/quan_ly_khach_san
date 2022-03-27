@@ -1,6 +1,9 @@
 package com.myproject.service;
 
+import java.util.Map;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.data.domain.Page;
 
@@ -16,6 +19,8 @@ public interface IAccountServ {
 	public Optional<AccountEntity> findById(String id);
 	
 	public Optional<AccountEntity> findByIdEmailPhoneNum(String keyword);
+	
+	public Map<String , Object> myAccounts(String idUser, HttpServletResponse response);
 
 	public Page<AccountEntity> paged(Boolean veryfied, Boolean enabled, int sizePage, int currentPage, String sortField, String sortDir, String keyword);
 

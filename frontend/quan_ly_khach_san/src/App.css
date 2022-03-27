@@ -102,6 +102,23 @@
   background-color: red;
 }
 
+.btn-repair-list {
+  background-color: #546cf8;
+  color: white;
+  padding: 2px;
+  border-radius: 4px;
+  min-width: 30px; 
+  min-height: 32px;
+  cursor: pointer;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-repair-list:hover {
+  background-color: rgb(4, 0, 255);
+}
+
 .btn-detail-list {
   background-color: #38A169;
   color: white;

@@ -3,7 +3,9 @@ package com.myproject.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myproject.entity.RoomEntity;
 
@@ -138,24 +140,41 @@ public interface IRoomRepo extends JpaRepository<RoomEntity, String>{
 			+ "on re.id_account = a.id "
 			+ "where t.id is not null and ( "
 			+ "re.end_date < getdate()) "
-			+ "and (r.room_num like '%%' "
-			+ "or r.room_state like '%%' "
-			+ "or concat(r.[floor], '') like '%%' "
-			+ "or a.name like '%%' "
-			+ "or a.phone_num like '%%' "
-			+ "or rt.id like '%%' "
-			+ "or re.id like '%%' "
-			+ "or concat(re.[start_date], '') like '%%' "
-			+ "or concat(re.end_date, '') like '%%') "
+			+ "and (r.room_num like %?1% "
+			+ "or r.room_state like %?1% "
+			+ "or concat(r.[floor], '') like %?1% "
+			+ "or a.name like %?1% "
+			+ "or a.phone_num like %?1% "
+			+ "or rt.id like %?1% "
+			+ "or re.id like %?1% "
+			+ "or concat(re.[start_date], '') like %?1% "
+			+ "or concat(re.end_date, '') like %?1%) "
 			+ "order by re.modified_at, r.id, r.room_num asc",
 			nativeQuery = true)
 	public List<Object[]> findAllRoomsTransactionIsNotNullAndCheckout(String keyword);
+	
+	@Query(value = "select r.* "
+			+ "from rooms r  "
+			+ "where r.room_state = 'REPAIR' "
+			+ "and (r.room_num like %?1% "
+			+ "or r.id like %?1% "
+			+ "or concat(r.customer_num, '') like %?1% "
+			+ "or r.room_state like %?1% "
+			+ "or concat(r.[floor], '') like %?1%) "
+			+ "order by r.modified_at, r.id, r.room_num asc",
+			nativeQuery = true)
+	public List<Object[]> findAllRoomsRoomsTateRepair(String keyword);
 	
 //----------------------------- INSERT -----------------------------
 
 
 //----------------------------- UPDATE -----------------------------
 
+	@Modifying
+	@Transactional
+	@Query(value = "update rooms set room_state = ?2 where id = ?1", nativeQuery = true)
+	public void updateRoomState(String idRoom, String roomState);
+	
 //----------------------------- DELETE -----------------------------
 	
 }

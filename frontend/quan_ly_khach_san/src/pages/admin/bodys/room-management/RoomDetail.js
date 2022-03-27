@@ -47,7 +47,7 @@ function RoomDetail() {
     dispatch(
       doShowRoomDetailAdmin({
         idRoom,
-        idTransaction: searchParams.get("idTransaction"),
+        idReservation: searchParams.get("idReservation"),
       })
     );
   }, []);
@@ -110,11 +110,28 @@ function RoomDetail() {
                   me={3}
                 />
                 <Box>
-                  <Text>ID: {room.idAccount}</Text>
-                  <Text>Họ & tên: {room.nameAccount}</Text>
-                  <Text>Email: {room.email}</Text>
-                  <Text>Số điện thoại: {room.phoneNum}</Text>
-                  <Text>Địa chỉ: {room.address}</Text>
+                  <table>
+                    <tr>
+                      <th>ID:</th>
+                      <td>{room.idAccount}</td>
+                    </tr>
+                    <tr>
+                      <th>Họ & tên:</th>
+                      <td>{room.nameAccount}</td>
+                    </tr>
+                    <tr>
+                      <th>Email:</th>
+                      <td>{room.email}</td>
+                    </tr>
+                    <tr>
+                      <th>Số điện thoại:</th>
+                      <td>{room.phoneNum}</td>
+                    </tr>
+                    <tr>
+                      <th>Địa chỉ:</th>
+                      <td>{room.address}</td>
+                    </tr>
+                  </table>
                 </Box>
               </Flex>
               <Stack spacing={4} direction="row" align="center" justify="end">
@@ -141,20 +158,45 @@ function RoomDetail() {
           <Heading p={4} size="lg">
             Thông tin phòng
           </Heading>
-          {console.log(room)}
-            
-          <UnorderedList ps={4}>
-            <ListItem>Mã dịch vụ: {room.idTransaction}</ListItem>
-            <ListItem>Mã phiếu thuê: {room.idReservation}</ListItem>
-            <ListItem>Mã phòng: {room.idRoom}</ListItem>
-            <ListItem>Thời gian tạo: {room.createAtRoom}</ListItem>
-            <ListItem>Thời gian cập nhập: {room.modifiedAtRoom}</ListItem>
-            <ListItem>Số phòng: {room.roomNum}</ListItem>
-            <ListItem>Tầng: {room.floor}</ListItem>
-            <ListItem>Khách tối đa: {room.customerNumRoom}</ListItem>
-            <ListItem>Giá phát sinh: {room.incurredPrice}</ListItem>
-            <ListItem>Mô tả: {room.descriptionRoom}</ListItem>
-          </UnorderedList>
+
+          <table>
+            <tr>
+              <th style={{minWidth: '160px'}}>Mã phiếu thuê:</th>
+              <td>{room.idReservation}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Mã phòng:</th>
+              <td>{room.idRoom}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Thời gian tạo:</th>
+              <td>{room.createAtRoom}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Thời gian cập nhập:</th>
+              <td>{room.modifiedAtRoom}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Số phòng:</th>
+              <td>{room.roomNum}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Tầng:</th>
+              <td>{room.floor}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Khách tối đa:</th>
+              <td>{room.customerNumRoom}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Giá phát sinh:</th>
+              <td>{room.incurredPrice}</td>
+            </tr>
+            <tr>
+              <th style={{minWidth: '160px'}}>Mô tả:</th>
+              <td>{room.descriptionRoom}</td>
+            </tr>
+          </table>
 
         </GridItem>
 

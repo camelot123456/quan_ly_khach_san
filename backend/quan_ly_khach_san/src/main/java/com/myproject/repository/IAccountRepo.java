@@ -34,6 +34,13 @@ public interface IAccountRepo extends JpaRepository<AccountEntity, String>{
 			nativeQuery = true)
 	public List<Object[]> findByIdTransaction(String idTransaction);
 	
+	@Query(value = "select a.id as id_a, a.name as name_a, a.phone_num, a.[address], a.avatar, a.email "
+			+ "from accounts a inner join reservations re "
+			+ "on a.id = re.id_account "
+			+ "where re.id=?1",
+			nativeQuery = true)
+	public List<Object[]> findByIdReservation(String idReservation);
+	
 	@Query(value = "select a.id, a.name, a.avatar, a.email, a.[address], a.phone_num "
 			+ "from accounts a "
 			+ "where (a.id = ?1 or a.email = ?1 or a.phone_num = ?1)  "

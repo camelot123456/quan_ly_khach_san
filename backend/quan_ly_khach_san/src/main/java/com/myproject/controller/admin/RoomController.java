@@ -99,10 +99,10 @@ public class RoomController {
 
 	@GetMapping(value = "/rooms/roomState/{idRoom}")
 	public ResponseEntity<?> doGetRoomDetailForAdmin(@PathVariable("idRoom") String idRoom,
-			@Param("idTransaction") String idTransaction) {
+			@Param("idReservation") String idReservation) {
 		Map<String, Object> apiResponse = new HashMap<String, Object>();
-		apiResponse.put("room", roomServ.findRoomDetailForAdmin(idRoom, idTransaction).get());
-		apiResponse.put("services", serviceServ.findAllByIdTransaction(idTransaction));
+		apiResponse.put("room", roomServ.findRoomDetailForAdmin(idRoom, idReservation).get());
+		apiResponse.put("services", serviceServ.findAllByIdReservation(idReservation));
 		return ResponseEntity.ok().body(apiResponse);
 	}
 
@@ -136,6 +136,12 @@ public class RoomController {
 	@PutMapping("/rooms/update")
 	public ResponseEntity<?> doUpdateRoom(@RequestBody RoomEntity room) {
 		roomServ.update(room);
+		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
+	}
+	
+	@PutMapping("/rooms/updateRoomState")
+	public ResponseEntity<?> doUpdateRoomState(@RequestBody RoomEntity room) {
+		roomServ.updateRoomState(room);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
 	}
 	

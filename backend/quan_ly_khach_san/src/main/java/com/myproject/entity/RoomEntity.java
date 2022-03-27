@@ -66,7 +66,7 @@ public class RoomEntity {
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "[room_state]", columnDefinition = "varchar(7)")
+	@Column(name = "[room_state]", columnDefinition = "varchar(10)")
 	private ERoomState roomState;
 	
 	@Column(name = "[floor]", columnDefinition = "int")

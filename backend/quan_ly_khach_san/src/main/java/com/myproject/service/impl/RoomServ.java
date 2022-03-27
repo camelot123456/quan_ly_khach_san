@@ -205,12 +205,42 @@ public class RoomServ implements IRoomServ {
 
 		return pageImpl;
 	}
+	
+
 
 	@Override
-	public Optional<RoomDetailForAdmin> findRoomDetailForAdmin(String idRoom, String idTransaction) {
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsRoomsTateRepair(int currentPage,
+			int sizePage, String sortField, String sortDir, String keyword) {
+		// TODO Auto-generated method stub
+		keyword = keyword == null ? "" : keyword;
+		List<Object[]> roomRecords = roomRepo.findAllRoomsRoomsTateRepair(keyword);
+		List<RoomRoomtypeReservationReservationroomAccount> roomNewArr = null;
+		if (roomRecords.size() > 0) {
+			roomNewArr = new ArrayList<RoomRoomtypeReservationReservationroomAccount>();
+			for (Object[] record : roomRecords) {
+				RoomRoomtypeReservationReservationroomAccount r = new RoomRoomtypeReservationReservationroomAccount();
+				r.setIdRoom((String) record[0]);
+				r.setRoomNum((String) record[7]);
+				r.setRoomState((String) record[8]);
+				r.setFloor((Integer) record[4]);
+				roomNewArr.add(r);
+			}
+		}
+
+		Sort sort = Sort.by(sortField);
+		sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+		PageRequest pageRequest = PageRequest.of(currentPage, sizePage, sort);
+		PageImpl<RoomRoomtypeReservationReservationroomAccount> pageImpl = new PageImpl<RoomRoomtypeReservationReservationroomAccount>(
+				roomNewArr, pageRequest, roomNewArr.size());
+
+		return pageImpl;
+	}
+
+	@Override
+	public Optional<RoomDetailForAdmin> findRoomDetailForAdmin(String idRoom, String idReservation) {
 		// TODO Auto-generated method stub
 		List<Object[]> roomRecords = roomRepo.findRoomDetailForAdmin(idRoom);
-		List<Object[]> accountRecords = accountRepo.findByIdTransaction(idTransaction);
+		List<Object[]> accountRecords = accountRepo.findByIdReservation(idReservation);
 		try {
 			Object[] roomObject = roomRecords.get(0);
 			Object[] accountObject = accountRecords.get(0);
@@ -250,7 +280,6 @@ public class RoomServ implements IRoomServ {
 			room.setAddress((String) accountObject[3]);
 			room.setAvatar((String) accountObject[4]);
 			room.setEmail((String) accountObject[5]);
-			room.setIdTransaction((String) accountObject[6]);
 			return Optional.of(room);
 		} catch (IndexOutOfBoundsException e) {
 			// TODO: handle exception
@@ -352,7 +381,7 @@ public class RoomServ implements IRoomServ {
 		} else if (roomState.equalsIgnoreCase("empty")) {
 			return null;
 		} else if (roomState.equalsIgnoreCase("repair")) {
-			return null;
+			return findAllRoomsRoomsTateRepair(currentPage, sizePage, sortField, sortDir, keyword);
 		} else if (roomState.equalsIgnoreCase("waiting")) {
 			return findAllRoomsTransactionIsNotNullAndWaiting(currentPage, sizePage, sortField, sortDir, keyword);
 		} else if (roomState.equalsIgnoreCase("checkout")) {
@@ -421,6 +450,14 @@ public class RoomServ implements IRoomServ {
 		}
 		return null;
 	}
+	
+
+	@Override
+	public void updateRoomState(RoomEntity room) {
+		// TODO Auto-generated method stub
+		System.out.println(room.getRoomState());
+		roomRepo.updateRoomState(room.getId(), room.getRoomState().toString());
+	}
 
 	@Override
 	public void deleteById(String id) {
@@ -435,5 +472,6 @@ public class RoomServ implements IRoomServ {
 			roomRepo.deleteById(id);
 		}
 	}
+
 
 }

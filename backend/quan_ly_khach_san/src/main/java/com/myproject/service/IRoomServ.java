@@ -30,6 +30,8 @@ public interface IRoomServ {
 	
 	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsTransactionIsNotNullAndCheckout(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
 	
+	public Page<RoomRoomtypeReservationReservationroomAccount> findAllRoomsRoomsTateRepair(int currentPage, int sizePage, String sortField, String sortDir, String keyword);
+	
 	public Optional<RoomDetailForAdmin> findRoomDetailForAdmin(String idRoom, String idTransaction);
 	
 	public Optional<RoomEntity> findById(String id);
@@ -37,6 +39,8 @@ public interface IRoomServ {
 	public RoomEntity save(RoomEntity room);
 	
 	public RoomEntity update(RoomEntity room);
+	
+	public void updateRoomState(RoomEntity room);
 	
 	public void deleteById(String id);
 	

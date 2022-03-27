@@ -9,4 +9,12 @@ const doCreateTransaction = (idReservation) => {
     return httpCommon().post(`${URL_BASE}/api/admin/transactions/payment`, idReservation)
 }
 
-export default {getTransactions, doCreateTransaction}
+const doFindTransactionById = (idTransaction) => {
+    return httpCommon().get(`${URL_BASE}/api/admin/transactions/${idTransaction}`)
+}
+
+const doSoftDeleteById = (transaction) => {
+    return httpCommon().put(`${URL_BASE}/api/admin/transactions/updateDeleted`, transaction)
+}
+
+export default {getTransactions, doCreateTransaction, doFindTransactionById, doSoftDeleteById}

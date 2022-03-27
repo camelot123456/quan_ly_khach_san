@@ -29,7 +29,7 @@ import {
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import {formatDate} from '../../../../commons/dateformat-common'
-import { doShowRoomsAdmin } from "../../../../redux/actions/room-action";
+import { doShowRoomsAdmin, doUpdateRoomstate } from "../../../../redux/actions/room-action";
 import { doCancelById, doCheckoutRoomReservation, doFindForTransaction } from "../../../../redux/actions/reservation-action";
 import { doCreateTransactionPaymnet } from "../../../../redux/actions/transaction-action"
 import ModalScrollCustom from "../../fragments/ModalScrollCustom";
@@ -177,6 +177,37 @@ function RoomState() {
     })
   }
 
+  const handleSetRoomRepair = (idRoom) => {
+    dispatch(doUpdateRoomstate({id: idRoom, roomState: "EMPTY"}))
+    .then(res => {
+      toast({
+        title: 'Thông báo',
+        description: "Cập nhập thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch(err => {
+      toast({
+        title: 'Thông báo',
+        description: "Cập nhập thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }).finally(() => {
+      doShowRoomsAdmin({
+        roomState: "repair",
+        currentPage: 0,
+        sizePage: 20,
+        sortField: "id",
+        sortDir: "asc",
+        keyword: "",
+      });
+    })
+  }
+
   const handlePaymentReservationById = (dataRequest) => {
     dispatch(doCreateTransactionPaymnet(dataRequest))
   }
@@ -228,14 +259,14 @@ function RoomState() {
             </Tab>
           </Link>
 
-          <Link to="/admin/rooms?tab1=0&tab2=3">
+          <Link to="/admin/rooms?tab1=0&tab2=4">
             <Tab borderRadius={8} h={70} bg="#A0AEC0" mr={5} w={190}
               onClick={() => setRoomState("empty")} >
               Trống: {rooms.length || 0}
             </Tab>
           </Link>
 
-          <Link to="/admin/rooms?tab1=0&tab2=4">
+          <Link to="/admin/rooms?tab1=0&tab2=5">
             <Tab borderRadius={8} h={70} bg="#F56565" mr={5} w={190}
               onClick={() => setRoomState("repair")} >
               Sửa chữa: {rooms.length || 0}
@@ -304,6 +335,7 @@ function RoomState() {
               onFormatDate={formatDate}
               onParseColor={() => parseColor("REPAIR")}
               type="REPAIR"
+              onSetRoomRepair={handleSetRoomRepair}
             />
           </TabPanel>
         </TabPanels>
@@ -313,9 +345,15 @@ function RoomState() {
 }
 
 function RoomAll(props) {
-  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, onFindReservationForTransaction, onCheckoutRoomReservation } = props;
+  const { rooms, onFormatDate, onParseColor, type, onCancelRoom, onFindReservationForTransaction, onCheckoutRoomReservation, onSetRoomRepair } = props;
 
   const reservationTransaction = useSelector((state) => state.reservationReducer.reservationTransaction);
+
+  const handleSetRoomRepair = (idRoom) => {
+    if (onSetRoomRepair) {
+      return onSetRoomRepair(idRoom);
+    }
+  };
 
   const handleFormatDate = (date, format) => {
     if (onFormatDate) {
@@ -365,8 +403,8 @@ function RoomAll(props) {
                 </Link>
                 <Link
                   style={{ minWidth: "26px", textAlign: "center" }}
-                  to={`/admin/rooms/${room.idRoom}?idTransaction=${
-                    room.idTransaction === null ? "" : room.idTransaction
+                  to={`/admin/rooms/${room.idRoom}?idReservation=${
+                    room.idReservation === null ? "" : room.idReservation
                   }`}
                 >
                   <Box color="white" borderRadius={4} border="solid 1px"
@@ -482,13 +520,15 @@ function RoomAll(props) {
 
                   {type == "REPAIR" ?
                     (<>
-                      <Link style={{ minWidth: "26px", textAlign: "center", marginRight: "3px", }} to="/" >
-                        <Box color="white" borderRadius={4} border="solid 1px" bg="green.800"
-                          _hover={{ borderColor: "white", bg: "green.500" }}
-                        >
-                          <i className="fa fa-medkit" aria-hidden="true"></i>
-                        </Box>
-                      </Link>
+                      <AlertDialogCustom 
+                        nameBtnCall={<i className="fa fa-ban" aria-hidden="true"></i>}
+                        className="btn-cancel-deposit"
+                        title="Trả phòng"
+                        content="Bạn có phòng hoàn tất sửa chữa ?"
+                        nameBtnNegative="Xác nhận"
+                        nameBtnPositive="Hủy"
+                        onBtnNegative={() => handleSetRoomRepair(room.idRoom)}
+                      />
                     </>) : (<></>)
                   }
 

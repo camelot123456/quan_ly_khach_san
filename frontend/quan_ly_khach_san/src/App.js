@@ -43,9 +43,10 @@ function App() {
                 </Route>
 
                 <Route path="" element={<WebLayout />}>
+                  <Route path="" element={<Home />}></Route>
                   <Route path="home" element={<Home />}></Route>
                   <Route path="rooms" element={<Rooms />}></Route>
-                  <Route path="cart" element={<OrderAndHistory />}></Route>
+                  <Route path="user/:idAccount" element={<OrderAndHistory />}></Route>
                   <Route path="rooms/:idRoomtype" element={<RoomDetailPublic />}></Route>
                   <Route path="services" element={<Services />}></Route>
                 </Route>

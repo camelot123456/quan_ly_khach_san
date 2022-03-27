@@ -3,6 +3,8 @@ package com.myproject.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -69,6 +71,11 @@ public class AccountController {
 	public ResponseEntity<?> doFindAccountById(@PathVariable("idAccount") String idAccount) {
 		accountServ.findById(idAccount);
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully"));
+	}
+	
+	@GetMapping("/accounts/myAccount/{idUser}")
+	public ResponseEntity<?> showMyUser(@PathVariable("idUser") String idUser, HttpServletResponse response) {
+		return ResponseEntity.ok().body(accountServ.myAccounts(idUser, response));
 	}
 	
 	@PostMapping("/accounts")

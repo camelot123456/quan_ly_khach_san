@@ -23,6 +23,8 @@ public interface ITransactionServ {
 	
 	public void update(String id, String idReservation);
 	
+	public void doSoftDelete(String idTransaction);
+	
 	public void deleteById(String id);
 	
 	public void deleteMany(String[] ids);

@@ -34,3 +34,33 @@ export const doCreateTransactionPaymnet = (idReservation) => async (dispatch) =>
         })
     })
 }
+
+export const doSoftDeleteById = (transaction) => async (dispatch) => {
+    return new Promise((resolve, reject) => {
+        transactionService.doSoftDeleteById(transaction)
+        .then((response) => {
+            resolve()
+        })
+        .catch((error) => {
+            reject()
+        })
+    })
+}
+
+export const doFindTransactionById = (idTransaction) => async (dispatch) => {
+    return new Promise((resolve, reject) => {
+        transactionService.doFindTransactionById(idTransaction)
+        .then((res) => {
+            dispatch({
+                type: transactionTypes.FIND_BY_ID_TRANSACTION,
+                payload: {
+                    transaction: res.data
+                }
+            })
+            resolve()
+        })
+        .catch((error) => {
+            reject()
+        })
+    })
+}

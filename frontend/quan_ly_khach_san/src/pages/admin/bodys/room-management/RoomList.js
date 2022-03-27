@@ -34,7 +34,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 
-import { findAll, doSaveRoom, doUpdateRoom, doDeleteRoom } from "../../../../redux/actions/room-action";
+import { findAll, doSaveRoom, doUpdateRoom, doDeleteRoom, doUpdateRoomstate } from "../../../../redux/actions/room-action";
 import ModalScrollCustom from "../../fragments/ModalScrollCustom"
 import { Form, Formik } from "formik";
 import * as Yup from 'yup'
@@ -87,6 +87,37 @@ function RoomList() {
     })
   }
 
+  const handleSetRoomRepair = (idRoom) => {
+    dispatch(doUpdateRoomstate({id: idRoom, roomState: "REPAIR"}))
+    .then(res => {
+      toast({
+        title: 'Thông báo',
+        description: "Cập nhập thành công",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    })
+    .catch(err => {
+      toast({
+        title: 'Thông báo',
+        description: "Cập nhập thất bại",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }).finally(() => {
+      dispatch(findAll({
+        currentPage: 0,
+        sizePage: 20,
+        sortField: "id",
+        sortDir: "asc",
+        keyword: "",
+      }));
+    })
+  }
+  
+
   return (
     <>
       <ModalScrollCustom 
@@ -121,12 +152,14 @@ function RoomList() {
               <Td>{room.incurredPrice}</Td>
               <Td>
                 <HStack>
-                  <ModalScrollCustom 
-                    icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
-                    title="Phòng"
-                    className="btn-detail-list"
-                    content={<ContentFormRoom edit={true} idRoom={room.id} room={room}/>}
-                    closeOnOverlayClick={false}
+                  <AlertDialogCustom 
+                    nameBtnCall={<i className="fa fa-lock" aria-hidden="true"></i>}
+                    className="btn-repair-list"
+                    title="Cập nhập"
+                    content="Bạn có chắc phòng này đang sửa chữa không ?"
+                    nameBtnNegative="Xác nhận"
+                    nameBtnPositive="Hủy"
+                    onBtnNegative={() => handleSetRoomRepair(room.id)}
                   />
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
@@ -136,6 +169,13 @@ function RoomList() {
                     nameBtnNegative="Xóa"
                     nameBtnPositive="Hủy"
                     onBtnNegative={() => handleDeleteRoomById(room.id)}
+                  />
+                  <ModalScrollCustom 
+                    icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
+                    title="Phòng"
+                    className="btn-detail-list"
+                    content={<ContentFormRoom edit={true} idRoom={room.id} room={room}/>}
+                    closeOnOverlayClick={false}
                   />
                 </HStack>
               </Td>

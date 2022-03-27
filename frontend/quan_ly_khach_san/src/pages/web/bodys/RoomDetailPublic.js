@@ -98,7 +98,7 @@ function RoomDetailPublic() {
             duration: 9000,
             isClosable: true,
           })
-          navigate("/home")
+          navigate(`/user/${account.id}`)
         })
         .catch((err) => {
           toast({

@@ -80,6 +80,18 @@ export const doSaveRoom = (dataRequest) => dispatch => {
     })
 }
 
+export const doUpdateRoomstate = (dataRequest) => dispatch => {
+    return new Promise((resolve, reject) => {
+        roomService.doUpdateRoomstate(dataRequest)
+        .then((response) => {
+            resolve()
+        })
+        .catch((error) => {
+            reject()
+        })
+    })
+}
+
 export const doUpdateRoom = (dataRequest) => dispatch => {
     return new Promise((resolve, reject) => {
         roomService.doUpdateRoom(dataRequest)

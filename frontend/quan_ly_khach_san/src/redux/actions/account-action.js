@@ -103,6 +103,26 @@ export const doDeleteCustomer = (dataRequest) => (dispatch ) => {
     })
 }
 
+export const showMyAccountByIdAccount = (idAccount) => (dispatch ) => {
+    return new Promise((resolve, reject) => {
+        accountService.showMyAccountByIdAccount(idAccount)
+        .then(res => {
+            dispatch({
+                type: accountType.SHOW_MY_ACCOUNT,
+                payload: {
+                    myAccount: res.data.account,
+                    myAccountTransaction: res.data.transactions,
+                    myAccountReservation: res.data.reservations
+                }
+            })
+            resolve()
+        })
+        .catch(err => {
+            reject()
+        })
+    })
+}
+
 export const doDeleteAccountById = (pagedRequest) => (dispatch) => {
     // return new Promise((resolve, reject) => {
     //     accountService.showPagedByType(pagedRequest)

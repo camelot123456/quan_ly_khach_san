@@ -17,7 +17,11 @@ const initialState = {
     accountAllArr: [],
     pagedAll: {},
 
-    account: {}
+    account: {},
+
+    myAccount: {},
+    myAccountTransaction: [],
+    myAccountReservation: []
 
 }
 
@@ -75,6 +79,20 @@ const accountReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 accountAllArr: accountAllArr,
                 pagedAll: pagedAll
+            }
+
+        case accountType.SHOW_MY_ACCOUNT:
+            var myAccount = {...state.myAccount}
+            var myAccountTransaction = {...state.myAccountTransaction}
+            var myAccountReservation = {...state.myAccountReservation}
+            myAccount = payload.myAccount
+            myAccountTransaction = payload.myAccountTransaction
+            myAccountReservation = payload.myAccountReservation
+            return {
+                ...state,
+                myAccount,
+                myAccountTransaction,
+                myAccountReservation
             }
 
         default:

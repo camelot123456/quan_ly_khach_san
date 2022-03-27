@@ -21,4 +21,8 @@ const doDeleteCustomer = (dataRequest) => {
     return httpCommon().delete(`${URL_BASE}/api/admin/accounts/deleteCustomer`, {data: dataRequest})
 }
 
-export default {doFindAccountByIdEmailPhoneNum, showPagedByType, doUpdateCustomer, doDeleteCustomer, doCreateAccountInternal}
+const showMyAccountByIdAccount = (idAccount) => {
+    return httpCommon().get(`${URL_BASE}/api/accounts/myAccount/${idAccount}`)
+}
+
+export default {doFindAccountByIdEmailPhoneNum, showPagedByType, doUpdateCustomer, doDeleteCustomer, doCreateAccountInternal, showMyAccountByIdAccount}

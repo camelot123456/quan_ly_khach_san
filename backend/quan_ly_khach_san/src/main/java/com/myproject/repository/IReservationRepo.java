@@ -15,10 +15,12 @@ public interface IReservationRepo extends JpaRepository<ReservationEntity, Strin
 			nativeQuery = true)
 	public Page<ReservationEntity> pagedByKeyword(String keyword, Pageable pageable);
 	
-	@Query(value = "select * "
+	@Query(value = "select re.* "
 			+ "from reservations re inner join accounts a "
-			+ "on re.id_account = a.id "
-			+ "where a.id=?1",
+			+ "on re.id_account = a.id left join transactions t "
+			+ "on re.id = t.id_reservation "
+			+ "where a.id=?1 and t.id is null "
+			+ "order by re.modified_at desc",
 			nativeQuery = true)
 	public List<ReservationEntity> findByIdAccount(String idAccount);
 	

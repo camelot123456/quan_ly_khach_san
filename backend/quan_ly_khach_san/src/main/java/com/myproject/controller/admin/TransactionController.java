@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,6 +64,11 @@ public class TransactionController {
 				appProperties.getSystemConstant().getPagedDefault().getKeyword());
 	}
 	
+	@GetMapping("/transactions/{idTransaction}")
+	public ResponseEntity<?> doFindTransactionByIdTransaction(@PathVariable("idTransaction") String idTransaction) {
+		return ResponseEntity.ok().body(transactionServ.findById(idTransaction));
+	}
+	
 	@GetMapping("/transactions/constant")
 	public ResponseEntity<?> doShowConstantTransaction() {
 		Map<String, Object> responses = new HashMap<String, Object>();
@@ -77,4 +83,9 @@ public class TransactionController {
 		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
 	}
 	
+	@PutMapping("/transactions/updateDeleted")
+	public ResponseEntity<?> doSoftDelete(@RequestBody TransactionEntity transaction) {
+		transactionServ.doSoftDelete(transaction.getId());
+		return ResponseEntity.ok().body(new ApiResponse(true, "Successfully."));
+	}
 }

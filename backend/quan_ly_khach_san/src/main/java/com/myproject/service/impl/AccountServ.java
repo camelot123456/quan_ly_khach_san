@@ -2,14 +2,21 @@ package com.myproject.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -249,6 +256,32 @@ public class AccountServ implements IAccountServ{
 		}
 		return findAll(sizePage, currentPage, sortField, sortDir, keyword);
 	}	
+	
+
+	@Override
+	public Map<String, Object> myAccounts(String idUser, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		try {
+			AccountEntity userStorage = accountRepo.findById(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+			AccountEntity account = accountRepo.findById(idUser).get();
+			if (userStorage.getId().equals(account.getId())) {
+				Map<String, Object> res = new HashMap<String, Object>();
+				List<TransactionEntity> transactions = transactionRepo.findAllByIdAccount(idUser);
+				List<ReservationEntity> reservations = reservationRepo.findByIdAccount(idUser);
+				res.put("account", account);
+				res.put("transactions", transactions);
+				res.put("reservations", reservations);
+				return res;
+			}
+		} catch (NoSuchElementException e) {
+			// TODO: handle exception
+			response.setStatus(HttpStatus.FORBIDDEN.value());
+			return null;
+		}
+		response.setStatus(HttpStatus.FORBIDDEN.value());
+		return null;
+	}
+
 
 //----------------------------- INSERT -----------------------------
 	

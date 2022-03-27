@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myproject.entity.TransactionEntity;
 
@@ -36,9 +38,16 @@ public interface ITransactionRepo extends JpaRepository<TransactionEntity, Strin
 	@Query(value = "select t.* "
 			+ "from transactions t inner join accounts a "
 			+ "on t.id_account = a.id "
-			+ "where a.id = ?1 ",
+			+ "where a.id = ?1 and t.deleted = 0 "
+			+ "order by t.modified_at desc",
 			nativeQuery = true)
 	public List<TransactionEntity> findAllByIdAccount(String idAccount);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update transactions set deleted = ?2 where id = ?1",
+			nativeQuery = true)
+	public void updateDeleted(String idTransaction, Boolean deleted);
 	
 //	--------------------------------------statistic------------------------------------------
 	

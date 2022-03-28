@@ -2,28 +2,38 @@ import serviceTypes from '../../redux/types/service-type'
 import serviceService from '../../services/service-service'
 
 export const doFindAll = () => async (dispatch) => {
-    try {
-        const serviceResponse = await serviceService.doFindAll();
-        dispatch({
-            type: serviceTypes.FIND_ALL_ACTION,
-            payload: {
-                apiResponse: {
-                    message: 'Successfully.',
-                    success: true
-                },
-                services: serviceResponse.data
-            }
+    return new Promise((resolve, reject) => {
+        serviceService.doFindAll()
+        .then((res) => {
+            dispatch({
+                type: serviceTypes.FIND_ALL_ACTION,
+                payload: {
+                    services: res.data
+                }
+            })
+            resolve()
         })
-    } catch (error) {
-        dispatch({
-            type: serviceTypes.ERROR_ACTION,
-            payload: {
-                apiResponse: {
-                    success: false,
-                    message: error.message,
-                },
-                services: []
-            }
+        .catch((err) => {
+            reject()
         })
-    }
+    })
+}
+
+export const showServiceList = (pagedRequest) => async (dispatch) => {
+    return new Promise((resolve, reject) => {
+        serviceService.showServiceList(pagedRequest)
+        .then((res) => {
+            dispatch({
+                type: serviceTypes.FIND_ALL_SERVICES_LIST,
+                payload: {
+                    services: res.data.services,
+                    paged: res.data.paged
+                }
+            })
+            resolve()
+        })
+        .catch((err) => {
+            reject()
+        })
+    })
 }

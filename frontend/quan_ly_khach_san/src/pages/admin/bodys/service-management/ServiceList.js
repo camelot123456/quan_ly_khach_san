@@ -41,14 +41,23 @@ import AlertDialogCustom from "../../fragments/AlertDialogCustom";
 import { PATH_IMG_ROOMTYPE, URL_BASE } from "../../../../constants";
 import {formatDate} from '../../../../commons/dateformat-common'
 import {setRoomtypePhotoActive, showRoomtypePhotoByIdRoomtype} from '../../../../redux/actions/roomtypePhoto-action'
+import { showServiceList } from "../../../../redux/actions/service-action";
 
 function ServiceList() {
   const toast = useToast()
   const dispatch = useDispatch();
-  const roomtypes = useSelector((state) => state.roomtypeReducer.roomtypes);
+  const services = useSelector((state) => state.serviceReducer.services);
+
+  console.log(services)
 
   useEffect(() => {
-    dispatch(doShowRoomtypeList());
+    dispatch(showServiceList({
+      currentPage: 0,
+      sizePage: 20,
+      sortField: "id",
+      sortDir: "asc",
+      keyword: "",
+    }));
   }, []);
 
   const handleDeleteRoomtypeById = (idRoomtype) => {
@@ -56,7 +65,7 @@ function ServiceList() {
     .then((res) => {
       toast({
         title: 'Thông báo',
-        description: "Xóa loại phòng thành công",
+        description: "Xóa dịch vụ thành công",
         status: 'success',
         duration: 9000,
         isClosable: true,
@@ -65,7 +74,7 @@ function ServiceList() {
     .catch((err) => {
       toast({
         title: 'Thông báo',
-        description: "Xóa loại phòng thất bại",
+        description: "Xóa dịch vụ thất bại",
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -80,12 +89,12 @@ function ServiceList() {
     <>
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
-          title="Loại phòng"
+          title="Dịch vụ"
           className="btn-add"
           content={<ContentFormRoomtype edit={false} />}
           closeOnOverlayClick={false}
       />
-      {roomtypes ? (
+      {services ? (
         <Table variant="striped" colorScheme="blue" size="sm">
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
@@ -99,36 +108,32 @@ function ServiceList() {
           </Tr>
         </Thead>
         <Tbody>
-          {roomtypes.map((roomtype, index) => (
+          {services.map((service, index) => (
             <Tr key={index}>
               <Td>{index + 1}</Td>
-              <Td>{roomtype.id}</Td>
+              <Td>{service.id}</Td>
               <Td>
-                { roomtype.avatarUrl.startsWith("https://") || roomtype.avatarUrl.startsWith("http://") ? (
-                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={roomtype.avatarUrl} alt={roomtype.name} />
-                  ) : (
-                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={`${URL_BASE}/img/roomtype/${roomtype.avatarUrl}`} alt={roomtype.name} />
-                )}
+                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={service.avatarUrl} alt={service.name} />
               </Td>
-              <Td>{roomtype.name}</Td>
-              <Td>{roomtype.price}</Td>
+              <Td>{service.name}</Td>
+              <Td>{service.price}</Td>
               <Td>
                 <HStack>
                   <ModalScrollCustom 
                     icon={<i className="fa fa-pencil" aria-hidden="true"></i>}
-                    title="Loại phòng"
+                    title="Dịch vụ"
                     className="btn-detail-list"
-                    content={<ContentFormRoomtype edit={true} idRoomtype={roomtype.id} roomtype={roomtype}/>}
+                    // content={<ContentFormRoomtype edit={true} idService={service.id} service={service}/>}
                     closeOnOverlayClick={false}
                   />
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
                     className="btn-delete-list"
                     title="Xóa loại phòng"
-                    content="Bạn có muốn xóa loại phòng này không ?"
+                    content="Bạn có muốn xóa dịch vụ này không ?"
                     nameBtnNegative="Xóa"
                     nameBtnPositive="Hủy"
-                    onBtnNegative={() => handleDeleteRoomtypeById(roomtype.id)}
+                    onBtnNegative={() => handleDeleteRoomtypeById(service.id)}
                   />
                 </HStack>
               </Td>

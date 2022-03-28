@@ -22,6 +22,7 @@ import Rooms from "./pages/web/bodys/Rooms";
 import Services from "./pages/web/bodys/Services";
 import RoomDetailPublic from "./pages/web/bodys/RoomDetailPublic";
 import OrderAndHistory from "./pages/web/bodys/OrderAndHistory";
+import ServiceList from "./pages/admin/bodys/service-management/ServiceList";
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
                   <Route path="transactions" element={<TransactionList />}></Route>
                   <Route path="customers" element={<AccountTab />} />
                   <Route path="internals" element={<InternalTab />} />
+                  <Route path="services" element={<ServiceList />} />
                 </Route>
               </Route>
             </Routes>

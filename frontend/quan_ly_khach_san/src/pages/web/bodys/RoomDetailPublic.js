@@ -150,7 +150,7 @@ function RoomDetailPublic() {
                             {startDate && endDate && (
                               <ModalScrollCustom 
                                 icon={<i className="fa fa-search" aria-hidden="true"></i>}
-                                title="Thành viên nội bộ"
+                                title="Tra cứu phòng"
                                 className="btn-detail-list"
                                 onBtnClick={() =>
                                   handleCheckRoomEmpty({

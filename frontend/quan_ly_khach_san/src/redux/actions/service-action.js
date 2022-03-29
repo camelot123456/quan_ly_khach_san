@@ -37,3 +37,27 @@ export const showServiceList = (pagedRequest) => async (dispatch) => {
         })
     })
 }
+
+export const doCreateService = (payload) => async (dispatch) => {
+    return new Promise((resolve, reject) => {
+        serviceService.doCreateService(payload)
+        .then((res) => {
+            resolve()
+        })
+        .catch((err) => {
+            reject()
+        })
+    })
+}
+
+export const doDeleteService = (payload) => async (dispatch) => {
+    return new Promise((resolve, reject) => {
+        serviceService.doDeleteService(payload)
+        .then((res) => {
+            resolve()
+        })
+        .catch((err) => {
+            reject()
+        })
+    })
+}

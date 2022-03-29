@@ -29,6 +29,8 @@ import {
   ScatterChart,
   ZAxis,
   Scatter,
+  Pie,
+  PieChart,
 } from "recharts";
 
 import "./Dashboard.css";
@@ -66,6 +68,30 @@ function Dashboard() {
   useEffect(() => {
     dispatch(showStatistic())
   }, [])
+
+
+
+  // test
+  const data01 = [
+    { name: 'Group A', value: 400 },
+    { name: 'Group B', value: 300 },
+    { name: 'Group C', value: 300 },
+    { name: 'Group D', value: 200 },
+  ];
+  const data02 = [
+    { name: 'A1', value: 100 },
+    { name: 'A2', value: 300 },
+    { name: 'B1', value: 100 },
+    { name: 'B2', value: 80 },
+    { name: 'B3', value: 40 },
+    { name: 'B4', value: 30 },
+    { name: 'B5', value: 50 },
+    { name: 'C1', value: 100 },
+    { name: 'C2', value: 200 },
+    { name: 'D1', value: 150 },
+    { name: 'D2', value: 50 },
+  ];
+  // test
 
   return (
     <>
@@ -275,7 +301,11 @@ function Dashboard() {
               Thống kê số lượng khách hàng theo loại
             </Text>
             <Box>
-
+              {/* test */}
+              <PieChart width={400} height={200}>
+                <Pie data={data01} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#8884d8" />
+                <Pie data={data02} dataKey="value" cx="50%" cy="50%" innerRadius={70} outerRadius={90} fill="#82ca9d" label />
+              </PieChart>
             </Box>
         </VStack>
 
@@ -283,35 +313,29 @@ function Dashboard() {
           <Text className="text-heading mb-3">
             Những thành tích đạt được
           </Text>
-          {/* var revenueStatisticMaxByYear = useSelector((state => state.statisticReducer.revenueStatisticMaxByYear))
-  var revenueStatisticByAllYear = useSelector((state => state.statisticReducer.revenueStatisticByAllYear))
-  var revenueStatisticByThisYear = useSelector((state => state.statisticReducer.revenueStatisticByThisYear))
-
-  var revenueStatisticMaxByQuarter = useSelector((state => state.statisticReducer.revenueStatisticMaxByQuarter))
-  var revenueStatisticByAllQuarter = useSelector((state => state.statisticReducer.revenueStatisticByAllQuarter))
-  var revenueStatisticByThisQuarter = useSelector((state => state.statisticReducer.revenueStatisticByThisQuarter))
-  var revenueStatisticMaxByAllQuarter = useSelector((state => state.statisticReducer.revenueStatisticMaxByAllQuarter))
-
-  var revenueStatisticMaxByMonth = useSelector((state => state.statisticReducer.revenueStatisticMaxByMonth))
-  var revenueStatisticByAllMonth = useSelector((state => state.statisticReducer.revenueStatisticByAllMonth))
-  var revenueStatisticByThisMonth = useSelector((state => state.statisticReducer.revenueStatisticByThisMonth))
-  var revenueStatisticMaxByAllMonth = useSelector((state => state.statisticReducer.revenueStatisticMaxByAllMonth))
-
-  var revenueStatisticMaxByWeek = useSelector((state => state.statisticReducer.revenueStatisticMaxByWeek))
-  var revenueStatisticByAllWeek = useSelector((state => state.statisticReducer.revenueStatisticByAllWeek))
-  var revenueStatisticByThisWeek = useSelector((state => state.statisticReducer.revenueStatisticByThisWeek))
-  var revenueStatisticMaxByAllWeek = useSelector((state => state.statisticReducer.revenueStatisticMaxByAllWeek))
-
-  var revenueStatisticMaxByDay = useSelector((state => state.statisticReducer.revenueStatisticMaxByDay))
-  var revenueStatisticByThisDay = useSelector((state => state.statisticReducer.revenueStatisticByThisDay)) */}
           <Box>
-              <ul>
-                <li>Năm đạt doanh thu cao nhất: {`${revenueStatisticMaxByYear.year} - $${revenueStatisticMaxByYear.total}`}</li>
-                <li>Quý đạt doanh thu cao nhất: {`Quý ${revenueStatisticMaxByQuarter.quarter} - năm ${revenueStatisticMaxByQuarter.year} - $${revenueStatisticMaxByQuarter.total}`}</li>
-                <li>Tháng đạt doanh thu cao nhất: {`${revenueStatisticMaxByMonth.month}-${revenueStatisticMaxByMonth.year} - $${revenueStatisticMaxByMonth.total}`}</li>
-                <li>Tuần đạt doanh thu cao nhất: {`Tuần thứ ${revenueStatisticMaxByWeek.week} - năm ${revenueStatisticMaxByWeek.year} - $${revenueStatisticMaxByWeek.total}`}</li>
-                <li>Ngày đạt doanh thu cao nhất: {`${revenueStatisticMaxByDay.date}-${revenueStatisticMaxByDay.month}-${revenueStatisticMaxByDay.year} - $${revenueStatisticMaxByDay.total}`}</li>
-              </ul>
+            <table>
+              <tr>
+                <th>Năm đạt doanh thu cao nhất:</th>
+                <td>{`${revenueStatisticMaxByYear.year} - $${revenueStatisticMaxByYear.total}`}</td>
+              </tr>
+              <tr>
+                <th>Quý đạt doanh thu cao nhất:</th>
+                <td>{`Quý ${revenueStatisticMaxByQuarter.quarter} - năm ${revenueStatisticMaxByQuarter.year} - $${revenueStatisticMaxByQuarter.total}`}</td>
+              </tr>
+              <tr>
+                <th>Tháng đạt doanh thu cao nhất:</th>
+                <td>{`${revenueStatisticMaxByMonth.month}-${revenueStatisticMaxByMonth.year} - $${revenueStatisticMaxByMonth.total}`}</td>
+              </tr>
+              <tr>
+                <th>Tuần đạt doanh thu cao nhất:</th>
+                <td>{`Tuần thứ ${revenueStatisticMaxByWeek.week} - năm ${revenueStatisticMaxByWeek.year} - $${revenueStatisticMaxByWeek.total}`}</td>
+              </tr>
+              <tr>
+                <th>Ngày đạt doanh thu cao nhất:</th>
+                <td>{`${revenueStatisticMaxByDay.date}-${revenueStatisticMaxByDay.month}-${revenueStatisticMaxByDay.year} - $${revenueStatisticMaxByDay.total}`}</td>
+              </tr>
+            </table>
           </Box>
         </VStack>
       </Flex>

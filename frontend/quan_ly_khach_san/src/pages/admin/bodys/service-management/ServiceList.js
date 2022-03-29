@@ -31,6 +31,8 @@ import {
   Textarea,
   Wrap,
   WrapItem,
+  Heading,
+  Divider,
 } from "@chakra-ui/react";
 
 import { doShowRoomtypeList, doCreateRoomtype, doDeleteRoomtypeById, doUpdateRoomtype } from "../../../../redux/actions/roomtype-action";
@@ -41,14 +43,13 @@ import AlertDialogCustom from "../../fragments/AlertDialogCustom";
 import { PATH_IMG_ROOMTYPE, URL_BASE } from "../../../../constants";
 import {formatDate} from '../../../../commons/dateformat-common'
 import {setRoomtypePhotoActive, showRoomtypePhotoByIdRoomtype} from '../../../../redux/actions/roomtypePhoto-action'
-import { showServiceList } from "../../../../redux/actions/service-action";
+import { doCreateService, doDeleteService, showServiceList } from "../../../../redux/actions/service-action";
 
 function ServiceList() {
   const toast = useToast()
   const dispatch = useDispatch();
   const services = useSelector((state) => state.serviceReducer.services);
 
-  console.log(services)
 
   useEffect(() => {
     dispatch(showServiceList({
@@ -60,8 +61,8 @@ function ServiceList() {
     }));
   }, []);
 
-  const handleDeleteRoomtypeById = (idRoomtype) => {
-    dispatch(doDeleteRoomtypeById(idRoomtype))
+  const handleDeleteServiceById = (idRoomtype) => {
+    dispatch(doDeleteService({id: idRoomtype}))
     .then((res) => {
       toast({
         title: 'Thông báo',
@@ -81,12 +82,20 @@ function ServiceList() {
       })
     })
     .finally(() => {
-      dispatch(doShowRoomtypeList())
+      dispatch(showServiceList({
+        currentPage: 0,
+        sizePage: 20,
+        sortField: "id",
+        sortDir: "asc",
+        keyword: "",
+      }));
     })
   }
 
   return (
     <>
+      <Heading py={4}>Quản lý dịch vụ</Heading>
+      <Divider />
       <ModalScrollCustom 
           icon={<i className="fa fa-plus" aria-hidden="true"></i>}
           title="Dịch vụ"
@@ -102,7 +111,7 @@ function ServiceList() {
             <Th>Stt</Th>
             <Th>Id</Th>
             <Th>Ảnh chính</Th>
-            <Th>Tên phòng</Th>
+            <Th>Tên dịch vụ</Th>
             <Th>Giá (VND)</Th>
             <Th>Công cụ</Th>
           </Tr>
@@ -113,7 +122,7 @@ function ServiceList() {
               <Td>{index + 1}</Td>
               <Td>{service.id}</Td>
               <Td>
-                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={service.avatarUrl} alt={service.name} />
+                  <Image maxWidth="100px" maxHeight="60px" borderRadius={6} src={service.avatar} alt={service.name} />
               </Td>
               <Td>{service.name}</Td>
               <Td>{service.price}</Td>
@@ -129,11 +138,11 @@ function ServiceList() {
                   <AlertDialogCustom 
                     nameBtnCall={<i className="fa fa-trash-o" aria-hidden="true"></i>}
                     className="btn-delete-list"
-                    title="Xóa loại phòng"
+                    title="Xóa dịch vụ"
                     content="Bạn có muốn xóa dịch vụ này không ?"
                     nameBtnNegative="Xóa"
                     nameBtnPositive="Hủy"
-                    onBtnNegative={() => handleDeleteRoomtypeById(service.id)}
+                    onBtnNegative={() => handleDeleteServiceById(service.id)}
                   />
                 </HStack>
               </Td>
@@ -152,8 +161,6 @@ function ServiceList() {
 }
 
 function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
-
-  console.log(roomtype);
 
   const dispatch = useDispatch();
   const toast = useToast()
@@ -218,7 +225,7 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
             idRoomtypePhoto: roomtypePhotoActive.id
           }
           console.log(data)
-          formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
+          formData.append("service", new Blob([JSON.stringify(data)], {type: 'application/json'}))
           dispatch(doUpdateRoomtype(formData))
           .then(response => {
             toast({
@@ -239,26 +246,32 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
             })
           })
           .finally(() => {
-            dispatch(doShowRoomtypeList())
+            dispatch(showServiceList({
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }));
           })
         }
         else {
-          var formData = new FormData(document.getElementById('form-roomtype'))
+          var formData = new FormData(document.getElementById('form-service'))
           var data = {
             name: values.name,
             price: values.price,
             description: values.description,
             isImgFile: tab == 1 ? true : false,
-            avatarUrl: formData.get('avatarUrl')
+            avatar: formData.get('avatarUrl')
           }
           console.log(data)
-          formData.append("roomtype", new Blob([JSON.stringify(data)], {type: 'application/json'}))
-          formData.append("avatar-file", document.forms['form-roomtype'].avatarFile.files[0])
-          dispatch(doCreateRoomtype(formData))
+          formData.append("service", new Blob([JSON.stringify(data)], {type: 'application/json'}))
+          formData.append("avatar-file", document.forms['form-service'].avatarFile.files[0])
+          dispatch(doCreateService(formData))
           .then(response => {
             toast({
               title: 'Thông báo',
-              description: "Thêm mới loại phòng thành công",
+              description: "Thêm mới dịch vụ thành công",
               status: 'success',
               duration: 9000,
               isClosable: true,
@@ -267,14 +280,20 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
           .catch((err) => {
             toast({
               title: 'Thông báo',
-              description: "Thêm mới loại phòng thất bại",
+              description: "Thêm mới dịch vụ thất bại",
               status: 'error',
               duration: 9000,
               isClosable: true,
             })
           })
           .finally(() => {
-            dispatch(doShowRoomtypeList())
+            dispatch(showServiceList({
+              currentPage: 0,
+              sizePage: 20,
+              sortField: "id",
+              sortDir: "asc",
+              keyword: "",
+            }));
           })
         }
       }}
@@ -283,7 +302,7 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
         const {errors, values, touched, handleSubmit, handleBlur, handleChange} = formikProps;
 
         return ( 
-          <Form id="form-roomtype" name="form-roomtype" encType="multipart/form-data">
+          <Form id="form-service" name="form-service" encType="multipart/form-data">
 
             {edit && (
               <>
@@ -310,7 +329,7 @@ function ContentFormRoomtype ({edit, idRoomtype, roomtype}) {
             )}
 
             <FormControl isInvalid={errors.name && touched.name}>
-              <FormLabel htmlFor="name">Tên loại phòng</FormLabel>
+              <FormLabel htmlFor="name">Tên dịch vụ</FormLabel>
               <Input size="sm" bg="white" id="name" onChange={handleChange} value={values.name}/>
               <FormErrorMessage>{errors.name}</FormErrorMessage>
             </FormControl>

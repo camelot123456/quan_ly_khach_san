@@ -16,6 +16,8 @@ import com.myproject.payload.service.ServiceOfInvoice;
 import com.myproject.repository.IServiceRepo;
 import com.myproject.service.IServiceServ;
 
+import net.bytebuddy.utility.RandomString;
+
 @Service
 public class ServiceServ implements IServiceServ{
 
@@ -96,7 +98,12 @@ public class ServiceServ implements IServiceServ{
 	@Override
 	public ServiceEntity save(ServiceEntity service) {
 		// TODO Auto-generated method stub
-		if (!serviceRepo.existsById(service.getId())) {
+		String id = "";
+		do {
+			id = RandomString.make(10);
+		} while (serviceRepo.existsById(id));
+		if (!serviceRepo.existsById(id)) {
+			service.setId(id);
 			return serviceRepo.save(service);
 		}
 		return null;
